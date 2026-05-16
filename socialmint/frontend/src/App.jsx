@@ -169,7 +169,7 @@ function LoginScreen({ onLogin }) {
       const res  = await fetch(`${API}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: `${provider}_${id}_${Date.now()}`, name, provider }),
+        body: JSON.stringify({ userId: `${provider}_${id}`, name, provider }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Login failed");

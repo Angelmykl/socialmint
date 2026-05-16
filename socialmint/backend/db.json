@@ -1,0 +1,282 @@
+{
+  "users": {
+    "Google_google_1778744726321": {
+      "userId": "Google_google_1778744726321",
+      "name": "Alex Johnson",
+      "provider": "Google",
+      "circleWalletId": "3f213654-ef78-5a91-9299-347916cbace9",
+      "circleWalletAddress": "0xf60abe02ef169a32a352603a8c3afb44ef39dde1",
+      "totalAnalyses": 0,
+      "totalSpentUsdc": 0,
+      "transactions": [],
+      "createdAt": "2026-05-14T07:45:29.289Z",
+      "lastLoginAt": "2026-05-14T07:45:29.289Z"
+    },
+    "Google_google_1778744743112": {
+      "userId": "Google_google_1778744743112",
+      "name": "Alex Johnson",
+      "provider": "Google",
+      "circleWalletId": "f1397bac-f401-5d2c-8810-5ea70300be74",
+      "circleWalletAddress": "0xa161b0aa02a3753cebe30be16ffbaf5cff802387",
+      "totalAnalyses": 0,
+      "totalSpentUsdc": 0,
+      "transactions": [],
+      "createdAt": "2026-05-14T07:45:44.984Z",
+      "lastLoginAt": "2026-05-14T07:45:44.984Z"
+    },
+    "Google_google_1778761588755": {
+      "userId": "Google_google_1778761588755",
+      "name": "Alex Johnson",
+      "provider": "Google",
+      "circleWalletId": "3a12399c-9e4a-5ec8-890e-ce6006d3fbc6",
+      "circleWalletAddress": "0x7070a0fa48ad47e60a0c2dd317a759d4a901b857",
+      "totalAnalyses": 0,
+      "totalSpentUsdc": 0,
+      "transactions": [],
+      "createdAt": "2026-05-14T12:26:30.907Z",
+      "lastLoginAt": "2026-05-14T12:26:30.907Z"
+    },
+    "Google_google_1778831391365": {
+      "userId": "Google_google_1778831391365",
+      "name": "Alex Johnson",
+      "provider": "Google",
+      "circleWalletId": "2df40cf9-fc7d-5a00-86ca-99a145ebf22e",
+      "circleWalletAddress": "0xea962ad868625770362ff63339847ec014ccc92a",
+      "totalAnalyses": 2,
+      "totalSpentUsdc": 0,
+      "transactions": [],
+      "createdAt": "2026-05-15T07:49:53.477Z",
+      "lastLoginAt": "2026-05-15T07:49:53.477Z"
+    },
+    "Google_google_1778913812366": {
+      "userId": "Google_google_1778913812366",
+      "name": "Alex Johnson",
+      "provider": "Google",
+      "circleWalletId": "7b1dafa9-a482-52be-8bd1-b383babbe683",
+      "circleWalletAddress": "0x8d0b97167558a10180ed05737d2be14d594c288f",
+      "totalAnalyses": 0,
+      "totalSpentUsdc": 0,
+      "transactions": [],
+      "createdAt": "2026-05-16T06:43:34.287Z",
+      "lastLoginAt": "2026-05-16T06:43:34.287Z"
+    },
+    "Google_google_1778914034240": {
+      "userId": "Google_google_1778914034240",
+      "name": "Alex Johnson",
+      "provider": "Google",
+      "circleWalletId": "4c4f7ec8-3028-5c7c-9d6f-c10f385f55c9",
+      "circleWalletAddress": "0xe2d38ebe93079b77e353d51df5a69d13dd73d7a6",
+      "totalAnalyses": 0,
+      "totalSpentUsdc": 0,
+      "transactions": [],
+      "createdAt": "2026-05-16T06:47:16.190Z",
+      "lastLoginAt": "2026-05-16T06:47:16.190Z"
+    },
+    "Google_google": {
+      "userId": "Google_google",
+      "name": "Alex Johnson",
+      "provider": "Google",
+      "circleWalletId": "4a5cf9f0-f177-5f22-9273-133017b420c6",
+      "circleWalletAddress": "0xcb619cf9b5893a6d8981169526d5bc08b77d1b28",
+      "totalAnalyses": 4,
+      "totalSpentUsdc": 1.5,
+      "transactions": [
+        {
+          "txId": "9160d553-bb2d-5467-a71f-5c9e94680b0c",
+          "amount": 0.5,
+          "platform": "Facebook",
+          "status": "confirmed",
+          "createdAt": "2026-05-16T08:03:37.550Z",
+          "analysisId": "9160d553-bb2d-5467-a71f-5c9e94680b0c",
+          "niche": "i want to start an online tech class where i teach beginners basic coding just to make them develop interest in tech",
+          "goals": [
+            "products",
+            "content"
+          ]
+        },
+        {
+          "txId": "0fca74b3-a82f-5acc-929b-818f61578a65",
+          "amount": 0.5,
+          "platform": "Facebook",
+          "status": "confirmed",
+          "createdAt": "2026-05-16T07:58:43.634Z",
+          "analysisId": "0fca74b3-a82f-5acc-929b-818f61578a65",
+          "niche": "give me some faceless contents ideas for social media marketing for children toys",
+          "goals": [
+            "products",
+            "content"
+          ]
+        },
+        {
+          "txId": "55524671-ab55-5228-9003-405d98ff6a84",
+          "amount": 0.5,
+          "platform": "Facebook",
+          "status": "confirmed",
+          "createdAt": "2026-05-16T07:37:09.733Z"
+        }
+      ],
+      "createdAt": "2026-05-16T06:56:43.409Z",
+      "lastLoginAt": "2026-05-16T07:18:37.744Z",
+      "analyses": [
+        {
+          "id": "9160d553-bb2d-5467-a71f-5c9e94680b0c",
+          "platform": "Facebook",
+          "niche": "i want to start an online tech class where i teach beginners basic coding just to make them develop interest in tech",
+          "goals": [
+            "products",
+            "content"
+          ],
+          "summary": "You're positioned perfectly to capture the massive beginner coding education market on Facebook, where people actively seek accessible learning opportunities. Your challenge is converting interest into paid products while building trust through valuable free content that demonstrates your teaching ability.",
+          "products": [
+            {
+              "title": "21-Day Coding Bootcamp for Complete Beginners",
+              "why": "Perfect for Facebook's older demographic who want structured, comprehensive learning with community support",
+              "price_range": "$197–$497"
+            },
+            {
+              "title": "1-on-1 Tech Career Transition Coaching",
+              "why": "High-value service for career changers who need personalized guidance and accountability",
+              "price_range": "$150–$300"
+            },
+            {
+              "title": "Build Your First Website Masterclass",
+              "why": "Tangible outcome that beginners can show off, creates immediate sense of accomplishment",
+              "price_range": "$97–$197"
+            },
+            {
+              "title": "Tech Fundamentals Toolkit (Templates + Resources)",
+              "why": "Low-barrier entry product with coding templates, cheat sheets, and project starter files",
+              "price_range": "$27–$67"
+            }
+          ],
+          "content": [
+            {
+              "idea": "Code a Simple Calculator in 60 Seconds",
+              "format": "Video",
+              "hook": "Think coding is too hard? Watch me build a working calculator in under a minute"
+            },
+            {
+              "idea": "5 Coding Mistakes That Scream 'Beginner'",
+              "format": "Carousel Post",
+              "hook": "I can spot a coding newbie from a mile away because of these 5 dead giveaways"
+            },
+            {
+              "idea": "Student Success Story Transformation",
+              "format": "Video",
+              "hook": "Sarah went from zero coding knowledge to landing her first tech job in 3 months"
+            },
+            {
+              "idea": "Live Coding Challenge with Viewers",
+              "format": "Facebook Live",
+              "hook": "Going live in 10 minutes to code whatever you throw at me - bring your wildest ideas"
+            }
+          ],
+          "marketing": [
+            {
+              "channel": "Facebook Groups",
+              "tactic": "Join beginner-friendly coding and career change groups, provide helpful answers with soft mentions of your teaching",
+              "expected_reach": "Access to 50K+ highly targeted potential students actively seeking help"
+            },
+            {
+              "channel": "Facebook Ads",
+              "tactic": "Target 25-45 year olds interested in career change, online learning, and tech skills with lead magnet ads",
+              "expected_reach": "2,000-5,000 qualified leads per month with $500-1000 ad spend"
+            },
+            {
+              "channel": "Local Facebook Community Groups",
+              "tactic": "Offer free coding workshops to local community centers and libraries, document and share the sessions",
+              "expected_reach": "Build local credibility reaching 10,000+ community members who share and refer"
+            },
+            {
+              "channel": "Facebook Messenger",
+              "tactic": "Create automated sequences for lead magnets that nurture with coding tips and success stories over 7 days",
+              "expected_reach": "Convert 15-25% of leads into discovery calls or course purchases through personalized follow-up"
+            }
+          ],
+          "charged": "0.50 USDC",
+          "isFreeDemo": false,
+          "createdAt": "2026-05-16T08:03:57.726Z"
+        },
+        {
+          "id": "0fca74b3-a82f-5acc-929b-818f61578a65",
+          "platform": "Facebook",
+          "niche": "give me some faceless contents ideas for social media marketing for children toys",
+          "goals": [
+            "products",
+            "content"
+          ],
+          "summary": "Children's toy faceless content is a goldmine on Facebook where parents actively seek educational and entertaining content for their kids. The key opportunity lies in leveraging unboxing psychology and educational play demonstrations without showing faces.",
+          "products": [
+            {
+              "title": "Sensory Play Kits",
+              "why": "Parents love educational toys that develop motor skills and keep kids engaged",
+              "price_range": "$15–$35"
+            },
+            {
+              "title": "STEM Building Sets",
+              "why": "High-income parents actively seek toys that combine fun with learning",
+              "price_range": "$25–$75"
+            },
+            {
+              "title": "Montessori Wooden Toys",
+              "why": "Growing trend toward screen-free, developmental toys among conscious parents",
+              "price_range": "$20–$60"
+            },
+            {
+              "title": "Custom Activity Books",
+              "why": "Digital downloads with high margins that solve specific parenting challenges",
+              "price_range": "$5–$20"
+            }
+          ],
+          "content": [
+            {
+              "idea": "10-Second Toy Transformations",
+              "format": "Reel",
+              "hook": "This $5 toy just saved my sanity for 2 hours"
+            },
+            {
+              "idea": "Silent ASMR Unboxing",
+              "format": "Video",
+              "hook": "POV: You found the perfect quiet time toy"
+            },
+            {
+              "idea": "Mess-Free Activity Reveals",
+              "format": "Reel",
+              "hook": "No cleanup needed with this genius activity"
+            },
+            {
+              "idea": "Age-Appropriate Toy Tests",
+              "format": "Carousel",
+              "hook": "Testing viral toys so you don't waste money"
+            }
+          ],
+          "marketing": [
+            {
+              "channel": "Facebook Parent Groups",
+              "tactic": "Share educational content with soft product mentions",
+              "expected_reach": "Highly engaged parent communities 500-5000 members"
+            },
+            {
+              "channel": "Facebook Marketplace",
+              "tactic": "List curated toy bundles with detailed educational benefits",
+              "expected_reach": "Local parents searching for specific toys"
+            },
+            {
+              "channel": "Facebook Ads",
+              "tactic": "Target parents of specific age ranges with problem-solving toy content",
+              "expected_reach": "Precise demographic targeting reaching 10K+ relevant parents"
+            },
+            {
+              "channel": "Facebook Events",
+              "tactic": "Host virtual play sessions demonstrating toys",
+              "expected_reach": "Engaged audience of 50-200 parents per event"
+            }
+          ],
+          "charged": "0.50 USDC",
+          "isFreeDemo": false,
+          "createdAt": "2026-05-16T07:58:56.530Z"
+        }
+      ]
+    }
+  }
+}

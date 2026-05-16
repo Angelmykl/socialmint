@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SocialMint Agent — UI Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',system-ui,sans-serif;background:#E8E5E0;padding:2rem 1rem;min-height:100vh;}
+.wrap{display:flex;flex-direction:column;gap:3rem;max-width:1200px;margin:0 auto;}
+.section-label{font-size:11px;font-weight:700;color:#78716C;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;text-align:center;}
+
+:root{
+  --side:#1C1917;--side-h:#292524;--side-b:#2C2825;
+  --side-m:#78716C;--side-t:#F5F5F4;--side-s:#A8A29E;
+  --canvas:#F7F5F2;--surface:#FFFFFF;--surf-alt:#F3F1EE;
+  --border:#E7E4DF;--border-s:#D4CFC8;
+  --ink:#1C1917;--ink-s:#57534E;--ink-m:#A8A29E;
+  --amber:#D97706;--amber-bg:#FEF3C7;--amber-t:#92400E;
+  --green:#16A34A;--green-bg:#F0FDF4;--green-t:#15803D;--green-b:#BBF7D0;
+  --red:#DC2626;--red-bg:#FEF2F2;
+  --blue:#2563EB;--blue-bg:#EFF6FF;--blue-t:#1D4ED8;
+  --purple-bg:#F5F3FF;--purple-t:#6D28D9;
+}
+
+/* ── App shell ── */
+.app{display:flex;height:620px;border-radius:16px;overflow:hidden;box-shadow:0 16px 64px rgba(0,0,0,0.2);}
+
+/* Sidebar */
+.sb{width:220px;flex-shrink:0;background:var(--side);display:flex;flex-direction:column;}
+.sb-logo{padding:18px 16px 14px;border-bottom:1px solid var(--side-b);display:flex;align-items:center;gap:10px;}
+.sb-icon{width:36px;height:36px;border-radius:10px;background:var(--amber);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.sb-name{font-size:14px;font-weight:700;color:var(--side-t);}
+.sb-tag{font-size:10px;color:var(--side-m);}
+.sb-nav{flex:1;padding:12px 8px;overflow-y:auto;}
+.sb-sec{font-size:10px;font-weight:700;color:var(--side-m);padding:4px 12px 8px;text-transform:uppercase;letter-spacing:.08em;}
+.nb{display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;border-radius:8px;border:none;background:transparent;color:var(--side-s);font-size:13px;font-family:inherit;cursor:pointer;margin-bottom:2px;text-align:left;}
+.nb.on{background:var(--side-h);color:var(--side-t);font-weight:600;}
+.nb-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:5px;background:var(--amber);color:#fff;margin-left:auto;}
+.nb-dot{width:4px;height:4px;border-radius:50%;background:var(--amber);margin-left:auto;}
+.sb-div{height:1px;background:var(--side-b);margin:10px 4px;}
+.sb-bottom{padding:10px 8px;border-top:1px solid var(--side-b);}
+.net-pill{background:var(--side-h);border-radius:10px;padding:9px 12px;margin-bottom:8px;}
+.net-row{display:flex;align-items:center;gap:6px;margin-bottom:2px;}
+.net-dot{width:7px;height:7px;border-radius:50%;background:var(--green);}
+.net-lbl{font-size:11px;font-weight:600;color:var(--side-t);}
+.net-sub{font-size:10px;color:var(--side-m);}
+.user-row{display:flex;align-items:center;gap:8px;padding:7px 12px;border-radius:8px;}
+.user-av{width:24px;height:24px;border-radius:50%;background:var(--amber);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;}
+.user-nm{font-size:12px;color:var(--side-s);flex:1;}
+
+/* Main */
+.main{flex:1;display:flex;flex-direction:column;min-width:0;background:var(--canvas);}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;}
+.topbar-title{font-size:15px;font-weight:600;color:var(--ink);}
+.wchip{display:flex;align-items:center;gap:7px;background:var(--surf-alt);border:1px solid var(--border);border-radius:8px;padding:6px 12px;}
+.wdot{width:7px;height:7px;border-radius:50%;background:var(--green);}
+.waddr{font-size:12px;font-family:monospace;color:var(--ink-s);}
+
+/* Metric cards row */
+.metrics{display:flex;gap:10px;padding:16px 20px;flex-shrink:0;background:var(--canvas);}
+.mc{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:14px 16px;flex:1;}
+.mc-lbl{font-size:10px;font-weight:700;color:var(--ink-m);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
+.mc-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;}
+.mc-val{font-size:20px;font-weight:700;color:var(--ink);margin-bottom:2px;}
+.mc-sub{font-size:11px;color:var(--ink-m);}
+
+/* Split content */
+.split{display:flex;flex:1;overflow:hidden;}
+.form-panel{width:300px;flex-shrink:0;border-right:1px solid var(--border);padding:18px 18px;overflow-y:auto;background:var(--surface);}
+.flbl{font-size:11px;font-weight:700;color:var(--ink-m);text-transform:uppercase;letter-spacing:.07em;margin-bottom:14px;}
+.flabel{font-size:12px;font-weight:600;color:var(--ink-s);display:block;margin-bottom:7px;}
+.plats{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px;}
+.pb{padding:5px 10px;border-radius:7px;font-size:11px;font-family:inherit;border:1px solid var(--border);background:var(--surf-alt);color:var(--ink-s);cursor:pointer;display:flex;align-items:center;gap:4px;}
+.pb.on{border:1.5px solid var(--amber);background:var(--amber-bg);color:var(--amber-t);font-weight:600;}
+.ta{width:100%;min-height:78px;border:1px solid var(--border);border-radius:9px;padding:9px 11px;font-size:12px;color:var(--ink-m);font-family:inherit;background:var(--surf-alt);resize:none;margin-bottom:16px;line-height:1.6;}
+.cbrow{display:flex;align-items:flex-start;gap:9px;padding:9px 11px;border-radius:9px;margin-bottom:6px;cursor:pointer;}
+.cbrow.on{border:1.5px solid var(--green);background:var(--green-bg);}
+.cbrow.off{border:1px solid var(--border);background:var(--surf-alt);}
+.cb{width:16px;height:16px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.cb.on{background:var(--green);color:#fff;}
+.cb.off{border:2px solid var(--border-s);}
+.ct{font-size:12px;font-weight:600;}
+.cs{font-size:10px;color:var(--ink-m);}
+.bal-bar{display:flex;justify-content:space-between;align-items:center;background:var(--surf-alt);border:1px solid var(--border);border-radius:9px;padding:9px 12px;margin:14px 0 10px;}
+.bl{font-size:12px;color:var(--ink-s);}
+.bv{font-size:13px;font-weight:700;color:var(--green);}
+.ctabtn{width:100%;padding:11px;background:var(--ink);color:#FAFAF9;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+
+/* Results panel */
+.rp{flex:1;padding:18px 20px;overflow-y:auto;background:var(--canvas);}
+.snapshot{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--amber);border-radius:12px;padding:16px 20px;margin-bottom:14px;}
+.snaplbl{font-size:10px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+.snaptxt{font-size:14px;color:var(--ink);line-height:1.75;}
+.rtabs{display:flex;gap:6px;margin-bottom:12px;}
+.rtab{padding:7px 14px;border-radius:7px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;}
+.rtab.on{border:1.5px solid var(--amber);background:var(--amber-bg);color:var(--amber-t);font-weight:600;}
+.rtab.off{border:1px solid var(--border);background:var(--surface);color:var(--ink-s);}
+.rcard{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:15px 18px;margin-bottom:9px;display:flex;gap:13px;align-items:flex-start;}
+.rnum{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.rtitle{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:5px;}
+.rbadge{font-size:11px;font-weight:600;padding:2px 9px;border-radius:20px;margin-left:8px;}
+.rdesc{font-size:13px;color:var(--ink-s);line-height:1.7;}
+.hook-box{background:var(--surf-alt);border-left:3px solid var(--purple-t);border-radius:0 7px 7px 0;padding:10px 14px;font-size:13px;color:var(--ink-s);line-height:1.65;font-style:italic;margin-top:8px;}
+
+/* Table (history/dashboard) */
+.tcard{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:0 20px 20px;}
+.thead{background:var(--surf-alt);}
+th{padding:10px 18px;text-align:left;font-size:10px;font-weight:700;color:var(--ink-m);letter-spacing:.07em;text-transform:uppercase;}
+td{padding:12px 18px;font-size:13px;border-top:1px solid var(--border);}
+.confirmed{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;background:var(--green-bg);color:var(--green-t);}
+.card-hdr{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border);}
+.card-title{font-size:14px;font-weight:600;color:var(--ink);}
+.card-sub{font-size:12px;color:var(--ink-m);margin-top:2px;}
+.add-btn{padding:8px 14px;background:var(--ink);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;}
+
+/* Login */
+.login-bg{background:var(--canvas);border-radius:16px;padding:3rem 1rem;box-shadow:0 4px 24px rgba(0,0,0,.05);}
+.login-card{max-width:400px;margin:0 auto;background:var(--surface);border-radius:16px;border:1px solid var(--border);padding:2rem;box-shadow:0 4px 24px rgba(0,0,0,.06);}
+.login-logo{display:flex;align-items:center;gap:12px;margin-bottom:1.75rem;}
+.login-icon{width:44px;height:44px;border-radius:12px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:22px;}
+.tab-row{display:flex;background:var(--surf-alt);border-radius:9px;padding:3px;margin-bottom:1.25rem;border:1px solid var(--border);}
+.ttab{flex:1;padding:7px 0;border-radius:7px;border:none;font-size:12px;cursor:pointer;font-family:inherit;}
+.ttab.on{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.07);}
+.ttab.off{background:transparent;color:var(--ink-m);}
+.sbtn{display:flex;align-items:center;gap:12px;padding:11px 14px;border:1px solid var(--border);border-radius:10px;background:var(--surface);width:100%;margin-bottom:9px;font-size:13px;font-weight:500;color:var(--ink);cursor:pointer;font-family:inherit;}
+.si{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0;}
+.login-note{font-size:11px;color:var(--ink-m);margin-top:1.25rem;text-align:center;line-height:1.6;}
+
+/* Mobile */
+.mob-wrap{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;}
+.mob-frame{width:340px;border-radius:16px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.15);background:var(--canvas);}
+.mob-top{background:var(--side);padding:13px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--side-b);}
+.mob-logo-row{display:flex;align-items:center;gap:8px;}
+.mob-icon{width:30px;height:30px;border-radius:8px;background:var(--amber);display:flex;align-items:center;justify-content:center;font-size:15px;}
+.mob-title{font-size:13px;font-weight:700;color:var(--side-t);}
+.mob-ham{width:30px;height:30px;border-radius:7px;background:var(--side-h);border:none;color:var(--side-s);font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.mob-body{padding:14px;}
+.mob-wallet{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
+.mob-bal{font-size:18px;font-weight:700;color:var(--ink);}
+.mob-lbl{font-size:10px;color:var(--ink-m);}
+.mob-addr{font-size:10px;color:var(--ink-m);font-family:monospace;margin-top:1px;}
+.mob-badge{font-size:10px;font-weight:700;padding:4px 9px;border-radius:7px;background:var(--amber-bg);color:var(--amber-t);}
+.mob-form{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px;margin-bottom:12px;}
+.mob-flbl{font-size:10px;font-weight:700;color:var(--ink-m);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;}
+.mob-plats{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;}
+.mob-plat{padding:4px 8px;border-radius:6px;font-size:10px;border:1px solid var(--border);background:var(--surf-alt);color:var(--ink-s);font-family:inherit;}
+.mob-plat.a{border-color:var(--amber)!important;background:var(--amber-bg);color:var(--amber-t);font-weight:600;}
+.mob-ta{width:100%;height:52px;border:1px solid var(--border);border-radius:7px;padding:7px 9px;font-size:11px;color:var(--ink-m);font-family:inherit;background:var(--surf-alt);resize:none;margin-bottom:10px;line-height:1.55;}
+.mob-goals{display:flex;flex-direction:column;gap:5px;margin-bottom:10px;}
+.mob-goal{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;font-size:11px;font-family:inherit;}
+.mob-goal.on{border:1.5px solid var(--green);background:var(--green-bg);color:var(--green-t);font-weight:600;}
+.mob-goal.off{border:1px solid var(--border);background:var(--surf-alt);color:var(--ink-s);}
+.mob-cb{width:14px;height:14px;border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;}
+.mob-cb.on{background:var(--green);color:#fff;}
+.mob-cb.off{border:1.5px solid var(--border-s);}
+.mob-btn{width:100%;padding:10px;background:var(--ink);color:#FAFAF9;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
+.mob-results{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px;}
+.mob-snap{border-left:3px solid var(--amber);padding-left:10px;margin-bottom:10px;}
+.mob-slbl{font-size:9px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;}
+.mob-stxt{font-size:11px;color:var(--ink);line-height:1.65;}
+.mob-rtabs{display:flex;gap:4px;margin-bottom:9px;}
+.mob-rt{padding:5px 10px;border-radius:6px;font-size:10px;font-family:inherit;cursor:pointer;font-weight:500;}
+.mob-rt.on{border:1.5px solid var(--amber);background:var(--amber-bg);color:var(--amber-t);font-weight:600;}
+.mob-rt.off{border:1px solid var(--border);background:var(--surf-alt);color:var(--ink-m);}
+.mob-rcard{background:var(--surf-alt);border-radius:8px;padding:9px 11px;margin-bottom:6px;}
+.mob-rcrow{display:flex;align-items:center;gap:6px;margin-bottom:3px;flex-wrap:wrap;}
+.mob-rnum{width:18px;height:18px;border-radius:4px;background:var(--amber-bg);color:var(--amber-t);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;}
+.mob-rtitle{font-size:11px;font-weight:700;color:var(--ink);}
+.mob-rprice{font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;background:var(--green-bg);color:var(--green-t);}
+.mob-rdesc{font-size:10px;color:var(--ink-s);line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 1. LOGIN SCREEN                                           -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div>
+  <div class="section-label">Login Screen</div>
+  <div class="login-bg">
+    <div class="login-card">
+      <div class="login-logo">
+        <div class="login-icon">💡</div>
+        <div>
+          <div style="font-size:17px;font-weight:700;color:var(--ink);">SocialMint Agent</div>
+          <div style="font-size:12px;color:var(--ink-m);">AI-powered monetization intelligence</div>
+        </div>
+      </div>
+      <div style="font-size:20px;font-weight:700;color:var(--ink);margin-bottom:6px;">Sign in</div>
+      <div style="font-size:13px;color:var(--ink-s);margin-bottom:1.5rem;line-height:1.6;">Your Circle Agent Wallet is created automatically on first sign-in.</div>
+      <div class="tab-row">
+        <button class="ttab on">🔐 Social login</button>
+        <button class="ttab off">👛 Web3 wallet</button>
+      </div>
+      <button class="sbtn"><div class="si" style="background:#FEF2F2;color:#EA4335;">G</div>Continue with Google</button>
+      <button class="sbtn"><div class="si" style="background:#F1F5F9;color:#0F172A;">𝕏</div>Continue with X / Twitter</button>
+      <button class="sbtn"><div class="si" style="background:#EFF6FF;color:#1877F2;">f</div>Continue with Facebook</button>
+      <div class="login-note">Each analysis costs 0.50 USDC · Powered by Circle Agent Stack on Base</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 2. DASHBOARD PAGE                                         -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div>
+  <div class="section-label">Dashboard (Desktop)</div>
+  <div class="app">
+    <div class="sb">
+      <div class="sb-logo"><div class="sb-icon">💡</div><div><div class="sb-name">SocialMint</div><div class="sb-tag">AI Monetization Agent</div></div></div>
+      <div class="sb-nav">
+        <div class="sb-sec">Workspace</div>
+        <button class="nb on">⊞&nbsp;&nbsp;Dashboard<span class="nb-dot"></span></button>
+        <button class="nb">✦&nbsp;&nbsp;New Analysis<span class="nb-badge">0.50 USDC</span></button>
+        <button class="nb">⏱&nbsp;&nbsp;History</button>
+        <button class="nb">◎&nbsp;&nbsp;Wallet</button>
+        <div class="sb-div"></div>
+        <button class="nb">⚙&nbsp;&nbsp;Settings</button>
+      </div>
+      <div class="sb-bottom">
+        <div class="net-pill"><div class="net-row"><div class="net-dot"></div><span class="net-lbl">Base Testnet</span></div><div class="net-sub">Circle Agent Stack live</div></div>
+        <div class="user-row"><div class="user-av">A</div><span class="user-nm">Alex Johnson</span><span style="font-size:12px;color:var(--side-m);">→</span></div>
+      </div>
+    </div>
+    <div class="main">
+      <div class="topbar">
+        <div class="topbar-title">Dashboard</div>
+        <div class="wchip"><div class="wdot"></div><span class="waddr">0xA3F9...B2D1</span></div>
+      </div>
+      <div class="metrics">
+        <div class="mc"><div class="mc-lbl">USDC Balance<div class="mc-icon" style="background:#FEF3C7;">◎</div></div><div class="mc-val">9.50</div><div class="mc-sub">Available to spend</div></div>
+        <div class="mc"><div class="mc-lbl">Total Analyses<div class="mc-icon" style="background:#F0FDF4;">✦</div></div><div class="mc-val">1</div><div class="mc-sub">All time</div></div>
+        <div class="mc"><div class="mc-lbl">Total Spent<div class="mc-icon" style="background:#EFF6FF;">⚡</div></div><div class="mc-val">0.50 USDC</div><div class="mc-sub">Charged to wallet</div></div>
+        <div class="mc"><div class="mc-lbl">Per Call<div class="mc-icon" style="background:#F5F3FF;">↗</div></div><div class="mc-val">0.50 USDC</div><div class="mc-sub">Fixed price</div></div>
+      </div>
+      <div class="tcard">
+        <div class="card-hdr">
+          <div><div class="card-title">Recent analyses</div><div class="card-sub">Latest Circle USDC ledger activity</div></div>
+          <button class="add-btn">+ New Analysis</button>
+        </div>
+        <table style="width:100%;border-collapse:collapse;">
+          <thead class="thead"><tr><th>Analysis</th><th>Source</th><th>Amount</th><th>Status</th><th>Time</th></tr></thead>
+          <tbody>
+            <tr><td style="color:var(--ink);font-weight:500;">⚡ Instagram analysis</td><td style="color:var(--ink-s);">Circle Wallet</td><td style="color:var(--ink);font-weight:600;">−0.50 USDC</td><td><span class="confirmed">Confirmed</span></td><td style="color:var(--ink-m);font-family:monospace;font-size:12px;">09:42 AM</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 3. NEW ANALYSIS PAGE — FORM + RESULTS                     -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div>
+  <div class="section-label">New Analysis — Form &amp; Results (Desktop)</div>
+  <div class="app">
+    <div class="sb">
+      <div class="sb-logo"><div class="sb-icon">💡</div><div><div class="sb-name">SocialMint</div><div class="sb-tag">AI Monetization Agent</div></div></div>
+      <div class="sb-nav">
+        <div class="sb-sec">Workspace</div>
+        <button class="nb">⊞&nbsp;&nbsp;Dashboard</button>
+        <button class="nb on">✦&nbsp;&nbsp;New Analysis<span class="nb-badge">0.50 USDC</span><span class="nb-dot"></span></button>
+        <button class="nb">⏱&nbsp;&nbsp;History</button>
+        <button class="nb">◎&nbsp;&nbsp;Wallet</button>
+        <div class="sb-div"></div>
+        <button class="nb">⚙&nbsp;&nbsp;Settings</button>
+      </div>
+      <div class="sb-bottom">
+        <div class="net-pill"><div class="net-row"><div class="net-dot"></div><span class="net-lbl">Base Testnet</span></div><div class="net-sub">Circle Agent Stack live</div></div>
+        <div class="user-row"><div class="user-av">A</div><span class="user-nm">Alex Johnson</span><span style="font-size:12px;color:var(--side-m);">→</span></div>
+      </div>
+    </div>
+    <div class="main">
+      <div class="topbar">
+        <div class="topbar-title">New Analysis</div>
+        <div class="wchip"><div class="wdot"></div><span class="waddr">0xA3F9...B2D1</span></div>
+      </div>
+      <div class="split" style="flex:1;overflow:hidden;">
+        <!-- Form -->
+        <div class="form-panel">
+          <div class="flbl">Configure analysis</div>
+          <label class="flabel">Platform</label>
+          <div class="plats">
+            <button class="pb on">📸 Instagram</button>
+            <button class="pb">🎵 TikTok</button>
+            <button class="pb">𝕏 X / Twitter</button>
+            <button class="pb">▶ YouTube</button>
+            <button class="pb">💼 LinkedIn</button>
+            <button class="pb">👥 Facebook</button>
+          </div>
+          <label class="flabel">Your niche / audience / handle</label>
+          <textarea class="ta">Fitness page for busy moms in Nigeria, 25–45 year olds, 8k followers, strong Reels engagement, meal prep + workout content...</textarea>
+          <label class="flabel">Discover (pick multiple)</label>
+          <div class="cbrow on"><div class="cb on">✓</div><div><div class="ct" style="color:var(--green-t);">📦 Products to sell</div><div class="cs">Physical, digital, or services</div></div></div>
+          <div class="cbrow on"><div class="cb on">✓</div><div><div class="ct" style="color:var(--green-t);">🎬 Content ideas</div><div class="cs">Videos, posts, hooks</div></div></div>
+          <div class="cbrow off"><div class="cb off"></div><div><div class="ct" style="color:var(--ink);">📣 Marketing channels</div><div class="cs">Where to push harder</div></div></div>
+          <div class="bal-bar"><span class="bl">Wallet balance</span><span class="bv">9.50 USDC</span></div>
+          <button class="ctabtn">⚡ Pay 0.50 USDC &amp; Analyze</button>
+        </div>
+        <!-- Results -->
+        <div class="rp">
+          <div class="snapshot">
+            <div class="snaplbl">✦ Instagram · Opportunity Snapshot</div>
+            <div class="snaptxt">Your fitness niche for Nigerian moms is underserved and highly monetizable — the combination of meal prep and postpartum fitness creates a powerful hook that culturally-aware competitors are missing entirely. You have the audience and the trust; you just need the products.</div>
+          </div>
+          <div class="rtabs">
+            <button class="rtab on">📦 Products</button>
+            <button class="rtab off">🎬 Content</button>
+          </div>
+          <div class="rcard">
+            <div class="rnum" style="background:var(--amber-bg);color:var(--amber-t);">1</div>
+            <div style="flex:1;">
+              <div class="rtitle">30-Day Postpartum Meal Plan<span class="rbadge" style="background:var(--green-bg);color:var(--green-t);">$15–$25</span></div>
+              <div class="rdesc">Nigerian moms are actively searching for culturally-relevant nutrition post-birth. A PDF plan in Pidgin and English fills a gap no competitor has touched — and it can be created in a weekend with content you already have.</div>
+            </div>
+          </div>
+          <div class="rcard">
+            <div class="rnum" style="background:var(--amber-bg);color:var(--amber-t);">2</div>
+            <div style="flex:1;">
+              <div class="rtitle">No-Equipment Home Workout Program<span class="rbadge" style="background:var(--green-bg);color:var(--green-t);">$20–$40</span></div>
+              <div class="rdesc">15-minute workout videos designed for moms who can't leave the house. Bundle into a 4-week plan to boost perceived value. Zero production cost beyond your phone camera.</div>
+            </div>
+          </div>
+          <div class="rcard">
+            <div class="rnum" style="background:var(--amber-bg);color:var(--amber-t);">3</div>
+            <div style="flex:1;">
+              <div class="rtitle">1-on-1 Coaching via WhatsApp<span class="rbadge" style="background:var(--green-bg);color:var(--green-t);">$50–$100/mo</span></div>
+              <div class="rdesc">Your 8k engaged followers means at least 1–2% are ready to pay for personalised attention. Offer a free 20-minute discovery call — convert 5 clients for ₦200k+ in monthly recurring revenue.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 4. CONTENT TAB RESULTS                                    -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div>
+  <div class="section-label">Content Ideas Tab</div>
+  <div class="app">
+    <div class="sb">
+      <div class="sb-logo"><div class="sb-icon">💡</div><div><div class="sb-name">SocialMint</div><div class="sb-tag">AI Monetization Agent</div></div></div>
+      <div class="sb-nav">
+        <div class="sb-sec">Workspace</div>
+        <button class="nb">⊞&nbsp;&nbsp;Dashboard</button>
+        <button class="nb on">✦&nbsp;&nbsp;New Analysis<span class="nb-badge">0.50 USDC</span><span class="nb-dot"></span></button>
+        <button class="nb">⏱&nbsp;&nbsp;History</button>
+        <button class="nb">◎&nbsp;&nbsp;Wallet</button>
+        <div class="sb-div"></div>
+        <button class="nb">⚙&nbsp;&nbsp;Settings</button>
+      </div>
+      <div class="sb-bottom">
+        <div class="net-pill"><div class="net-row"><div class="net-dot"></div><span class="net-lbl">Base Testnet</span></div><div class="net-sub">Circle Agent Stack live</div></div>
+        <div class="user-row"><div class="user-av">A</div><span class="user-nm">Alex Johnson</span><span style="font-size:12px;color:var(--side-m);">→</span></div>
+      </div>
+    </div>
+    <div class="main">
+      <div class="topbar">
+        <div class="topbar-title">New Analysis</div>
+        <div class="wchip"><div class="wdot"></div><span class="waddr">0xA3F9...B2D1</span></div>
+      </div>
+      <div class="split" style="flex:1;overflow:hidden;">
+        <div class="form-panel" style="display:flex;align-items:center;justify-content:center;color:var(--ink-m);font-size:13px;text-align:center;padding:32px;">
+          <div>
+            <div style="font-size:32px;margin-bottom:12px;">✦</div>
+            <div style="font-weight:600;color:var(--ink-s);margin-bottom:6px;">Analysis complete</div>
+            <div style="font-size:12px;line-height:1.65;">Run another analysis or<br/>explore your results →</div>
+          </div>
+        </div>
+        <div class="rp">
+          <div class="snapshot">
+            <div class="snaplbl">✦ TikTok · Opportunity Snapshot</div>
+            <div class="snaptxt">Your short-form content is positioned perfectly for virality — the key is leaning into relatable "before and after" formats that TikTok's algorithm disproportionately rewards in the health and parenting verticals.</div>
+          </div>
+          <div class="rtabs">
+            <button class="rtab off">📦 Products</button>
+            <button class="rtab on">🎬 Content</button>
+            <button class="rtab off">📣 Marketing</button>
+          </div>
+          <div class="rcard">
+            <div class="rnum" style="background:var(--purple-bg);color:var(--purple-t);">1</div>
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
+                <span class="rtitle" style="margin-bottom:0;">What I Eat in a Day — Nigerian Mom Edition</span>
+                <span class="rbadge" style="background:var(--purple-bg);color:var(--purple-t);margin-left:0;">Reel / TikTok</span>
+              </div>
+              <div class="hook-box">"Nobody shows what a healthy Nigerian mom actually eats — so I'm going first"</div>
+            </div>
+          </div>
+          <div class="rcard">
+            <div class="rnum" style="background:var(--purple-bg);color:var(--purple-t);">2</div>
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
+                <span class="rtitle" style="margin-bottom:0;">5-Minute Postpartum Workout</span>
+                <span class="rbadge" style="background:var(--purple-bg);color:var(--purple-t);margin-left:0;">Short</span>
+              </div>
+              <div class="hook-box">"The workout I wish someone showed me 3 days after delivery"</div>
+            </div>
+          </div>
+          <div class="rcard">
+            <div class="rnum" style="background:var(--purple-bg);color:var(--purple-t);">3</div>
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
+                <span class="rtitle" style="margin-bottom:0;">Meal Prep Sunday — ₦5,000 Budget</span>
+                <span class="rbadge" style="background:var(--purple-bg);color:var(--purple-t);margin-left:0;">Series</span>
+              </div>
+              <div class="hook-box">"Feed your family healthy all week for less than the cost of one restaurant meal"</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 5. MOBILE VIEWS                                           -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div>
+  <div class="section-label">Mobile Views — Responsive</div>
+  <div class="mob-wrap">
+
+    <!-- Mobile Form -->
+    <div>
+      <div style="font-size:10px;font-weight:700;color:var(--ink-m);text-transform:uppercase;letter-spacing:.08em;text-align:center;margin-bottom:8px;">Analyze · Form</div>
+      <div class="mob-frame">
+        <div class="mob-top">
+          <div class="mob-logo-row"><div class="mob-icon">💡</div><span class="mob-title">SocialMint Agent</span></div>
+          <button class="mob-ham">☰</button>
+        </div>
+        <div class="mob-body">
+          <div class="mob-wallet">
+            <div>
+              <div class="mob-lbl">USDC Balance</div>
+              <div class="mob-bal">9.50 <span style="font-size:13px;font-weight:400;color:var(--ink-m);">USDC</span></div>
+              <div class="mob-addr">0xA3F9...B2D1 · Base</div>
+            </div>
+            <div class="mob-badge">0.50 USDC / call</div>
+          </div>
+          <div class="mob-form">
+            <div class="mob-flbl">Configure analysis</div>
+            <div style="font-size:11px;font-weight:600;color:var(--ink-s);margin-bottom:6px;">Platform</div>
+            <div class="mob-plats">
+              <button class="mob-plat a">📸 Instagram</button>
+              <button class="mob-plat">🎵 TikTok</button>
+              <button class="mob-plat">𝕏 X / Twitter</button>
+              <button class="mob-plat">▶ YouTube</button>
+              <button class="mob-plat">💼 LinkedIn</button>
+              <button class="mob-plat">👥 Facebook</button>
+            </div>
+            <div style="font-size:11px;font-weight:600;color:var(--ink-s);margin-bottom:6px;">Your niche / audience</div>
+            <textarea class="mob-ta">Fitness page for busy moms in Nigeria, 8k followers, Reels focused...</textarea>
+            <div class="mob-goals">
+              <div class="mob-goal on"><div class="mob-cb on">✓</div>📦 Products to sell</div>
+              <div class="mob-goal on"><div class="mob-cb on">✓</div>🎬 Content ideas</div>
+              <div class="mob-goal off"><div class="mob-cb off"></div>📣 Marketing channels</div>
+            </div>
+            <button class="mob-btn">⚡ Pay 0.50 USDC &amp; Analyze</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Results -->
+    <div>
+      <div style="font-size:10px;font-weight:700;color:var(--ink-m);text-transform:uppercase;letter-spacing:.08em;text-align:center;margin-bottom:8px;">Analyze · Results</div>
+      <div class="mob-frame">
+        <div class="mob-top">
+          <div class="mob-logo-row"><div class="mob-icon">💡</div><span class="mob-title">SocialMint Agent</span></div>
+          <button class="mob-ham">☰</button>
+        </div>
+        <div class="mob-body">
+          <div class="mob-results">
+            <div class="mob-snap">
+              <div class="mob-slbl">✦ Instagram · Opportunity Snapshot</div>
+              <div class="mob-stxt">Your fitness niche for Nigerian moms is underserved — meal prep meets postpartum wellness is an untapped gap your competitors are completely missing.</div>
+            </div>
+            <div class="mob-rtabs">
+              <button class="mob-rt on">📦 Products</button>
+              <button class="mob-rt off">🎬 Content</button>
+              <button class="mob-rt off">📣 Marketing</button>
+            </div>
+            <div class="mob-rcard">
+              <div class="mob-rcrow"><div class="mob-rnum">1</div><span class="mob-rtitle">30-Day Postpartum Meal Plan</span><span class="mob-rprice">$15–$25</span></div>
+              <div class="mob-rdesc">Culturally-relevant nutrition plan in Pidgin + English. A gap no competitor has filled — create it in a weekend.</div>
+            </div>
+            <div class="mob-rcard">
+              <div class="mob-rcrow"><div class="mob-rnum">2</div><span class="mob-rtitle">Home Workout Program</span><span class="mob-rprice">$20–$40</span></div>
+              <div class="mob-rdesc">No-equipment 15-min videos for moms at home. Bundle as a 4-week plan to boost perceived value.</div>
+            </div>
+            <div class="mob-rcard">
+              <div class="mob-rcrow"><div class="mob-rnum">3</div><span class="mob-rtitle">1-on-1 Coaching</span><span class="mob-rprice">$50–$100/mo</span></div>
+              <div class="mob-rdesc">Convert 5 clients from 8k followers — ₦200k+ monthly via WhatsApp discovery calls.</div>
+            </div>
+            <div class="mob-rcard">
+              <div class="mob-rcrow"><div class="mob-rnum">4</div><span class="mob-rtitle">Cooking Masterclass Bundle</span><span class="mob-rprice">$30–$60</span></div>
+              <div class="mob-rdesc">4-video series on Nigerian healthy cooking — pair with the meal plan for a premium bundle upsell.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile History -->
+    <div>
+      <div style="font-size:10px;font-weight:700;color:var(--ink-m);text-transform:uppercase;letter-spacing:.08em;text-align:center;margin-bottom:8px;">History Page</div>
+      <div class="mob-frame">
+        <div class="mob-top">
+          <div class="mob-logo-row"><div class="mob-icon">💡</div><span class="mob-title">SocialMint Agent</span></div>
+          <button class="mob-ham">☰</button>
+        </div>
+        <div class="mob-body">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+            <div style="padding:12px 14px;border-bottom:1px solid var(--border);">
+              <div style="font-size:13px;font-weight:600;color:var(--ink);">Transaction history</div>
+              <div style="font-size:11px;color:var(--ink-m);margin-top:2px;">Circle USDC ledger activity</div>
+            </div>
+            <div style="padding:0 14px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--border);">
+                <div><div style="font-size:12px;font-weight:500;color:var(--ink);">⚡ Instagram analysis</div><div style="font-size:10px;color:var(--ink-m);font-family:monospace;margin-top:1px;">TX-M3X9P · 09:42 AM</div></div>
+                <div style="display:flex;align-items:center;gap:7px;"><span class="confirmed" style="font-size:9px;">Confirmed</span><span style="font-size:12px;font-weight:700;color:var(--red);">−0.50</span></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--border);">
+                <div><div style="font-size:12px;font-weight:500;color:var(--ink);">⚡ TikTok analysis</div><div style="font-size:10px;color:var(--ink-m);font-family:monospace;margin-top:1px;">TX-K7L2N · 09:38 AM</div></div>
+                <div style="display:flex;align-items:center;gap:7px;"><span class="confirmed" style="font-size:9px;">Confirmed</span><span style="font-size:12px;font-weight:700;color:var(--red);">−0.50</span></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;">
+                <div><div style="font-size:12px;font-weight:500;color:var(--ink);">⚡ YouTube analysis</div><div style="font-size:10px;color:var(--ink-m);font-family:monospace;margin-top:1px;">TX-R4Q8Z · 09:21 AM</div></div>
+                <div style="display:flex;align-items:center;gap:7px;"><span class="confirmed" style="font-size:9px;">Confirmed</span><span style="font-size:12px;font-weight:700;color:var(--red);">−0.50</span></div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
+            <div style="flex:1;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:11px 13px;min-width:120px;">
+              <div style="font-size:10px;font-weight:700;color:var(--ink-m);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;">Total Spent</div>
+              <div style="font-size:17px;font-weight:700;color:var(--ink);">1.50 USDC</div>
+              <div style="font-size:10px;color:var(--ink-m);">3 analyses</div>
+            </div>
+            <div style="flex:1;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:11px 13px;min-width:120px;">
+              <div style="font-size:10px;font-weight:700;color:var(--ink-m);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;">Balance</div>
+              <div style="font-size:17px;font-weight:700;color:var(--green);">8.50 USDC</div>
+              <div style="font-size:10px;color:var(--ink-m);">17 calls left</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- /wrap -->
+</body>
+</html>

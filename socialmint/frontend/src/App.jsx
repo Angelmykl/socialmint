@@ -169,7 +169,7 @@ function LoginScreen({ onLogin }) {
       const res  = await fetch(`${API}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: `${provider}_${id}`, name, provider }),
+        body: JSON.stringify({ userId: `${provider}_${id}_${Date.now()}`, name, provider }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Login failed");
@@ -354,7 +354,7 @@ function Dashboard({ user, onLogout }) {
   const [totalAnalyses, setTotalAnalyses] = useState(user.totalAnalyses || 0);
   const [mobileNav, setMobileNav] = useState(false);
   const [isMobile, setIsMobile]   = useState(window.innerWidth < 768);
-  const [freeRunsUsed, setFreeRunsUsed] = useState(() => parseInt(localStorage.getItem("sm_free_runs") || "0"));
+  const [freeRunsUsed, setFreeRunsUsed] = useState(user.freeRunsUsed || 0);
   const FREE_LIMIT = 3;
 
   const DEMO_PROMPTS = [
@@ -886,11 +886,10 @@ function Dashboard({ user, onLogout }) {
     setNiche(prompt.niche);
     setError(""); setLoading(true); setResult(null);
 
-    // Track free run usage
+    // Track free run — server handles the real enforcement
     if (isFree) {
-      const newCount = freeRunsUsed + 1;
-      setFreeRunsUsed(newCount);
-      localStorage.setItem("sm_free_runs", String(newCount));
+      setFreeRunsUsed(n => n + 1);
+      // No localStorage — tracked in MongoDB now
     } else {
       // Deduct balance optimistically for paid run
       setBalance(b => parseFloat((b - COST).toFixed(2)));
@@ -1430,7 +1429,10 @@ export default function App() {
   const saved = localStorage.getItem("sm_user");
   const [user, setUser] = useState(saved ? JSON.parse(saved) : null);
 
-  function handleLogin(u) { localStorage.setItem("sm_user", JSON.stringify(u)); setUser(u); }
+function handleLogin(u) {
+    localStorage.setItem("sm_user", JSON.stringify(u));
+    setUser(u);
+  }
   function handleLogout() { localStorage.removeItem("sm_token"); localStorage.removeItem("sm_user"); setUser(null); }
 
   return user ? <Dashboard user={user} onLogout={handleLogout} /> : <LoginScreen onLogin={handleLogin} />;

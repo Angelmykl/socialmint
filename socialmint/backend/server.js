@@ -25,7 +25,6 @@ const {
 } = require("./circle");
 
 const app = express();
-app.set("trust proxy", 1);
 
 // ── Smart Database Layer ──────────────────────────────────────────────────────
 // Automatically picks MongoDB or local file depending on environment
@@ -146,7 +145,9 @@ app.post("/api/auth/login", loginLimiter, async (req, res) => {
           userId: user.userId, name: user.name, provider: user.provider,
           circleWalletId: user.circleWalletId,
           circleWalletAddress: user.circleWalletAddress,
-          totalAnalyses: user.totalAnalyses || 0, balance,
+          totalAnalyses: user.totalAnalyses || 0,
+          freeRunsUsed: user.freeRunsUsed || 0,
+          balance,
         },
       });
     }
@@ -166,6 +167,7 @@ app.post("/api/auth/login", loginLimiter, async (req, res) => {
       circleWalletId: wallet.id,
       circleWalletAddress: wallet.address,
       totalAnalyses: 0, totalSpentUsdc: 0,
+      freeRunsUsed: 0,
       transactions: [], analyses: [],
       createdAt: new Date(), lastLoginAt: new Date(),
     };
@@ -184,7 +186,9 @@ app.post("/api/auth/login", loginLimiter, async (req, res) => {
         userId, name, provider,
         circleWalletId: wallet.id,
         circleWalletAddress: wallet.address,
-        totalAnalyses: 0, balance, isNew: true,
+        totalAnalyses: 0,
+        freeRunsUsed: 0,
+        balance, isNew: true,
       },
     });
   } catch (err) {
@@ -247,7 +251,22 @@ app.post("/api/analyze", requireAuth, analysisLimiter, async (req, res) => {
       createdAt: new Date().toISOString(),
     });
   } else {
-    console.log(`🎁 Free demo: ${platform} — ${userId}`);
+    // ── Enforce free run limit server-side ──────────────────────────────────
+    const user = await getUser(userId);
+    const freeRunsUsed = user.freeRunsUsed || 0;
+    const FREE_LIMIT = 3;
+
+    if (freeRunsUsed >= FREE_LIMIT) {
+      return res.status(402).json({
+        error: "Free demos used up. Please top up your wallet to continue.",
+        code: "FREE_LIMIT_REACHED",
+        freeRunsUsed,
+      });
+    }
+
+    // Increment free runs counter in MongoDB
+    await updateUserField(userId, { freeRunsUsed: freeRunsUsed + 1 });
+    console.log(`🎁 Free demo ${freeRunsUsed + 1}/${FREE_LIMIT}: ${platform} — ${userId}`);
   }
 
   // Call Anthropic

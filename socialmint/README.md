@@ -1,184 +1,192 @@
-# SocialMint Agent 💡
+# SocialMint Agent 🌿
 
-> AI-powered social media monetization intelligence — charged per-call in USDC via Circle
+**AI-powered social media monetization intelligence, built on Circle's Agent Stack.**
 
----
-
-## What you need to go live (full checklist)
-
-### Accounts to create (all free)
-- [ ] **Circle** → https://console.circle.com (free, no credit card)
-- [ ] **MongoDB Atlas** → https://mongodb.com/atlas (free 512MB tier)
-- [ ] **Anthropic** → https://console.anthropic.com (paid per use — ~$0.003/call)
-- [ ] **Railway** → https://railway.app (deploy backend, free tier available)
-- [ ] **Vercel** → https://vercel.com (deploy frontend, completely free)
-
-That's it. 5 accounts. No server to buy, no DevOps knowledge needed.
+Live at **[socialmint.org](https://socialmint.org)**
 
 ---
 
-## Project structure
+## What it does
+
+SocialMint Agent analyzes a creator or business owner's social media presence and returns specific, actionable monetization intelligence — products to sell, content ideas that earn, and marketing channels to push harder on.
+
+Every analysis costs **0.50 USDC**, charged automatically from the user's Circle Programmable Wallet. No credit cards. No subscriptions. Pay per insight.
+
+---
+
+## Built on Circle Agent Stack
+
+SocialMint is a live demonstration of **agentic economic activity** — the AI agent autonomously manages wallets, executes USDC micropayments, and delivers economic value, all without manual approval at any step.
+
+### The agentic loop on every analysis:
 
 ```
-socialmint/
-├── backend/                  ← Node.js + Express API
-│   ├── server.js             ← All routes (login, analyze, webhook)
-│   ├── circle.js             ← Circle USDC payment functions
-│   ├── setup.js              ← Run once to create your treasury wallet
-│   ├── models/
-│   │   └── User.js           ← MongoDB user schema (permanent storage)
-│   ├── middleware/
-│   │   ├── auth.js           ← JWT wristband checker
-│   │   └── rateLimiter.js    ← Abuse protection (bouncer)
-│   ├── package.json
-│   └── .env.example          ← Copy to .env and fill in
-│
-├── frontend/                 ← React + Vite app
-│   ├── src/
-│   │   ├── main.jsx          ← Entry point
-│   │   └── App.jsx           ← Full UI (login, wallet, analyze, results)
-│   ├── index.html
-│   ├── vite.config.js
-│   ├── package.json
-│   └── .env.example          ← Copy to .env and fill in
-│
-├── .gitignore
-└── README.md
+User signs in
+    ↓
+Circle Programmable Wallet created automatically (Base network)
+    ↓
+User submits niche + goals
+    ↓
+Agent checks wallet balance via Circle API
+    ↓
+Agent charges 0.50 USDC → treasury wallet (Circle transfer API)
+    ↓
+Agent calls Claude (Anthropic) with monetization prompt
+    ↓
+AI returns products, content hooks, marketing strategies
+    ↓
+Results saved to MongoDB · Transaction logged to Circle console
 ```
+
+No human approves any step. The agent holds funds, makes payment decisions, and settles on-chain in seconds.
 
 ---
 
-## Step-by-step launch guide
+## Circle Integration
 
-### Step 1 — Clone and install
+| Feature | Implementation |
+|---|---|
+| **Wallet creation** | `POST /v1/w3s/developer/wallets` — one wallet per user, created on signup |
+| **Balance checks** | `GET /v1/w3s/wallets/{id}/balances` — checked before every analysis |
+| **USDC transfers** | `POST /v1/w3s/developer/transactions/transfer` — 0.50 USDC per call |
+| **Network** | Base Sepolia (testnet) · Base Mainnet (production-ready) |
+| **Wallet type** | SCA (Smart Contract Account) via Developer-Controlled Wallets |
+| **Treasury** | Developer-controlled treasury wallet receives all fees |
+| **Webhooks** | Configured for `transfers.complete` and `wallets.created` |
+
+All API activity is visible and verifiable in the Circle Developer Console under this account's Wallet Set.
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Frontend** | React + Vite, deployed on Vercel |
+| **Backend** | Node.js + Express, deployed on Railway |
+| **Auth** | Clerk (Google OAuth, Email OTP, Web3 wallets) |
+| **Payments** | Circle Programmable Wallets API |
+| **AI** | Anthropic Claude Sonnet |
+| **Database** | MongoDB Atlas (local db.json fallback for dev) |
+| **Domain** | socialmint.org |
+
+---
+
+## Key Features
+
+### 🔐 Real social authentication
+Clerk handles Google OAuth, email OTP, MetaMask, and Coinbase Wallet. Every user gets a Circle USDC wallet created automatically on first sign-in.
+
+### ◎ Per-call USDC micropayments
+0.50 USDC charged per analysis via Circle's transfer API. No subscription model. No friction. The agent handles payment autonomously before calling the AI.
+
+### ✦ AI monetization intelligence
+Claude analyzes the user's niche, audience, and goals and returns:
+- **Products to sell** — physical, digital, or services with price ranges
+- **Content ideas** — hooks, formats, and viral angles
+- **Marketing channels** — where to push harder and what tactic to use
+
+### 📋 12 ready-made prompts
+Pre-built prompts across Nigerian/African niches, business owners, and creators. First 3 are free — tracked server-side in MongoDB (not localStorage — cannot be bypassed).
+
+### 🔒 Server-side free run enforcement
+Free demo limit enforced at the API level. Clearing browser storage, incognito mode, or different devices cannot reset it. Limits are stored per user in MongoDB.
+
+### 📊 Full analysis history
+Every paid and free analysis saved permanently. Users can view full results anytime, re-run with one click, or build on previous insights.
+
+---
+
+## Security
+
+- JWT authentication on all API routes
+- Free run limits enforced server-side (MongoDB, not browser)
+- Circle Entity Secret registered and encrypted per API spec
+- Rate limiting on all endpoints
+- CORS restricted to production domain
+- MongoDB Atlas with IP allowlist
+
+---
+
+## Running locally
 
 ```bash
-git clone https://github.com/yourusername/socialmint.git
+# Clone
+git clone https://github.com/Angelmykl/socialmint
 cd socialmint
 
-# Install backend dependencies
-cd backend && npm install
-
-# Install frontend dependencies
-cd ../frontend && npm install
-```
-
-### Step 2 — Set up MongoDB (free)
-
-1. Go to https://mongodb.com/atlas → click "Try Free"
-2. Sign up → create a project → create a cluster → choose **Free (M0)**
-3. Create a database user (save the username + password)
-4. Click Connect → Connect your application → copy the connection string
-5. Replace `<password>` in the string with your password
-
-### Step 3 — Set up Circle (free)
-
-1. Go to https://console.circle.com → sign up free
-2. Create an app → go to **Developer → API Keys** → create a key → copy it
-3. Go to **Wallets → Wallet Sets** → create one → copy the ID
-
-### Step 4 — Configure backend
-
-```bash
+# Backend
 cd backend
 cp .env.example .env
-# Open .env and fill in:
-#   CIRCLE_API_KEY
-#   CIRCLE_WALLET_SET_ID
-#   MONGODB_URI
-#   ANTHROPIC_API_KEY
-#   JWT_SECRET (generate below)
+# Fill in your keys
+npm install
+node server.js
+
+# Frontend (new terminal)
+cd ../frontend
+npm install
+npm run dev
 ```
 
-Generate your JWT secret:
-```bash
-node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+### Environment variables (backend)
+
+```env
+CIRCLE_API_KEY=TEST_API_KEY:your-key-id:your-key-secret
+ENTITY_SECRET=your-64-char-hex
+CIRCLE_WALLET_SET_ID=your-wallet-set-id
+CIRCLE_TREASURY_WALLET_ID=your-treasury-wallet-id
+CIRCLE_TREASURY_ADDRESS=0xYourTreasuryAddress
+ANTHROPIC_API_KEY=sk-ant-your-key
+MONGODB_URI=mongodb+srv://...
+JWT_SECRET=your-secret
+NODE_ENV=development
+FRONTEND_URL=http://localhost:5173
 ```
 
-### Step 5 — Create your treasury wallet (ONE TIME)
+### Environment variables (frontend)
 
-```bash
-cd backend
-npm run setup
-# Copy the output values into your .env file
-# This is the wallet that collects all 0.50 USDC fees
+```env
+VITE_API_URL=http://localhost:4000
+VITE_CLERK_PUBLISHABLE_KEY=pk_test_your-key
 ```
-
-### Step 6 — Run locally
-
-```bash
-# Terminal 1 — backend
-cd backend && npm run dev
-
-# Terminal 2 — frontend
-cd frontend && npm run dev
-```
-
-Open http://localhost:5173 — the app is running!
 
 ---
 
-### Step 7 — Deploy backend to Railway
+## Deployment
 
-1. Go to https://railway.app → sign up with GitHub
-2. Click **New Project → Deploy from GitHub repo**
-3. Select your repo → select the **backend** folder as root
-4. Go to **Variables** → add all your `.env` values
-5. Railway gives you a URL like `https://socialmint-backend.railway.app`
-6. Set up Circle webhook: console.circle.com → Notifications → add `https://your-backend.railway.app/api/webhooks/circle`
-
-### Step 8 — Deploy frontend to Vercel
-
-1. Go to https://vercel.com → sign up with GitHub
-2. Click **New Project → Import** your repo
-3. Set **Root Directory** to `frontend`
-4. Add environment variable: `VITE_API_URL` = your Railway backend URL
-5. Click Deploy → Vercel gives you a live URL
-
-**Your app is live.** Share the Vercel URL with users.
+| Service | Purpose |
+|---|---|
+| **Railway** | Backend — auto-deploys on GitHub push |
+| **Vercel** | Frontend — auto-deploys on GitHub push |
+| **MongoDB Atlas** | Database — persistent user data and analysis history |
+| **Porkbun** | Domain registrar for socialmint.org |
 
 ---
 
-## How money flows (no smart contract needed)
+## Circle Grant Category
 
-```
-User logs in (Google / Twitter / Wallet)
-        ↓
-Backend calls Circle API → creates USDC wallet for user
-        ↓
-User funds their wallet (sends USDC to their wallet address)
-        ↓
-User clicks "Pay 0.50 USDC & Analyze"
-        ↓
-Backend calls Circle API → transfers 0.50 USDC:
-    user wallet ──────────────────────▶ your treasury wallet
-        ↓
-Anthropic API called → analysis generated
-        ↓
-Result returned to user
-```
+**Primary: Agentic Economic Activity**
 
-Every transaction is logged in your Circle developer dashboard.
+SocialMint Agent demonstrates the full Agent Stack vision at the consumer layer:
+- AI agent autonomously provisions Circle wallets on user signup
+- Agent checks balances, executes USDC transfers, and settles on Base
+- No manual approval at any step of the payment flow
+- Targeting emerging market creators (Nigeria/Africa) who have no existing crypto infrastructure
+
+**Secondary: Peer-to-peer payments**
+
+Each analysis is a direct micropayment from user wallet to treasury wallet, settled on Base in seconds.
 
 ---
 
-## Revenue projection
+## Live
 
-| Daily calls | Monthly revenue | Monthly costs | Monthly profit |
-|---|---|---|---|
-| 50 | $750 | ~$5 (API) | ~$745 |
-| 500 | $7,500 | ~$50 (API) | ~$7,450 |
-| 5,000 | $75,000 | ~$500 (API) | ~$74,500 |
+| | |
+|---|---|
+| **App** | https://socialmint.org |
+| **API health** | https://socialmint-production.up.railway.app/api/health |
+| **GitHub** | https://github.com/Angelmykl/socialmint |
 
 ---
 
-## Grant submission to Circle
-
-Apply at: https://circle.com/grant
-
-Key things to mention:
-- Built on Circle Programmable Wallets API
-- USDC on Base (with Arc roadmap when mainnet launches)
-- Real per-call micropayments using Circle Agent Stack model
-- Targeting emerging markets (Nigeria, Africa, LATAM) — underserved audience
-- Trackable via your Circle developer dashboard (wallet creations + transfer volume)
+Built with Circle Agent Stack · Anthropic Claude · MongoDB · Deployed on Railway + Vercel

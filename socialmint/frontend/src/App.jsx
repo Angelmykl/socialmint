@@ -240,8 +240,7 @@ function LoginScreen({ onLogin }) {
           </div>
         )}
 
-        {/* Wrapper clips the white Clerk footer */}
-        <div style={{ width: "100%", borderRadius: 16, overflow: "hidden", border: "1px solid rgba(255,255,255,0.1)" }}>
+        <div style={{ width: "100%" }}>
           <SignIn
             routing="hash"
             forceRedirectUrl={window.location.origin}
@@ -250,36 +249,53 @@ function LoginScreen({ onLogin }) {
                 rootBox: { width: "100%" },
                 card: {
                   background: "rgba(255,255,255,0.05)",
-                  border: "none", borderRadius: "0",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: "16px",
                   backdropFilter: "blur(20px)",
                   margin: "0", boxShadow: "none", width: "100%",
                 },
                 headerTitle: { color: "#ffffff" },
-                headerSubtitle: { color: C.sideSubtext },
+                headerSubtitle: { color: "rgba(255,255,255,0.5)" },
                 socialButtonsBlockButton: {
-                  background: "rgba(255,255,255,0.06)",
-                  border: "1px solid rgba(255,255,255,0.1)",
+                  background: "rgba(255,255,255,0.08)",
+                  border: "1px solid rgba(255,255,255,0.15)",
                   color: "#ffffff",
                 },
-                formFieldLabel: { color: C.sideSubtext },
+                socialButtonsBlockButtonText: { color: "#ffffff", fontWeight: 500 },
+                dividerLine: { background: "rgba(255,255,255,0.1)" },
+                dividerText: { color: "rgba(255,255,255,0.4)" },
+                formFieldLabel: { color: "#ffffff" },
                 formFieldInput: {
-                  background: "rgba(255,255,255,0.06)",
-                  border: "1px solid rgba(255,255,255,0.1)",
+                  background: "rgba(255,255,255,0.08)",
+                  border: "1px solid rgba(255,255,255,0.15)",
                   color: "#ffffff",
                 },
-                footer: { background: "rgba(0,0,0,0.3)", borderTop: "1px solid rgba(255,255,255,0.08)" },
-                footerActionText: { color: C.sideSubtext },
+                formButtonPrimary: {
+                  background: `linear-gradient(135deg, ${C.mint}, #0EA5E9)`,
+                  border: "none",
+                },
+                footer: {
+                  background: "rgba(0,0,0,0.25)",
+                  borderTop: "1px solid rgba(255,255,255,0.08)",
+                  borderRadius: "0 0 16px 16px",
+                },
+                footerActionText: { color: "rgba(255,255,255,0.5)" },
                 footerActionLink: { color: C.mint },
+                identityPreviewText: { color: "#ffffff" },
+                identityPreviewEditButton: { color: C.mint },
               },
             }}
           />
         </div>
 
-        <div style={{ fontSize: 11, color: C.sideMuted, marginTop: "1rem", textAlign: "center", lineHeight: 1.6 }}>
+        <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginTop: "1rem", textAlign: "center", lineHeight: 1.6 }}>
           Powered by Circle Agent Stack · USDC on Base
         </div>
       </div>
-      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+      <style>{`
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .cl-formFieldInput::placeholder { color: rgba(255,255,255,0.35) !important; }
+      `}</style>
     </div>
   );
 }
@@ -1453,8 +1469,45 @@ function Dashboard({ user, onLogout }) {
 
 export default function App() {
   const { signOut } = useClerk();
+  const { isLoaded } = useUser();
   const saved = localStorage.getItem("sm_user");
   const [user, setUser] = useState(saved ? JSON.parse(saved) : null);
+  const [transitioning, setTransitioning] = useState(false);
+
+  // Show loading while Clerk initializes
+  if (!isLoaded) {
+    return (
+      <div style={{
+        minHeight: "100vh",
+        background: `linear-gradient(135deg, ${C.side} 0%, #0D1E3D 100%)`,
+        display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center", gap: 16,
+        fontFamily: "'DM Sans', system-ui, sans-serif",
+      }}>
+        <BrandLogo size={56} />
+        <div style={{ color: "#fff", fontSize: 15, fontWeight: 600, marginTop: 8 }}>SocialMint Agent</div>
+        <Spinner size={24} />
+        <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+      </div>
+    );
+  }
+
+  if (transitioning) {
+    return (
+      <div style={{
+        minHeight: "100vh",
+        background: `linear-gradient(135deg, ${C.side} 0%, #0D1E3D 100%)`,
+        display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center", gap: 16,
+        fontFamily: "'DM Sans', system-ui, sans-serif",
+      }}>
+        <BrandLogo size={56} />
+        <Spinner size={24} />
+        <div style={{ color: C.sideSubtext, fontSize: 13 }}>Please wait...</div>
+        <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+      </div>
+    );
+  }
 
   function handleLogin(u) {
     localStorage.setItem("sm_user", JSON.stringify(u));
@@ -1462,10 +1515,12 @@ export default function App() {
   }
 
   async function handleLogout() {
+    setTransitioning(true);
     await signOut();
     localStorage.removeItem("sm_token");
     localStorage.removeItem("sm_user");
     setUser(null);
+    setTransitioning(false);
   }
 
   return user ? <Dashboard user={user} onLogout={handleLogout} /> : <LoginScreen onLogin={handleLogin} />;

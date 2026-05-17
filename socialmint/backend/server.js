@@ -192,8 +192,14 @@ app.post("/api/auth/login", loginLimiter, async (req, res) => {
     };
     await saveUser(userId, newUser);
 
-    if (process.env.NODE_ENV !== "production") {
-      try { await fundTestWallet(wallet.address); } catch {}
+    // Auto-fund on testnet (Base Sepolia or Arc Testnet) but not mainnet
+    if (process.env.USE_MAINNET !== "true") {
+      try {
+        await fundTestWallet(wallet.address);
+        console.log("💧 Auto-funded new wallet with testnet USDC:", wallet.address);
+      } catch (e) {
+        console.log("⚠️ Auto-fund failed (user can manually use faucet):", e.message);
+      }
     }
 
     let balance = 0;

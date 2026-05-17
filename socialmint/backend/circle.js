@@ -141,9 +141,10 @@ async function getTransactionStatus(transactionId) {
 }
 
 async function fundTestWallet(walletAddress) {
+  const { blockchain } = getNetwork();
   const res = await axios.post(
     "https://api.circle.com/v1/faucet/drips",
-    { address: walletAddress, blockchain: "BASE-SEPOLIA", native: false, usdc: true },
+    { address: walletAddress, blockchain, native: false, usdc: true },
     { headers: headers() }
   );
   return res.data;

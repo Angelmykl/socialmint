@@ -163,9 +163,11 @@ function LoginScreen({ onLogin }) {
   const { isSignedIn, user } = useUser();
   const [syncing, setSyncing] = useState(false);
   const [error, setError]     = useState("");
+  const syncedRef = useState(false);
 
   useEffect(() => {
-    if (isSignedIn && user && !syncing) {
+    if (isSignedIn && user && !syncing && !syncedRef[0]) {
+      syncedRef[0] = true;
       setSyncing(true);
       handleClerkUser(user);
     }
@@ -238,9 +240,7 @@ function LoginScreen({ onLogin }) {
 
         <SignIn
           routing="hash"
-          signUpUrl="#"
-          afterSignInUrl={window.location.href}
-          afterSignUpUrl={window.location.href}
+          forceRedirectUrl={window.location.origin}
           appearance={{
             elements: {
               rootBox: { width: "100%" },

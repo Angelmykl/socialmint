@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useClerk, useUser } from "@clerk/clerk-react";
 
 const API  = import.meta.env.VITE_API_URL || "http://localhost:4000";
 const COST = 0.50;
@@ -159,36 +160,87 @@ function Spinner({ size = 16, dark = false }) {
 
 // ── Login ─────────────────────────────────────────────────────────────────────
 function LoginScreen({ onLogin }) {
-  const [tab, setTab]         = useState("social");
+  const { signIn, isLoaded } = useClerk();
+  const { isSignedIn, user } = useUser();
   const [loading, setLoading] = useState(null);
   const [error, setError]     = useState("");
+  const [syncing, setSyncing] = useState(false);
 
-  async function doLogin(id, name, provider) {
-    setLoading(id); setError("");
+  useEffect(() => {
+    if (isSignedIn && user && !syncing) {
+      setSyncing(true);
+      handleClerkUser(user);
+    }
+  }, [isSignedIn, user]);
+
+  async function handleClerkUser(clerkUser) {
     try {
+      const provider = clerkUser.externalAccounts?.[0]?.provider || "email";
+      const userId   = `clerk_${clerkUser.id}`;
+      const name     = clerkUser.fullName || clerkUser.firstName || "User";
+      const email    = clerkUser.primaryEmailAddress?.emailAddress || "";
       const res  = await fetch(`${API}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: `${provider}_${id}`, name, provider }),
+        body: JSON.stringify({ userId, name, provider, email }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Login failed");
       localStorage.setItem("sm_token", data.token);
       localStorage.setItem("sm_user",  JSON.stringify(data.user));
       onLogin(data.user);
-    } catch (e) { setError(e.message); }
-    setLoading(null);
+    } catch (e) {
+      setError(e.message);
+      setSyncing(false);
+    }
+  }
+
+  async function signInWith(strategy) {
+    if (!isLoaded) return;
+    setLoading(strategy); setError("");
+    try {
+      await signIn.authenticateWithRedirect({
+        strategy,
+        redirectUrl:         window.location.origin + "/sso-callback",
+        redirectUrlComplete: window.location.origin,
+      });
+    } catch (e) {
+      setError(e.message || "Login failed. Please try again.");
+      setLoading(null);
+    }
+  }
+
+  const providers = [
+    { strategy: "oauth_google",   label: "Google",      letter: "G", color: "#EA4335", bg: "#FEF2F2" },
+    { strategy: "oauth_twitter",  label: "X / Twitter", letter: "𝕏", color: "#0F172A", bg: "#F1F5F9" },
+    { strategy: "oauth_facebook", label: "Facebook",    letter: "f", color: "#1877F2", bg: "#EFF6FF" },
+  ];
+
+  if (syncing) {
+    return (
+      <div style={{
+        minHeight: "100vh",
+        background: `linear-gradient(135deg, ${C.side} 0%, #0D1E3D 100%)`,
+        display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center", gap: 16,
+        fontFamily: "'DM Sans', system-ui, sans-serif",
+      }}>
+        <BrandLogo size={56} />
+        <div style={{ color: "#fff", fontSize: 16, fontWeight: 600, marginTop: 8 }}>Setting up your wallet...</div>
+        <div style={{ color: C.sideSubtext, fontSize: 13 }}>Creating your Circle USDC wallet</div>
+        <Spinner size={24} />
+      </div>
+    );
   }
 
   return (
     <div style={{
-      minHeight: "100vh", background: `linear-gradient(135deg, ${C.side} 0%, #0D1E3D 100%)`,
+      minHeight: "100vh",
+      background: `linear-gradient(135deg, ${C.side} 0%, #0D1E3D 100%)`,
       display: "flex", alignItems: "center", justifyContent: "center",
       padding: "2rem 1rem", fontFamily: "'DM Sans', system-ui, sans-serif",
     }}>
       <div style={{ width: "100%", maxWidth: 420 }}>
-
-        {/* Brand header */}
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "2rem" }}>
           <BrandLogo size={64} />
           <div style={{ marginTop: 14, textAlign: "center" }}>
@@ -200,7 +252,6 @@ function LoginScreen({ onLogin }) {
             </div>
           </div>
         </div>
-
         <div style={{
           background: "rgba(255,255,255,0.04)", backdropFilter: "blur(20px)",
           borderRadius: 20, border: "1px solid rgba(255,255,255,0.08)",
@@ -210,36 +261,18 @@ function LoginScreen({ onLogin }) {
             Sign in to get started
           </div>
           <div style={{ fontSize: 13, color: C.sideSubtext, marginBottom: "1.5rem", lineHeight: 1.6 }}>
-            A Circle USDC wallet is created for you automatically. Each analysis costs 0.50 USDC.
+            A Circle USDC wallet is created automatically. Each analysis costs 0.50 USDC.
           </div>
-
-          {/* Tab */}
-          <div style={{
-            display: "flex", background: "rgba(0,0,0,0.3)",
-            borderRadius: 10, padding: 3, marginBottom: "1.25rem",
-          }}>
-            {[["social", "🔐 Social login"], ["wallet", "👛 Web3 wallet"]].map(([id, label]) => (
-              <button key={id} onClick={() => setTab(id)} style={{
-                flex: 1, padding: "7px 0", borderRadius: 8, border: "none",
-                background: tab === id ? "rgba(255,255,255,0.08)" : "transparent",
-                color: tab === id ? "#fff" : C.sideSubtext,
-                fontSize: 12, fontWeight: tab === id ? 600 : 400,
-                cursor: "pointer", fontFamily: "inherit", transition: "all 0.15s",
-              }}>{label}</button>
-            ))}
-          </div>
-
           {error && (
             <div style={{ background: C.redBg, color: C.red, borderRadius: 8, padding: "8px 12px", fontSize: 13, marginBottom: 12 }}>
               ⚠ {error}
             </div>
           )}
-
           <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-            {tab === "social" && SOCIAL_PROVIDERS.map(p => (
-              <button key={p.id}
-                onClick={() => doLogin(p.id, p.id === "google" ? "Alex Johnson" : p.id === "twitter" ? "@alex_j" : "Alex J.", p.label)}
-                disabled={!!loading}
+            {providers.map(p => (
+              <button key={p.strategy}
+                onClick={() => signInWith(p.strategy)}
+                disabled={!!loading || !isLoaded}
                 style={{
                   display: "flex", alignItems: "center", gap: 12,
                   padding: "11px 14px", fontFamily: "inherit",
@@ -247,42 +280,19 @@ function LoginScreen({ onLogin }) {
                   borderRadius: 10, background: "rgba(255,255,255,0.06)",
                   cursor: loading ? "not-allowed" : "pointer",
                   fontSize: 14, fontWeight: 500, color: "#fff",
-                  opacity: loading && loading !== p.id ? 0.4 : 1,
+                  opacity: loading && loading !== p.strategy ? 0.4 : 1,
+                  transition: "all 0.15s",
                 }}>
                 <span style={{
                   width: 30, height: 30, borderRadius: 8, background: p.bg,
                   display: "flex", alignItems: "center", justifyContent: "center",
                   fontSize: 14, fontWeight: 800, color: p.color, flexShrink: 0,
                 }}>{p.letter}</span>
-                {loading === p.id ? "Connecting..." : `Continue with ${p.label}`}
-                {loading === p.id && <span style={{ marginLeft: "auto" }}><Spinner /></span>}
-              </button>
-            ))}
-            {tab === "wallet" && WALLETS.map(w => (
-              <button key={w.id}
-                onClick={() => doLogin(w.id, "Wallet User", w.label)}
-                disabled={!!loading}
-                style={{
-                  display: "flex", alignItems: "center", gap: 12,
-                  padding: "11px 14px", fontFamily: "inherit",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: 10, background: "rgba(255,255,255,0.06)",
-                  cursor: loading ? "not-allowed" : "pointer",
-                  fontSize: 14, fontWeight: 500, color: "#fff",
-                  opacity: loading && loading !== w.id ? 0.4 : 1,
-                }}>
-                <span style={{
-                  width: 30, height: 30, borderRadius: 8,
-                  background: "rgba(255,255,255,0.08)",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 17, flexShrink: 0,
-                }}>{w.emoji}</span>
-                {loading === w.id ? "Connecting..." : w.label}
-                {loading === w.id && <span style={{ marginLeft: "auto" }}><Spinner /></span>}
+                {loading === p.strategy ? "Connecting..." : `Continue with ${p.label}`}
+                {loading === p.strategy && <span style={{ marginLeft: "auto" }}><Spinner /></span>}
               </button>
             ))}
           </div>
-
           <div style={{ fontSize: 11, color: C.sideMuted, marginTop: "1.5rem", textAlign: "center", lineHeight: 1.6 }}>
             Powered by Circle Agent Stack · USDC on Base
           </div>
@@ -1426,14 +1436,21 @@ function Dashboard({ user, onLogout }) {
 }
 
 export default function App() {
+  const { signOut } = useClerk();
   const saved = localStorage.getItem("sm_user");
   const [user, setUser] = useState(saved ? JSON.parse(saved) : null);
 
-function handleLogin(u) {
+  function handleLogin(u) {
     localStorage.setItem("sm_user", JSON.stringify(u));
     setUser(u);
   }
-  function handleLogout() { localStorage.removeItem("sm_token"); localStorage.removeItem("sm_user"); setUser(null); }
+
+  async function handleLogout() {
+    await signOut();
+    localStorage.removeItem("sm_token");
+    localStorage.removeItem("sm_user");
+    setUser(null);
+  }
 
   return user ? <Dashboard user={user} onLogout={handleLogout} /> : <LoginScreen onLogin={handleLogin} />;
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useClerk, useUser } from "@clerk/clerk-react";
+import { useClerk, useUser, SignIn } from "@clerk/clerk-react";
 
 const API  = import.meta.env.VITE_API_URL || "http://localhost:4000";
 const COST = 0.50;
@@ -160,11 +160,9 @@ function Spinner({ size = 16, dark = false }) {
 
 // ── Login ─────────────────────────────────────────────────────────────────────
 function LoginScreen({ onLogin }) {
-  const { signIn, isLoaded } = useClerk();
   const { isSignedIn, user } = useUser();
-  const [loading, setLoading] = useState(null);
-  const [error, setError]     = useState("");
   const [syncing, setSyncing] = useState(false);
+  const [error, setError]     = useState("");
 
   useEffect(() => {
     if (isSignedIn && user && !syncing) {
@@ -177,7 +175,7 @@ function LoginScreen({ onLogin }) {
     try {
       const provider = clerkUser.externalAccounts?.[0]?.provider || "email";
       const userId   = `clerk_${clerkUser.id}`;
-      const name     = clerkUser.fullName || clerkUser.firstName || "User";
+      const name     = clerkUser.fullName || clerkUser.firstName || clerkUser.emailAddresses?.[0]?.emailAddress || "User";
       const email    = clerkUser.primaryEmailAddress?.emailAddress || "";
       const res  = await fetch(`${API}/api/auth/login`, {
         method: "POST",
@@ -194,27 +192,6 @@ function LoginScreen({ onLogin }) {
       setSyncing(false);
     }
   }
-
-  async function signInWith(strategy) {
-    if (!isLoaded) return;
-    setLoading(strategy); setError("");
-    try {
-      await signIn.authenticateWithRedirect({
-        strategy,
-        redirectUrl:         window.location.origin + "/sso-callback",
-        redirectUrlComplete: window.location.origin,
-      });
-    } catch (e) {
-      setError(e.message || "Login failed. Please try again.");
-      setLoading(null);
-    }
-  }
-
-  const providers = [
-    { strategy: "oauth_google",   label: "Google",      letter: "G", color: "#EA4335", bg: "#FEF2F2" },
-    { strategy: "oauth_twitter",  label: "X / Twitter", letter: "𝕏", color: "#0F172A", bg: "#F1F5F9" },
-    { strategy: "oauth_facebook", label: "Facebook",    letter: "f", color: "#1877F2", bg: "#EFF6FF" },
-  ];
 
   if (syncing) {
     return (
@@ -240,7 +217,7 @@ function LoginScreen({ onLogin }) {
       display: "flex", alignItems: "center", justifyContent: "center",
       padding: "2rem 1rem", fontFamily: "'DM Sans', system-ui, sans-serif",
     }}>
-      <div style={{ width: "100%", maxWidth: 420 }}>
+      <div style={{ width: "100%", maxWidth: 480, display: "flex", flexDirection: "column", alignItems: "center" }}>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "2rem" }}>
           <BrandLogo size={64} />
           <div style={{ marginTop: 14, textAlign: "center" }}>
@@ -252,50 +229,44 @@ function LoginScreen({ onLogin }) {
             </div>
           </div>
         </div>
-        <div style={{
-          background: "rgba(255,255,255,0.04)", backdropFilter: "blur(20px)",
-          borderRadius: 20, border: "1px solid rgba(255,255,255,0.08)",
-          padding: "2rem",
-        }}>
-          <div style={{ fontSize: 18, fontWeight: 700, color: "#fff", marginBottom: 6 }}>
-            Sign in to get started
+
+        {error && (
+          <div style={{ background: C.redBg, color: C.red, borderRadius: 8, padding: "8px 16px", fontSize: 13, marginBottom: 16, width: "100%" }}>
+            ⚠ {error}
           </div>
-          <div style={{ fontSize: 13, color: C.sideSubtext, marginBottom: "1.5rem", lineHeight: 1.6 }}>
-            A Circle USDC wallet is created automatically. Each analysis costs 0.50 USDC.
-          </div>
-          {error && (
-            <div style={{ background: C.redBg, color: C.red, borderRadius: 8, padding: "8px 12px", fontSize: 13, marginBottom: 12 }}>
-              ⚠ {error}
-            </div>
-          )}
-          <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-            {providers.map(p => (
-              <button key={p.strategy}
-                onClick={() => signInWith(p.strategy)}
-                disabled={!!loading || !isLoaded}
-                style={{
-                  display: "flex", alignItems: "center", gap: 12,
-                  padding: "11px 14px", fontFamily: "inherit",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: 10, background: "rgba(255,255,255,0.06)",
-                  cursor: loading ? "not-allowed" : "pointer",
-                  fontSize: 14, fontWeight: 500, color: "#fff",
-                  opacity: loading && loading !== p.strategy ? 0.4 : 1,
-                  transition: "all 0.15s",
-                }}>
-                <span style={{
-                  width: 30, height: 30, borderRadius: 8, background: p.bg,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 14, fontWeight: 800, color: p.color, flexShrink: 0,
-                }}>{p.letter}</span>
-                {loading === p.strategy ? "Connecting..." : `Continue with ${p.label}`}
-                {loading === p.strategy && <span style={{ marginLeft: "auto" }}><Spinner /></span>}
-              </button>
-            ))}
-          </div>
-          <div style={{ fontSize: 11, color: C.sideMuted, marginTop: "1.5rem", textAlign: "center", lineHeight: 1.6 }}>
-            Powered by Circle Agent Stack · USDC on Base
-          </div>
+        )}
+
+        <SignIn
+          appearance={{
+            elements: {
+              rootBox: { width: "100%" },
+              card: {
+                background: "rgba(255,255,255,0.05)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                borderRadius: "16px",
+                backdropFilter: "blur(20px)",
+              },
+              headerTitle: { color: "#ffffff" },
+              headerSubtitle: { color: C.sideSubtext },
+              socialButtonsBlockButton: {
+                background: "rgba(255,255,255,0.06)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                color: "#ffffff",
+              },
+              formFieldLabel: { color: C.sideSubtext },
+              formFieldInput: {
+                background: "rgba(255,255,255,0.06)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                color: "#ffffff",
+              },
+              footerActionText: { color: C.sideSubtext },
+              footerActionLink: { color: C.mint },
+            },
+          }}
+        />
+
+        <div style={{ fontSize: 11, color: C.sideMuted, marginTop: "1.5rem", textAlign: "center", lineHeight: 1.6 }}>
+          Powered by Circle Agent Stack · USDC on Base
         </div>
       </div>
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>

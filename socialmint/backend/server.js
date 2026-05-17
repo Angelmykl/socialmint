@@ -25,6 +25,7 @@ const {
 } = require("./circle");
 
 const app = express();
+app.set("trust proxy", 1);
 
 // ── Smart Database Layer ──────────────────────────────────────────────────────
 // Automatically picks MongoDB or local file depending on environment

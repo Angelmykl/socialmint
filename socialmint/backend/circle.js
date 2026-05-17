@@ -89,10 +89,17 @@ async function chargeUser(userWalletId) {
     throw new Error(`Insufficient balance. Has ${balance} USDC, needs 0.50 USDC.`);
   }
   const entitySecretCiphertext = await getEntitySecretCiphertext();
-  const isMainnet = process.env.NODE_ENV === "production";
+
+  // Switch to mainnet only when USE_MAINNET=true is explicitly set
+  const isMainnet = process.env.USE_MAINNET === "true";
+  const blockchain  = isMainnet ? "BASE-MAINNET" : "BASE-SEPOLIA";
+  const tokenAddress = isMainnet ? USDC_TOKEN_BASE_MAINNET : USDC_TOKEN_BASE_SEPOLIA;
+
   console.log("   Attempting transfer from:", userWalletId);
   console.log("   To treasury:", process.env.CIRCLE_TREASURY_ADDRESS);
-  console.log("   Token:", isMainnet ? USDC_TOKEN_BASE_MAINNET : USDC_TOKEN_BASE_SEPOLIA);
+  console.log("   Network:", blockchain);
+  console.log("   Token:", tokenAddress);
+
   const res = await axios.post(
     `${BASE_URL}/developer/transactions/transfer`,
     {
@@ -101,8 +108,8 @@ async function chargeUser(userWalletId) {
       walletId: userWalletId,
       destinationAddress: process.env.CIRCLE_TREASURY_ADDRESS,
       amounts: ["0.50"],
-      tokenAddress: isMainnet ? USDC_TOKEN_BASE_MAINNET : USDC_TOKEN_BASE_SEPOLIA,
-      blockchain: isMainnet ? "BASE-MAINNET" : "BASE-SEPOLIA",
+      tokenAddress,
+      blockchain,
       feeLevel: "MEDIUM",
     },
     { headers: headers() }

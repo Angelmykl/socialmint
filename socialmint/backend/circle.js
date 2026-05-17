@@ -4,8 +4,23 @@ const { v4: uuidv4 } = require("uuid");
 
 const BASE_URL = "https://api.circle.com/v1/w3s";
 
+// Blockchain constants
 const USDC_TOKEN_BASE_SEPOLIA = "0x036CbD53842c5426634e7929541eC2318f3dCF7e";
 const USDC_TOKEN_BASE_MAINNET = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
+const USDC_TOKEN_ARC_TESTNET  = "0x3600000000000000000000000000000000000000";
+
+// Network selector
+// Set USE_ARC=true in Railway to use Arc Testnet
+// Set USE_MAINNET=true in Railway to use Base Mainnet
+function getNetwork() {
+  if (process.env.USE_MAINNET === "true") {
+    return { blockchain: "BASE-MAINNET", tokenAddress: USDC_TOKEN_BASE_MAINNET };
+  }
+  if (process.env.USE_ARC === "true") {
+    return { blockchain: "ARC-TESTNET", tokenAddress: USDC_TOKEN_ARC_TESTNET };
+  }
+  return { blockchain: "BASE-SEPOLIA", tokenAddress: USDC_TOKEN_BASE_SEPOLIA };
+}
 
 const headers = () => ({
   "Content-Type": "application/json",
@@ -36,13 +51,14 @@ async function createWalletSet(name = "SocialMint") {
 
 async function createTreasuryWallet() {
   const entitySecretCiphertext = await getEntitySecretCiphertext();
+  const { blockchain } = getNetwork();
   const res = await axios.post(
     `${BASE_URL}/developer/wallets`,
     {
       idempotencyKey: uuidv4(),
       entitySecretCiphertext,
       accountType: "SCA",
-      blockchains: ["BASE-SEPOLIA"],
+      blockchains: [blockchain],
       count: 1,
       walletSetId: process.env.CIRCLE_WALLET_SET_ID,
       metadata: [{ name: "SocialMint Treasury", refId: "treasury" }],
@@ -52,18 +68,20 @@ async function createTreasuryWallet() {
   const wallet = res.data.data.wallets[0];
   console.log("✅ Treasury wallet created:", wallet.id);
   console.log("   Address:", wallet.address);
+  console.log("   Network:", blockchain);
   return wallet;
 }
 
 async function createUserWallet(userId, displayName) {
   const entitySecretCiphertext = await getEntitySecretCiphertext();
+  const { blockchain } = getNetwork();
   const res = await axios.post(
     `${BASE_URL}/developer/wallets`,
     {
       idempotencyKey: uuidv4(),
       entitySecretCiphertext,
       accountType: "SCA",
-      blockchains: ["BASE-SEPOLIA"],
+      blockchains: [blockchain],
       count: 1,
       walletSetId: process.env.CIRCLE_WALLET_SET_ID,
       metadata: [{ name: displayName, refId: userId }],
@@ -89,11 +107,7 @@ async function chargeUser(userWalletId) {
     throw new Error(`Insufficient balance. Has ${balance} USDC, needs 0.50 USDC.`);
   }
   const entitySecretCiphertext = await getEntitySecretCiphertext();
-
-  // Switch to mainnet only when USE_MAINNET=true is explicitly set
-  const isMainnet = process.env.USE_MAINNET === "true";
-  const blockchain  = isMainnet ? "BASE-MAINNET" : "BASE-SEPOLIA";
-  const tokenAddress = isMainnet ? USDC_TOKEN_BASE_MAINNET : USDC_TOKEN_BASE_SEPOLIA;
+  const { blockchain, tokenAddress } = getNetwork();
 
   console.log("   Attempting transfer from:", userWalletId);
   console.log("   To treasury:", process.env.CIRCLE_TREASURY_ADDRESS);

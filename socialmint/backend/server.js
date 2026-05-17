@@ -165,6 +165,7 @@ app.post("/api/auth/login", loginLimiter, async (req, res) => {
           circleWalletAddress: user.circleWalletAddress,
           totalAnalyses: user.totalAnalyses || 0,
           freeRunsUsed: user.freeRunsUsed || 0,
+          network: process.env.USE_ARC === "true" ? "Arc Testnet" : process.env.USE_MAINNET === "true" ? "Base Mainnet" : "Base Testnet",
           balance,
         },
       });
@@ -204,6 +205,7 @@ app.post("/api/auth/login", loginLimiter, async (req, res) => {
         userId, name, provider,
         circleWalletId: wallet.id,
         circleWalletAddress: wallet.address,
+        network: process.env.USE_ARC === "true" ? "Arc Testnet" : process.env.USE_MAINNET === "true" ? "Base Mainnet" : "Base Testnet",
         totalAnalyses: 0,
         freeRunsUsed: 0,
         balance, isNew: true,

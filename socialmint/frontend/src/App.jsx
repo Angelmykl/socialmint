@@ -1425,7 +1425,7 @@ function Dashboard({ user, onLogout }) {
         {[
           ["Wallet ID",    user.circleWalletId || "—"],
           ["Address",      user.circleWalletAddress || "—"],
-          ["Network",      "Base (USDC)"],
+          ["Network",      user.network || "Arc Testnet (USDC)"],
           ["Type",         "Circle Programmable Wallet"],
           ["Cost / call",  "0.50 USDC"],
         ].map(([k, v]) => (

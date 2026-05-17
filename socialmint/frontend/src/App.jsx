@@ -219,58 +219,63 @@ function LoginScreen({ onLogin }) {
       display: "flex", alignItems: "center", justifyContent: "center",
       padding: "2rem 1rem", fontFamily: "'DM Sans', system-ui, sans-serif",
     }}>
-      <div style={{ width: "100%", maxWidth: 480, display: "flex", flexDirection: "column", alignItems: "center" }}>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "2rem" }}>
-          <BrandLogo size={64} />
-          <div style={{ marginTop: 14, textAlign: "center" }}>
-            <div style={{ fontSize: 24, fontWeight: 800, color: "#FFFFFF", letterSpacing: "-0.5px" }}>
+      <div style={{ width: "100%", maxWidth: 420, display: "flex", flexDirection: "column", alignItems: "center" }}>
+
+        {/* Brand centered */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "1.5rem", width: "100%", textAlign: "center" }}>
+          <BrandLogo size={56} />
+          <div style={{ marginTop: 12 }}>
+            <div style={{ fontSize: 22, fontWeight: 800, color: "#FFFFFF", letterSpacing: "-0.5px" }}>
               SocialMint Agent
             </div>
-            <div style={{ fontSize: 13, color: C.sideSubtext, marginTop: 4 }}>
+            <div style={{ fontSize: 12, color: C.sideSubtext, marginTop: 3 }}>
               AI-powered monetization intelligence
             </div>
           </div>
         </div>
 
         {error && (
-          <div style={{ background: C.redBg, color: C.red, borderRadius: 8, padding: "8px 16px", fontSize: 13, marginBottom: 16, width: "100%" }}>
+          <div style={{ background: C.redBg, color: C.red, borderRadius: 8, padding: "8px 16px", fontSize: 13, marginBottom: 12, width: "100%" }}>
             ⚠ {error}
           </div>
         )}
 
-        <SignIn
-          routing="hash"
-          forceRedirectUrl={window.location.origin}
-          appearance={{
-            elements: {
-              rootBox: { width: "100%" },
-              card: {
-                background: "rgba(255,255,255,0.05)",
-                border: "1px solid rgba(255,255,255,0.1)",
-                borderRadius: "16px",
-                backdropFilter: "blur(20px)",
-                margin: "0 auto",
+        {/* Wrapper clips the white Clerk footer */}
+        <div style={{ width: "100%", borderRadius: 16, overflow: "hidden", border: "1px solid rgba(255,255,255,0.1)" }}>
+          <SignIn
+            routing="hash"
+            forceRedirectUrl={window.location.origin}
+            appearance={{
+              elements: {
+                rootBox: { width: "100%" },
+                card: {
+                  background: "rgba(255,255,255,0.05)",
+                  border: "none", borderRadius: "0",
+                  backdropFilter: "blur(20px)",
+                  margin: "0", boxShadow: "none", width: "100%",
+                },
+                headerTitle: { color: "#ffffff" },
+                headerSubtitle: { color: C.sideSubtext },
+                socialButtonsBlockButton: {
+                  background: "rgba(255,255,255,0.06)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  color: "#ffffff",
+                },
+                formFieldLabel: { color: C.sideSubtext },
+                formFieldInput: {
+                  background: "rgba(255,255,255,0.06)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  color: "#ffffff",
+                },
+                footer: { background: "rgba(0,0,0,0.3)", borderTop: "1px solid rgba(255,255,255,0.08)" },
+                footerActionText: { color: C.sideSubtext },
+                footerActionLink: { color: C.mint },
               },
-              headerTitle: { color: "#ffffff" },
-              headerSubtitle: { color: C.sideSubtext },
-              socialButtonsBlockButton: {
-                background: "rgba(255,255,255,0.06)",
-                border: "1px solid rgba(255,255,255,0.1)",
-                color: "#ffffff",
-              },
-              formFieldLabel: { color: C.sideSubtext },
-              formFieldInput: {
-                background: "rgba(255,255,255,0.06)",
-                border: "1px solid rgba(255,255,255,0.1)",
-                color: "#ffffff",
-              },
-              footerActionText: { color: C.sideSubtext },
-              footerActionLink: { color: C.mint },
-            },
-          }}
-        />
+            }}
+          />
+        </div>
 
-        <div style={{ fontSize: 11, color: C.sideMuted, marginTop: "1.5rem", textAlign: "center", lineHeight: 1.6 }}>
+        <div style={{ fontSize: 11, color: C.sideMuted, marginTop: "1rem", textAlign: "center", lineHeight: 1.6 }}>
           Powered by Circle Agent Stack · USDC on Base
         </div>
       </div>
@@ -321,6 +326,54 @@ function MetricCard({ label, value, sub, icon, accent }) {
       </div>
       <div style={{ fontSize: 22, fontWeight: 800, color: C.ink, marginBottom: 3, letterSpacing: "-0.5px" }}>{value}</div>
       <div style={{ fontSize: 12, color: C.inkMuted }}>{sub}</div>
+    </div>
+  );
+}
+
+// ── User menu with logout dropdown ───────────────────────────────────────────
+function UserMenu({ user, onLogout }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div style={{ position: "relative" }}>
+      {open && (
+        <div style={{
+          position: "absolute", bottom: "100%", left: 0, right: 0,
+          background: C.side, border: `1px solid ${C.sideBorder}`,
+          borderRadius: 10, marginBottom: 4, overflow: "hidden",
+          boxShadow: "0 -4px 20px rgba(0,0,0,0.3)",
+        }}>
+          <div style={{ padding: "10px 14px", borderBottom: `1px solid ${C.sideBorder}` }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: C.sideText }}>{user.name}</div>
+            <div style={{ fontSize: 11, color: C.sideMuted, marginTop: 2 }}>{user.provider || "email"}</div>
+          </div>
+          <button onClick={() => { setOpen(false); onLogout(); }} style={{
+            width: "100%", padding: "10px 14px", border: "none",
+            background: "transparent", cursor: "pointer", fontFamily: "inherit",
+            display: "flex", alignItems: "center", gap: 8,
+            color: C.red, fontSize: 13, fontWeight: 500,
+            textAlign: "left",
+          }}>
+            <span>⎋</span> Sign out
+          </button>
+        </div>
+      )}
+      <button onClick={() => setOpen(v => !v)} style={{
+        width: "100%", display: "flex", alignItems: "center", gap: 8,
+        padding: "7px 12px", borderRadius: 8, border: "none",
+        background: open ? C.sideHover : "transparent",
+        cursor: "pointer", fontFamily: "inherit", transition: "all 0.12s",
+      }}>
+        <div style={{
+          width: 26, height: 26, borderRadius: "50%",
+          background: `linear-gradient(135deg, ${C.mint}, #0EA5E9)`,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: 11, fontWeight: 700, color: "#fff", flexShrink: 0,
+        }}>{user.name?.[0]?.toUpperCase() || "U"}</div>
+        <span style={{ flex: 1, textAlign: "left", color: C.sideSubtext, fontSize: 12, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          {user.name}
+        </span>
+        <span style={{ fontSize: 10, color: C.sideMuted }}>{open ? "▼" : "▲"}</span>
+      </button>
     </div>
   );
 }
@@ -479,7 +532,7 @@ function Dashboard({ user, onLogout }) {
       </div>
 
       {/* Bottom */}
-      <div style={{ padding: "10px 8px", borderTop: `1px solid ${C.sideBorder}` }}>
+      <div style={{ padding: "10px 8px", borderTop: `1px solid ${C.sideBorder}`, position: "relative" }}>
         <div style={{
           background: "rgba(0,200,150,0.08)", border: `1px solid ${C.mintBorder}`,
           borderRadius: 10, padding: "9px 12px", marginBottom: 8,
@@ -490,22 +543,9 @@ function Dashboard({ user, onLogout }) {
           </div>
           <div style={{ fontSize: 10, color: C.sideMuted }}>Circle Agent Stack live</div>
         </div>
-        <button onClick={onLogout} style={{
-          width: "100%", display: "flex", alignItems: "center", gap: 8,
-          padding: "7px 12px", borderRadius: 8, border: "none",
-          background: "transparent", cursor: "pointer", fontFamily: "inherit",
-        }}>
-          <div style={{
-            width: 26, height: 26, borderRadius: "50%",
-            background: `linear-gradient(135deg, ${C.mint}, #0EA5E9)`,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 11, fontWeight: 700, color: "#fff", flexShrink: 0,
-          }}>{user.name?.[0] || "U"}</div>
-          <span style={{ flex: 1, textAlign: "left", color: C.sideSubtext, fontSize: 12, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-            {user.name}
-          </span>
-          <span style={{ fontSize: 12, color: C.sideMuted }}>→</span>
-        </button>
+
+        {/* User menu with logout dropdown */}
+        <UserMenu user={user} onLogout={onLogout} />
       </div>
     </div>
   );

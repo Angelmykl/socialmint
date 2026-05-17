@@ -237,6 +237,10 @@ function LoginScreen({ onLogin }) {
         )}
 
         <SignIn
+          routing="hash"
+          signUpUrl="#"
+          afterSignInUrl={window.location.href}
+          afterSignUpUrl={window.location.href}
           appearance={{
             elements: {
               rootBox: { width: "100%" },
@@ -245,6 +249,7 @@ function LoginScreen({ onLogin }) {
                 border: "1px solid rgba(255,255,255,0.1)",
                 borderRadius: "16px",
                 backdropFilter: "blur(20px)",
+                margin: "0 auto",
               },
               headerTitle: { color: "#ffffff" },
               headerSubtitle: { color: C.sideSubtext },

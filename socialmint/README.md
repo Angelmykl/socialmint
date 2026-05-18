@@ -2,59 +2,121 @@
 
 **AI-powered social media monetization intelligence, built on Circle's Agent Stack.**
 
-Live at **[socialmint.org](https://socialmint.org)**
+> Pay-per-inference. Autonomous payments. Zero crypto knowledge required.
+
+Live at **[socialmint.org](https://socialmint.org)** · API: **[health check](https://socialmint-production.up.railway.app/api/health)** · **[GitHub](https://github.com/Angelmykl/socialmint)**
 
 ---
 
 ## What it does
 
-SocialMint Agent analyzes a creator or business owner's social media presence and returns specific, actionable monetization intelligence — products to sell, content ideas that earn, and marketing channels to push harder on.
+SocialMint Agent analyzes a creator, business owner, influencer, or digital marketer's social media presence and returns specific, actionable monetization intelligence:
 
-Every analysis costs **0.50 USDC**, charged automatically from the user's Circle Programmable Wallet. No credit cards. No subscriptions. Pay per insight.
+- **📦 Products to sell** — physical, digital, or services with real price ranges tailored to your market
+- **🎬 Content ideas** — hooks, formats, and viral angles that convert followers to buyers
+- **📣 Marketing channels** — where to push harder and what specific tactic to use
+
+Every analysis costs **0.50 USDC**, charged autonomously from the user's Circle Programmable Wallet on Arc Testnet. No credit cards. No subscriptions. No crypto knowledge needed.
 
 ---
 
-## Built on Circle Agent Stack
-
-SocialMint is a live demonstration of **agentic economic activity** — the AI agent autonomously manages wallets, executes USDC micropayments, and delivers economic value, all without manual approval at any step.
-
-### The agentic loop on every analysis:
+## Architecture
 
 ```
-User signs in
-    ↓
-Circle Programmable Wallet created automatically (Base network)
-    ↓
-User submits niche + goals
-    ↓
-Agent checks wallet balance via Circle API
-    ↓
-Agent charges 0.50 USDC → treasury wallet (Circle transfer API)
-    ↓
-Agent calls Claude (Anthropic) with monetization prompt
-    ↓
+┌─────────────────────────────────────────────────────────────────┐
+│                        socialmint.org                           │
+│                    React + Vite (Vercel)                        │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │ HTTPS
+┌──────────────────────────▼──────────────────────────────────────┐
+│                    Express API (Railway)                         │
+│                                                                 │
+│  ┌─────────────┐    ┌──────────────┐    ┌────────────────────┐  │
+│  │    Clerk    │    │   MongoDB    │    │  Rate Limiter +    │  │
+│  │    Auth     │    │    Atlas     │    │  JWT Middleware    │  │
+│  └──────┬──────┘    └──────┬───────┘    └────────────────────┘  │
+│         │                 │                                     │
+│  ┌──────▼──────────────────▼──────────────────────────────────┐ │
+│  │                   /api/auth/login                          │ │
+│  │  • Verify Clerk token                                      │ │
+│  │  • Create Circle wallet on Arc Testnet (new users)         │ │
+│  │  • Auto-fund wallet via Circle Faucet API                  │ │
+│  │  • Save user + wallet to MongoDB                           │ │
+│  └────────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│  ┌────────────────────────────────────────────────────────────┐ │
+│  │                   /api/analyze                             │ │
+│  │  1. Check wallet balance → Circle API                      │ │
+│  │  2. Charge 0.50 USDC → treasury (Circle transfer API)      │ │
+│  │  3. Call Anthropic Claude Sonnet                           │ │
+│  │  4. Save analysis + transaction to MongoDB                 │ │
+│  │  5. Return results to user                                 │ │
+│  └────────────────────────────────────────────────────────────┘ │
+└──────────────┬───────────────────────┬──────────────────────────┘
+               │                       │
+┌──────────────▼───────┐  ┌────────────▼──────────────────────────┐
+│   Circle Wallets API  │  │         Anthropic Claude API          │
+│   Arc Testnet         │  │         claude-sonnet-4-20250514      │
+│                       │  └───────────────────────────────────────┘
+│  • Wallet creation    │
+│  • Balance checks     │  ┌───────────────────────────────────────┐
+│  • USDC transfers     │  │         MongoDB Atlas                 │
+│  • Faucet auto-fund   │  │                                       │
+│  • Webhooks           │  │  • users (wallets, freeRunsUsed)      │
+└───────────────────────┘  │  • analyses (full results history)    │
+                           │  • transactions (Circle tx ledger)    │
+                           └───────────────────────────────────────┘
+```
+
+---
+
+## The Agentic Payment Loop
+
+Every time a user clicks **Analyze** this happens autonomously — no human approves any step:
+
+```
+User signs in with Google / Email OTP
+        ↓
+Circle Programmable Wallet auto-created on Arc Testnet
+        ↓
+Wallet auto-funded via Circle Faucet API (testnet)
+        ↓
+User submits niche + platform + monetization goals
+        ↓
+Agent checks wallet balance → GET /v1/w3s/wallets/{id}/balances
+        ↓
+Balance ≥ 0.50 USDC? → Agent executes transfer
+POST /v1/w3s/developer/transactions/transfer
+        ↓
+Payment confirmed → Anthropic Claude Sonnet called
+        ↓
 AI returns products, content hooks, marketing strategies
-    ↓
-Results saved to MongoDB · Transaction logged to Circle console
+        ↓
+Results + transaction saved to MongoDB permanently
+        ↓
+Treasury wallet receives 0.50 USDC · User sees results
 ```
-
-No human approves any step. The agent holds funds, makes payment decisions, and settles on-chain in seconds.
 
 ---
 
 ## Circle Integration
 
-| Feature | Implementation |
-|---|---|
-| **Wallet creation** | `POST /v1/w3s/developer/wallets` — one wallet per user, created on signup |
-| **Balance checks** | `GET /v1/w3s/wallets/{id}/balances` — checked before every analysis |
-| **USDC transfers** | `POST /v1/w3s/developer/transactions/transfer` — 0.50 USDC per call |
-| **Network** | Base Sepolia (testnet) · Base Mainnet (production-ready) |
-| **Wallet type** | SCA (Smart Contract Account) via Developer-Controlled Wallets |
-| **Treasury** | Developer-controlled treasury wallet receives all fees |
-| **Webhooks** | Configured for `transfers.complete` and `wallets.created` |
+| Circle API | Endpoint | Purpose |
+|---|---|---|
+| **Wallet creation** | `POST /v1/w3s/developer/wallets` | One SCA wallet per user on signup |
+| **Auto-funding** | `POST /v1/faucet/drips` | Auto-fund new wallets on Arc Testnet |
+| **Balance checks** | `GET /v1/w3s/wallets/{id}/balances` | Checked before every analysis |
+| **USDC transfers** | `POST /v1/w3s/developer/transactions/transfer` | 0.50 USDC per inference call |
+| **Entity secret** | `GET /v1/w3s/config/entity/publicKey` | Per-request encryption |
+| **Webhooks** | `transfers.complete` · `wallets.created` | Real-time settlement events |
 
-All API activity is visible and verifiable in the Circle Developer Console under this account's Wallet Set.
+**Network:** Arc Testnet (`ARC-TESTNET`)
+**USDC token:** `0x3600000000000000000000000000000000000000`
+**Wallet type:** SCA (Smart Contract Account) via Developer-Controlled Wallets
+**Wallet Set ID:** `bf6301a4-d50b-5aa1-92ea-e27c575c09cb`
+**Treasury:** `0xce67b5c7a1e1e2ef75fad910fa590d97fb046312`
+
+All API activity is verifiable in the Circle Developer Console.
 
 ---
 
@@ -62,38 +124,52 @@ All API activity is visible and verifiable in the Circle Developer Console under
 
 | Layer | Technology |
 |---|---|
-| **Frontend** | React + Vite, deployed on Vercel |
-| **Backend** | Node.js + Express, deployed on Railway |
-| **Auth** | Clerk (Google OAuth, Email OTP, Web3 wallets) |
-| **Payments** | Circle Programmable Wallets API |
-| **AI** | Anthropic Claude Sonnet |
-| **Database** | MongoDB Atlas (local db.json fallback for dev) |
-| **Domain** | socialmint.org |
+| **Frontend** | React + Vite → Vercel |
+| **Backend** | Node.js + Express → Railway |
+| **Auth** | Clerk (Google OAuth, Email OTP, MetaMask, Coinbase Wallet) |
+| **Payments** | Circle Programmable Wallets (Arc Testnet) |
+| **AI** | Anthropic Claude Sonnet (`claude-sonnet-4-20250514`) |
+| **Database** | MongoDB Atlas (local `db.json` fallback for dev) |
+| **Domain** | socialmint.org (Porkbun + Vercel) |
 
 ---
 
 ## Key Features
 
 ### 🔐 Real social authentication
-Clerk handles Google OAuth, email OTP, MetaMask, and Coinbase Wallet. Every user gets a Circle USDC wallet created automatically on first sign-in.
+Clerk handles Google OAuth, Email OTP, MetaMask, and Coinbase Wallet. Every user gets a Circle USDC wallet created automatically on first sign-in. No seed phrases. No crypto knowledge needed.
 
-### ◎ Per-call USDC micropayments
-0.50 USDC charged per analysis via Circle's transfer API. No subscription model. No friction. The agent handles payment autonomously before calling the AI.
+### ◎ Autonomous per-call micropayments
+0.50 USDC charged per analysis via Circle's transfer API. The agent checks balance, executes payment, and calls Claude — all autonomously before returning results.
 
 ### ✦ AI monetization intelligence
-Claude analyzes the user's niche, audience, and goals and returns:
-- **Products to sell** — physical, digital, or services with price ranges
-- **Content ideas** — hooks, formats, and viral angles
-- **Marketing channels** — where to push harder and what tactic to use
+Claude analyzes niche, audience, platform, and goals and returns platform-specific, market-aware recommendations priced in local currency context.
 
 ### 📋 12 ready-made prompts
-Pre-built prompts across Nigerian/African niches, business owners, and creators. First 3 are free — tracked server-side in MongoDB (not localStorage — cannot be bypassed).
+Pre-built prompts across Nigerian/African niches, business owners, and creators. First 3 are free — tracked server-side in MongoDB.
 
-### 🔒 Server-side free run enforcement
-Free demo limit enforced at the API level. Clearing browser storage, incognito mode, or different devices cannot reset it. Limits are stored per user in MongoDB.
+### 🔒 Server-side security
+Free demo limit enforced at the API level. Clearing browser storage, incognito mode, or different devices cannot reset free runs — stored per user in MongoDB.
 
-### 📊 Full analysis history
-Every paid and free analysis saved permanently. Users can view full results anytime, re-run with one click, or build on previous insights.
+### 📊 Permanent analysis history
+Every paid and free analysis saved permanently. View full results anytime, run again with one click, build on previous insights.
+
+### 💧 Auto-funding on signup
+New users on Arc Testnet are auto-funded via Circle Faucet API on wallet creation — they can use the app immediately without visiting the faucet manually.
+
+---
+
+## Unit Economics
+
+| | Per call |
+|---|---|
+| **User pays** | 0.50 USDC |
+| **Anthropic API cost** | ~0.008 USDC |
+| **Gross margin** | ~98.4% |
+| **$5 API credit covers** | ~625 analysis calls |
+| **Revenue at 1,000 users × 5 analyses/month** | 2,500 USDC/month |
+
+The micropayment model is economically viable precisely because USDC on Arc settles at negligible cost — traditional payment rails (Stripe, PayPal) would consume the entire margin in fees at this price point.
 
 ---
 
@@ -101,14 +177,29 @@ Every paid and free analysis saved permanently. Users can view full results anyt
 
 - JWT authentication on all API routes
 - Free run limits enforced server-side (MongoDB, not browser)
-- Circle Entity Secret registered and encrypted per API spec
-- Rate limiting on all endpoints
-- CORS restricted to production domain
+- Circle Entity Secret registered and encrypted per Circle spec
+- Rate limiting on all endpoints (`express-rate-limit`)
+- CORS restricted to production domain (`socialmint.org`)
 - MongoDB Atlas with IP allowlist
+- Environment variables never committed (`.gitignore`)
 
 ---
 
-## Running locally
+## Network Configuration
+
+SocialMint uses a single environment variable to switch networks:
+
+| Variable | Value | Network |
+|---|---|---|
+| *(default)* | — | Base Sepolia testnet |
+| `USE_ARC=true` | `true` | **Arc Testnet** (current) |
+| `USE_MAINNET=true` | `true` | Base Mainnet |
+
+Switching to mainnet requires only setting `USE_MAINNET=true` in Railway and creating a new mainnet treasury wallet via `node setup.js`.
+
+---
+
+## Running Locally
 
 ```bash
 # Clone
@@ -118,7 +209,7 @@ cd socialmint
 # Backend
 cd backend
 cp .env.example .env
-# Fill in your keys
+# Fill in your keys (see below)
 npm install
 node server.js
 
@@ -128,7 +219,7 @@ npm install
 npm run dev
 ```
 
-### Environment variables (backend)
+### Backend `.env`
 
 ```env
 CIRCLE_API_KEY=TEST_API_KEY:your-key-id:your-key-secret
@@ -141,25 +232,41 @@ MONGODB_URI=mongodb+srv://...
 JWT_SECRET=your-secret
 NODE_ENV=development
 FRONTEND_URL=http://localhost:5173
+USE_ARC=true
 ```
 
-### Environment variables (frontend)
+### Frontend `.env`
 
 ```env
 VITE_API_URL=http://localhost:4000
 VITE_CLERK_PUBLISHABLE_KEY=pk_test_your-key
 ```
 
+### Generate Entity Secret
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
+Register the output in Circle Console → Keys → Entity Secret.
+
+### Create Treasury Wallet
+
+```bash
+node setup.js
+```
+
 ---
 
 ## Deployment
 
-| Service | Purpose |
-|---|---|
-| **Railway** | Backend — auto-deploys on GitHub push |
-| **Vercel** | Frontend — auto-deploys on GitHub push |
-| **MongoDB Atlas** | Database — persistent user data and analysis history |
-| **Porkbun** | Domain registrar for socialmint.org |
+| Service | Purpose | Config |
+|---|---|---|
+| **Railway** | Backend | Root dir: `socialmint/backend` |
+| **Vercel** | Frontend | Root dir: `socialmint/frontend` |
+| **MongoDB Atlas** | Database | IP allowlist: `0.0.0.0/0` |
+| **Clerk** | Auth | Production instance, domain: `socialmint.org` |
+| **Porkbun** | Domain | DNS → Vercel + Clerk CNAMEs |
 
 ---
 
@@ -167,26 +274,27 @@ VITE_CLERK_PUBLISHABLE_KEY=pk_test_your-key
 
 **Primary: Agentic Economic Activity**
 
-SocialMint Agent demonstrates the full Agent Stack vision at the consumer layer:
+SocialMint demonstrates the Agent Stack vision at the consumer layer:
 - AI agent autonomously provisions Circle wallets on user signup
-- Agent checks balances, executes USDC transfers, and settles on Base
-- No manual approval at any step of the payment flow
-- Targeting emerging market creators (Nigeria/Africa) who have no existing crypto infrastructure
+- Agent checks balances and executes USDC transfers without human approval
+- Pay-per-inference model: 0.50 USDC per Claude call, settled on Arc
+- Targeting non-crypto-native users (creators, marketers, business owners) globally
 
 **Secondary: Peer-to-peer payments**
 
-Each analysis is a direct micropayment from user wallet to treasury wallet, settled on Base in seconds.
+Each analysis is a direct micropayment from user wallet to treasury wallet, settled on Arc in seconds.
 
 ---
 
-## Live
+## Links
 
 | | |
 |---|---|
-| **App** | https://socialmint.org |
+| **Live app** | https://socialmint.org |
 | **API health** | https://socialmint-production.up.railway.app/api/health |
 | **GitHub** | https://github.com/Angelmykl/socialmint |
+| **Circle console** | console.circle.com (Testnet → Wallets → Wallet Set `bf6301a4`) |
 
 ---
 
-Built with Circle Agent Stack · Anthropic Claude · MongoDB · Deployed on Railway + Vercel
+*Built with Circle Agent Stack · Anthropic Claude · MongoDB · Deployed on Railway + Vercel · Running on Arc Testnet*

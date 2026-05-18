@@ -286,7 +286,81 @@ Each analysis is a direct micropayment from user wallet to treasury wallet, sett
 
 ---
 
-## Links
+## Roadmap
+
+SocialMint Agent is built in phases — starting with AI monetization intelligence and expanding into a full financial intelligence platform for creators.
+
+### ✅ Phase 1 — AI Monetization Intelligence (Live)
+- Pay-per-inference AI analysis at 0.50 USDC per call
+- Circle Programmable Wallets on Arc Testnet
+- Google OAuth + Email OTP via Clerk
+- 12 ready-made prompts for creators and business owners
+- Server-side free run enforcement via MongoDB
+- Full analysis history with View + Run again
+- Auto-funding new user wallets on signup
+
+### 🔄 Phase 2 — Mainnet Launch
+- Switch to Arc Mainnet (`USE_MAINNET=true`)
+- Real USDC payments from real users
+- Facebook and Twitter OAuth
+- Circle Webhooks for real-time settlement (replacing polling)
+- Mobile-responsive polish
+
+### 🗺️ Phase 3 — SocialMint Agent Trade
+The next major feature: an autonomous trading agent that works 24/7 on behalf of users — even when they are offline.
+
+**How it works:**
+
+```
+User opens Agent Trade
+        ↓
+Agent scans market → returns top 5-10 low-cap tokens
+(market cap, volume, holder count, rug risk indicators)
+        ↓
+User sets buy condition:
+"Buy 5 USDC of [token] when market cap drops to $500k"
+        ↓
+User sets sell condition:
+"Sell when market cap reaches $2M"
+        ↓
+Agent monitors 24/7 via Circle Programmable Wallet
+        ↓
+Condition met → Agent executes trade autonomously
+        ↓
+Fee charged per execution (buy + sell) via USDC
+Scanning is always free
+```
+
+**Key features:**
+- Autonomous 24/7 execution — agent trades while user is offline
+- AI-powered rug screening — flags unverified contracts, unlocked liquidity, whale concentration
+- Limit order logic — buy low, sell high, set and forget
+- Per-trade fee model — charged on execution, not subscription
+- Full trade history — PnL per position, total agent fees, performance tracking
+
+**Multi-chain support via Circle Unified Balance:**
+
+Agent Trade will leverage **Circle's Unified Balance Kit** to let users fund their trading wallet from any supported chain — no manual bridging, no network switching. One USDC balance, accessible everywhere. This makes the product accessible to creators who hold USDC on Base, Ethereum, Arbitrum, or any other Circle-supported chain.
+
+```
+User USDC on Base / Ethereum / Arbitrum
+        ↓
+Circle Unified Balance Kit aggregates liquidity
+        ↓
+Agent executes trades on Arc using unified balance
+        ↓
+Settlement in USDC across chains seamlessly
+```
+
+### 🔮 Phase 4 — Creator Finance Suite
+- **SocialMint Yield** — idle USDC in wallets earns yield via Circle's USYC
+- **SocialMint Pay** — creators accept USDC payments from fans directly via their SocialMint wallet
+- **SocialMint Analytics** — cross-platform performance dashboard with monetization scoring
+- **Agent Marketplace** — community-built analysis prompts, buy/sell with USDC
+
+---
+
+
 
 | | |
 |---|---|

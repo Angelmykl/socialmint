@@ -244,6 +244,9 @@ function LoginScreen({ onLogin }) {
           <SignIn
             routing="hash"
             forceRedirectUrl={window.location.origin}
+            fallbackRedirectUrl={window.location.origin}
+            signUpForceRedirectUrl={window.location.origin}
+            signUpFallbackRedirectUrl={window.location.origin}
             appearance={{
               elements: {
                 rootBox: { width: "100%" },

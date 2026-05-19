@@ -242,7 +242,7 @@ function LoginScreen({ onLogin }) {
 
         <div style={{ width: "100%" }}>
           <SignIn
-            routing="hash"
+            routing="virtual"
             forceRedirectUrl={window.location.origin}
             fallbackRedirectUrl={window.location.origin}
             signUpForceRedirectUrl={window.location.origin}

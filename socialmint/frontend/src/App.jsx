@@ -290,7 +290,7 @@ function LoginScreen({ onLogin }) {
         </div>
 
         <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginTop: "1rem", textAlign: "center", lineHeight: 1.6 }}>
-          Powered by Circle Agent Stack · USDC on Base
+          Powered by Circle Agent Stack · USDC on Arc
         </div>
       </div>
       <style>{`

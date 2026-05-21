@@ -243,6 +243,22 @@ app.get("/api/wallet/balance", requireAuth, async (req, res) => {
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
+// ROUTE: Balance refresh
+// ─────────────────────────────────────────────────────────────────────────────
+app.get("/api/balance", requireAuth, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const user = await User.findOne({ userId });
+    if (!user?.circleWalletId) return res.json({ balance: 0 });
+    const balance = await getWalletBalance(user.circleWalletId);
+    res.json({ balance });
+  } catch (e) {
+    console.error("Balance refresh error:", e.message);
+    res.json({ balance: 0 });
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
 // ROUTE 3: Analyze
 // ─────────────────────────────────────────────────────────────────────────────
 app.post("/api/analyze", requireAuth, analysisLimiter, async (req, res) => {

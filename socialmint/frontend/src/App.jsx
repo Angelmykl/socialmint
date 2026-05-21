@@ -290,7 +290,7 @@ function LoginScreen({ onLogin }) {
         </div>
 
         <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginTop: "1rem", textAlign: "center", lineHeight: 1.6 }}>
-          Powered by Circle Agent Stack · USDC on Arc
+          Powered by Circle Agent Stack · USDC on Base
         </div>
       </div>
       <style>{`
@@ -463,7 +463,21 @@ function Dashboard({ user, onLogout }) {
     return () => window.removeEventListener("resize", fn);
   }, []);
 
-  // Fetch saved analyses history from backend
+  // Auto-refresh balance every 15 seconds
+  useEffect(() => {
+    async function refreshBalance() {
+      try {
+        const res = await fetch(`${API}/api/balance`, {
+          headers: { "Authorization": `Bearer ${token()}` },
+        });
+        const data = await res.json();
+        if (data.balance !== undefined) setBalance(data.balance);
+      } catch {}
+    }
+    refreshBalance(); // fetch immediately on mount
+    const interval = setInterval(refreshBalance, 15000); // then every 15s
+    return () => clearInterval(interval);
+  }, []);
   const [savedAnalyses, setSavedAnalyses] = useState([]);
   const [viewingAnalysis, setViewingAnalysis] = useState(null);
   const [viewTab, setViewTab] = useState("products");
@@ -1423,16 +1437,33 @@ function Dashboard({ user, onLogout }) {
       </div>
       <div style={{ background: C.surface, borderRadius: 14, border: `1px solid ${C.border}`, padding: "20px 24px" }}>
         <div style={{ fontSize: 14, fontWeight: 700, color: C.ink, marginBottom: 16 }}>Wallet details</div>
-        {[
-          ["Wallet ID",    user.circleWalletId || "—"],
-          ["Address",      user.circleWalletAddress || "—"],
-          ["Network",      user.network || "Arc Testnet (USDC)"],
-          ["Type",         "Circle Programmable Wallet"],
-          ["Cost / call",  "0.50 USDC"],
-        ].map(([k, v]) => (
-          <div key={k} style={{ display: "flex", justifyContent: "space-between", padding: "11px 0", borderBottom: `1px solid ${C.border}`, flexWrap: "wrap", gap: 8 }}>
+      {[
+          ["Wallet ID",    user.circleWalletId || "—", false],
+          ["Address",      user.circleWalletAddress || "—", true],
+          ["Network",      user.network || "Arc Testnet (USDC)", false],
+          ["Type",         "Circle Programmable Wallet", false],
+          ["Cost / call",  "0.50 USDC", false],
+        ].map(([k, v, copyable]) => (
+          <div key={k} style={{ display: "flex", justifyContent: "space-between", padding: "11px 0", borderBottom: `1px solid ${C.border}`, flexWrap: "wrap", gap: 8, alignItems: "center" }}>
             <span style={{ fontSize: 13, color: C.inkMuted }}>{k}</span>
-            <span style={{ fontSize: 13, color: C.ink, fontFamily: "monospace", wordBreak: "break-all" }}>{v}</span>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontSize: 13, color: C.ink, fontFamily: "monospace", wordBreak: "break-all" }}>{v}</span>
+              {copyable && v !== "—" && (
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(v);
+                  }}
+                  title="Copy address"
+                  style={{
+                    width: 28, height: 28, borderRadius: 6,
+                    border: `1px solid ${C.border}`,
+                    background: C.surfaceAlt, cursor: "pointer",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontSize: 13, flexShrink: 0,
+                  }}
+                >📋</button>
+              )}
+            </div>
           </div>
         ))}
       </div>

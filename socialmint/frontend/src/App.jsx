@@ -270,11 +270,11 @@ function Dashboard({ user, onLogout }) {
 
   const token = () => localStorage.getItem("sm_token");
 
-  // ── Auto-refresh balance every 15 seconds ─────────────────────────────────
+  // ── Balance refresh ────────────────────────────────────────────────────────
   const [refreshing, setRefreshing] = useState(false);
 
-  async function refreshBalance() {
-    setRefreshing(true);
+  async function fetchBalance(showSpinner = false) {
+    if (showSpinner) setRefreshing(true);
     try {
       const res = await fetch(`${API}/api/balance`, {
         headers: { "Authorization": `Bearer ${token()}` },
@@ -284,14 +284,18 @@ function Dashboard({ user, onLogout }) {
         setBalance(data.balance);
       }
     } catch {}
-    setRefreshing(false);
+    if (showSpinner) setRefreshing(false);
   }
 
+  // Auto-refresh silently every 15 seconds
   useEffect(() => {
-    refreshBalance(); // fetch immediately on mount
-    const interval = setInterval(refreshBalance, 15000); // then every 15s
+    fetchBalance(false); // silent on mount
+    const interval = setInterval(() => fetchBalance(false), 15000);
     return () => clearInterval(interval);
   }, []);
+
+  // Manual refresh — shows spinner
+  function refreshBalance() { fetchBalance(true); }
 
   useEffect(() => {
     const fn = () => setIsMobile(window.innerWidth < 768);

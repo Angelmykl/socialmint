@@ -290,7 +290,7 @@ function LoginScreen({ onLogin }) {
         </div>
 
         <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginTop: "1rem", textAlign: "center", lineHeight: 1.6 }}>
-          Powered by Circle Agent Stack · USDC on Base
+          Powered by Circle Agent Stack · USDC on Arc
         </div>
       </div>
       <style>{`
@@ -1429,6 +1429,14 @@ function Dashboard({ user, onLogout }) {
   );
 
   // ── Wallet page ───────────────────────────────────────────────────────────────
+  const [copied, setCopied] = useState(false);
+
+  function copyAddress() {
+    navigator.clipboard.writeText(user.circleWalletAddress || "");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
   const walletPage = (
     <div style={{ padding: 24, flex: 1, overflowY: "auto" }}>
       <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 20 }}>
@@ -1437,7 +1445,7 @@ function Dashboard({ user, onLogout }) {
       </div>
       <div style={{ background: C.surface, borderRadius: 14, border: `1px solid ${C.border}`, padding: "20px 24px" }}>
         <div style={{ fontSize: 14, fontWeight: 700, color: C.ink, marginBottom: 16 }}>Wallet details</div>
-      {[
+        {[
           ["Wallet ID",    user.circleWalletId || "—", false],
           ["Address",      user.circleWalletAddress || "—", true],
           ["Network",      user.network || "Arc Testnet (USDC)", false],
@@ -1449,19 +1457,15 @@ function Dashboard({ user, onLogout }) {
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <span style={{ fontSize: 13, color: C.ink, fontFamily: "monospace", wordBreak: "break-all" }}>{v}</span>
               {copyable && v !== "—" && (
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(v);
-                  }}
-                  title="Copy address"
-                  style={{
-                    width: 28, height: 28, borderRadius: 6,
-                    border: `1px solid ${C.border}`,
-                    background: C.surfaceAlt, cursor: "pointer",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: 13, flexShrink: 0,
-                  }}
-                >📋</button>
+                <button onClick={copyAddress} style={{
+                  padding: "4px 10px", borderRadius: 6,
+                  border: `1px solid ${copied ? C.mint : C.border}`,
+                  background: copied ? C.mintBg : C.surfaceAlt,
+                  color: copied ? C.mintText : C.inkMuted,
+                  cursor: "pointer", fontSize: 11, fontWeight: 600,
+                  fontFamily: "inherit", transition: "all 0.2s",
+                  flexShrink: 0, whiteSpace: "nowrap",
+                }}>{copied ? "✓ Copied!" : "Copy"}</button>
               )}
             </div>
           </div>

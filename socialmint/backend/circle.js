@@ -97,18 +97,8 @@ async function getWalletBalance(walletId) {
     { headers: headers() }
   );
   const balances = res.data.data.tokenBalances || [];
-  console.log("   Raw balances:", JSON.stringify(balances));
-  // Find USDC — works for both native (Arc) and ERC-20 (Base)
-  const usdc = balances.find(b =>
-    b.token?.symbol === "USDC" ||
-    b.token?.name?.toUpperCase().includes("USDC") ||
-    b.token?.tokenAddress === USDC_TOKEN_ARC_TESTNET ||
-    b.token?.tokenAddress === USDC_TOKEN_BASE_SEPOLIA ||
-    b.token?.tokenAddress === USDC_TOKEN_BASE_MAINNET
-  );
-  const amount = usdc ? parseFloat(usdc.amount) : 0.0;
-  console.log("   USDC balance found:", amount);
-  return amount;
+  const usdc = balances.find(b => b.token.symbol === "USDC");
+  return usdc ? parseFloat(usdc.amount) : 0.0;
 }
 
 async function chargeUser(userWalletId) {

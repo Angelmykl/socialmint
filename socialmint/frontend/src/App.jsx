@@ -270,21 +270,22 @@ function Dashboard({ user, onLogout }) {
 
   const token = () => localStorage.getItem("sm_token");
 
-  // ── Auto-refresh balance every 15 seconds ─────────────────────────────────
-  useEffect(() => {
-    async function refreshBalance() {
-      try {
-        const res = await fetch(`${API}/api/balance`, {
-          headers: { "Authorization": `Bearer ${token()}` },
-        });
-        const data = await res.json();
-        if (typeof data.balance === "number") setBalance(data.balance);
-      } catch {}
-    }
-    refreshBalance();
-    const interval = setInterval(refreshBalance, 15000);
-    return () => clearInterval(interval);
-  }, []);
+  // ── Manual balance refresh ─────────────────────────────────────────────────
+  const [refreshing, setRefreshing] = useState(false);
+
+  async function refreshBalance() {
+    setRefreshing(true);
+    try {
+      const res = await fetch(`${API}/api/balance`, {
+        headers: { "Authorization": `Bearer ${token()}` },
+      });
+      const data = await res.json();
+      if (typeof data.balance === "number" && data.balance > 0) {
+        setBalance(data.balance);
+      }
+    } catch {}
+    setRefreshing(false);
+  }
 
   useEffect(() => {
     const fn = () => setIsMobile(window.innerWidth < 768);
@@ -741,8 +742,20 @@ function Dashboard({ user, onLogout }) {
   const walletPage = (
     <div style={{ padding: 24, flex: 1, overflowY: "auto" }}>
       <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 20 }}>
-        <MetricCard label="USDC Balance"  value={`${balance.toFixed(2)} USDC`}                sub="Available to spend"  icon="◎" accent={C.mintBg} />
-        <MetricCard label="Total Charged" value={`${(totalAnalyses * 0.50).toFixed(2)} USDC`} sub="Lifetime total"      icon="⚡" accent={C.blueBg} />
+        <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14, padding: "16px 18px", flex: 1, minWidth: 140, boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: C.inkMuted, textTransform: "uppercase", letterSpacing: "0.07em" }}>USDC Balance</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <button onClick={refreshBalance} disabled={refreshing} style={{ padding: "3px 10px", borderRadius: 6, border: `1px solid ${C.border}`, background: C.surfaceAlt, color: C.inkMuted, cursor: refreshing ? "not-allowed" : "pointer", fontSize: 11, fontWeight: 600, fontFamily: "inherit" }}>
+                {refreshing ? "..." : "↻ Refresh"}
+              </button>
+              <div style={{ width: 30, height: 30, borderRadius: 8, background: C.mintBg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>◎</div>
+            </div>
+          </div>
+          <div style={{ fontSize: 22, fontWeight: 800, color: C.ink, marginBottom: 3, letterSpacing: "-0.5px" }}>{balance.toFixed(2)} USDC</div>
+          <div style={{ fontSize: 12, color: C.inkMuted }}>Available to spend</div>
+        </div>
+        <MetricCard label="Total Charged" value={`${(totalAnalyses * 0.50).toFixed(2)} USDC`} sub="Lifetime total" icon="⚡" accent={C.blueBg} />
       </div>
       <div style={{ background: C.surface, borderRadius: 14, border: `1px solid ${C.border}`, padding: "20px 24px" }}>
         <div style={{ fontSize: 14, fontWeight: 700, color: C.ink, marginBottom: 16 }}>Wallet details</div>

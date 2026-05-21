@@ -248,7 +248,7 @@ app.get("/api/wallet/balance", requireAuth, async (req, res) => {
 app.get("/api/balance", requireAuth, async (req, res) => {
   try {
     const userId = req.user.userId;
-    const user = await User.findOne({ userId });
+    const user = await getUser(userId);
     if (!user?.circleWalletId) return res.json({ balance: 0 });
     const balance = await getWalletBalance(user.circleWalletId);
     res.json({ balance });

@@ -270,7 +270,7 @@ function Dashboard({ user, onLogout }) {
 
   const token = () => localStorage.getItem("sm_token");
 
-  // ── Balance refresh ────────────────────────────────────────────────────────
+  // ── Balance refresh — event driven, not polling ────────────────────────────
   const [refreshing, setRefreshing] = useState(false);
 
   async function fetchBalance(showSpinner = false) {
@@ -287,14 +287,10 @@ function Dashboard({ user, onLogout }) {
     if (showSpinner) setRefreshing(false);
   }
 
-  // Auto-refresh silently every 15 seconds
-  useEffect(() => {
-    fetchBalance(false); // silent on mount
-    const interval = setInterval(() => fetchBalance(false), 15000);
-    return () => clearInterval(interval);
-  }, []);
+  // Fetch once on mount to get accurate balance from Circle
+  useEffect(() => { fetchBalance(false); }, []);
 
-  // Manual refresh — shows spinner
+  // Manual refresh button
   function refreshBalance() { fetchBalance(true); }
 
   useEffect(() => {
@@ -352,6 +348,7 @@ function Dashboard({ user, onLogout }) {
       setTxHistory(h => [{ id: data.txId, label: platform + " analysis", time: nowTime(), amount: COST }, ...h]);
       setResult({ ...data, goals: Array.from(goals) });
       setResultTab(Array.from(goals)[0]);
+      fetchBalance(false); // sync real balance from Circle after charge
     } catch (e) { setError(e.message); }
     setLoading(false);
   }
@@ -579,7 +576,7 @@ function Dashboard({ user, onLogout }) {
       const res = await fetch(`${API}/api/analyze`, { method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token()}` }, body: JSON.stringify({ platform: prompt.platform, niche: prompt.niche, goals: prompt.goals, isFreeDemo: isFree }) });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Analysis failed");
-      if (!isFree) { setTotalAnalyses(n => n + 1); setTxHistory(h => [{ id: data.txId, label: prompt.platform + " analysis", time: nowTime(), amount: COST }, ...h]); }
+      if (!isFree) { setTotalAnalyses(n => n + 1); setTxHistory(h => [{ id: data.txId, label: prompt.platform + " analysis", time: nowTime(), amount: COST }, ...h]); fetchBalance(false); }
       setResult({ ...data, goals: prompt.goals }); setResultTab(prompt.goals[0]);
     } catch (e) { setError(e.message || "Analysis failed — please try again."); if (!isFree) setBalance(b => parseFloat((b + COST).toFixed(2))); }
     setLoading(false);

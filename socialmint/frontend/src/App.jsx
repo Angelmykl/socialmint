@@ -270,7 +270,7 @@ function Dashboard({ user, onLogout }) {
 
   const token = () => localStorage.getItem("sm_token");
 
-  // ── Manual balance refresh ─────────────────────────────────────────────────
+  // ── Auto-refresh balance every 15 seconds ─────────────────────────────────
   const [refreshing, setRefreshing] = useState(false);
 
   async function refreshBalance() {
@@ -286,6 +286,12 @@ function Dashboard({ user, onLogout }) {
     } catch {}
     setRefreshing(false);
   }
+
+  useEffect(() => {
+    refreshBalance(); // fetch immediately on mount
+    const interval = setInterval(refreshBalance, 15000); // then every 15s
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const fn = () => setIsMobile(window.innerWidth < 768);

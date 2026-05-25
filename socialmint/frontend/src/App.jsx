@@ -374,6 +374,28 @@ function Dashboard({ user, onLogout }) {
         <NavItem icon="⏱" label="History"      active={page==="history"}   onClick={() => { setPage("history");   setMobileNav(false); }} />
         <NavItem icon="◎" label="Wallet"        active={page==="wallet"}    onClick={() => { setPage("wallet");    setMobileNav(false); }} />
         <div style={{ height: 1, background: C.sideBorder, margin: "10px 4px" }} />
+
+        {/* Coming Soon */}
+        <div style={{ fontSize: 10, fontWeight: 700, color: C.sideMuted, padding: "4px 12px 8px", textTransform: "uppercase", letterSpacing: "0.08em" }}>Coming Soon</div>
+        {[
+          { icon: "📈", label: "Agent Trade" },
+          { icon: "🎯", label: "Prediction Agent" },
+        ].map(item => (
+          <div key={item.label} style={{
+            display: "flex", alignItems: "center", gap: 10,
+            padding: "9px 12px", borderRadius: 8, opacity: 0.5,
+            cursor: "not-allowed",
+          }}>
+            <span style={{ fontSize: 15, flexShrink: 0 }}>{item.icon}</span>
+            <span style={{ flex: 1, fontSize: 13, color: C.sideSubtext }}>{item.label}</span>
+            <span style={{
+              fontSize: 9, fontWeight: 700, padding: "2px 7px", borderRadius: 20,
+              background: C.sideBorder, color: C.sideMuted, letterSpacing: "0.05em",
+            }}>SOON</span>
+          </div>
+        ))}
+
+        <div style={{ height: 1, background: C.sideBorder, margin: "10px 4px" }} />
         <NavItem icon="⚙" label="Settings"     active={page==="settings"}  onClick={() => { setPage("settings");  setMobileNav(false); }} />
       </div>
       <div style={{ padding: "10px 8px", borderTop: `1px solid ${C.sideBorder}`, position: "relative" }}>

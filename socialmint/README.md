@@ -1,4 +1,4 @@
-# SocialMint Agent
+# SocialMint Agent 🌿
 
 **AI-powered social media monetization intelligence, built on Circle's Agent Stack.**
 
@@ -353,6 +353,7 @@ Settlement in USDC across chains seamlessly
 ```
 
 ### 🔮 Phase 4 — Creator Finance Suite
+- **SocialMint Prediction Agent** — autonomous agent that monitors prediction markets (crypto prices, sports, politics, tech) and places bets on behalf of users using their Circle wallet. User sets conditions, agent executes 24/7. Winnings returned to Circle wallet automatically. Powered by Arc smart contracts for escrow + settlement and Circle Programmable Wallets for custody.
 - **SocialMint Yield** — idle USDC in wallets earns yield via Circle's USYC
 - **SocialMint Pay** — creators accept USDC payments from fans directly via their SocialMint wallet
 - **SocialMint Analytics** — cross-platform performance dashboard with monetization scoring

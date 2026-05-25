@@ -1,4 +1,4 @@
-# SocialMint Agent 🌿
+# SocialMint Agent
 
 **AI-powered social media monetization intelligence, built on Circle's Agent Stack.**
 

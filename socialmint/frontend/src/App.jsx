@@ -5,106 +5,498 @@ const API  = import.meta.env.VITE_API_URL || "http://localhost:4000";
 const COST = 0.50;
 
 const C = {
-  side:        "#0B1121",
-  sideHover:   "#131E35",
-  sideBorder:  "#1A2740",
-  sideMuted:   "#4A6080",
-  sideText:    "#F0F4FF",
-  sideSubtext: "#8BA3C4",
-  canvas:      "#F4F6FB",
-  surface:     "#FFFFFF",
-  surfaceAlt:  "#EEF1F8",
-  border:      "#E2E7F0",
-  borderStrong:"#C8D0E0",
-  ink:         "#0D1526",
-  inkSub:      "#3D526E",
-  inkMuted:    "#8BA3C4",
-  mint:        "#00C896",
-  mintDark:    "#00A87E",
-  mintBg:      "#E6FAF4",
-  mintText:    "#006B52",
-  mintBorder:  "#00C89640",
-  green:       "#10B981",
-  greenBg:     "#ECFDF5",
-  greenText:   "#065F46",
-  greenBorder: "#6EE7B7",
-  red:         "#EF4444",
-  redBg:       "#FEF2F2",
-  blue:        "#3B82F6",
-  blueBg:      "#EFF6FF",
-  blueText:    "#1D4ED8",
-  purple:      "#8B5CF6",
-  purpleBg:    "#F5F3FF",
-  purpleText:  "#5B21B6",
-  cta:        "#00C896",
-  ctaText:    "#FFFFFF",
-  ctaDark:    "#00A87E",
+  side:"#0B1121",sideHover:"#131E35",sideBorder:"#1A2740",sideMuted:"#4A6080",sideText:"#F0F4FF",sideSubtext:"#8BA3C4",
+  canvas:"#F4F6FB",surface:"#FFFFFF",surfaceAlt:"#EEF1F8",border:"#E2E7F0",borderStrong:"#C8D0E0",
+  ink:"#0D1526",inkSub:"#3D526E",inkMuted:"#8BA3C4",
+  mint:"#00C896",mintDark:"#00A87E",mintBg:"#E6FAF4",mintText:"#006B52",mintBorder:"#00C89640",
+  green:"#10B981",greenBg:"#ECFDF5",greenText:"#065F46",greenBorder:"#6EE7B7",
+  red:"#EF4444",redBg:"#FEF2F2",
+  blue:"#3B82F6",blueBg:"#EFF6FF",blueText:"#1D4ED8",
+  purple:"#8B5CF6",purpleBg:"#F5F3FF",purpleText:"#5B21B6",
+  cta:"#00C896",ctaText:"#FFFFFF",ctaDark:"#00A87E",
 };
 
 const PLATFORM_ICONS = {
-  Instagram: ({ size = 16 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <defs><linearGradient id="ig" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stopColor="#F58529"/><stop offset="50%" stopColor="#DD2A7B"/><stop offset="100%" stopColor="#515BD4"/></linearGradient></defs>
-      <rect x="2" y="2" width="20" height="20" rx="5" fill="url(#ig)"/>
-      <circle cx="12" cy="12" r="4" stroke="white" strokeWidth="2" fill="none"/>
-      <circle cx="17.5" cy="6.5" r="1" fill="white"/>
-    </svg>
-  ),
-  TikTok: ({ size = 16 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <rect width="24" height="24" rx="5" fill="#010101"/>
-      <path d="M16.5 5C16.7 6.5 17.6 7.8 19 8.3V11C18 11 17 10.7 16.2 10.2V15C16.2 17.8 14 20 11.1 20C8.2 20 6 17.8 6 15C6 12.2 8.2 10 11.1 10C11.3 10 11.5 10 11.7 10.1V13.2C11.5 13.1 11.3 13.1 11.1 13.1C9.9 13.1 9 14 9 15.1C9 16.2 9.9 17.1 11.1 17.1C12.3 17.1 13.2 16.2 13.2 15.1V5H16.5Z" fill="white"/>
-    </svg>
-  ),
-  "X / Twitter": ({ size = 16 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <rect width="24" height="24" rx="5" fill="#000000"/>
-      <path d="M18 5L13.2 10.5L18.5 18H14.8L11.5 13.5L7.5 18H5L10.1 12.2L5 5H8.8L11.8 9.2L15.5 5H18ZM15 16.5L7.5 6.5H9L16.5 16.5H15Z" fill="white"/>
-    </svg>
-  ),
-  YouTube: ({ size = 16 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <rect width="24" height="24" rx="5" fill="#FF0000"/>
-      <path d="M20.5 8C20.3 7.2 19.6 6.6 18.8 6.4C17.3 6 12 6 12 6C12 6 6.7 6 5.2 6.4C4.4 6.6 3.7 7.2 3.5 8C3.2 9.4 3 12 3 12C3 12 3.2 14.6 3.5 16C3.7 16.8 4.4 17.4 5.2 17.6C6.7 18 12 18 12 18C12 18 17.3 18 18.8 17.6C19.6 17.4 20.3 16.8 20.5 16C20.8 14.6 21 12 21 12C21 12 20.8 9.4 20.5 8Z" fill="#FF0000"/>
-      <path d="M10 15L15.2 12L10 9V15Z" fill="white"/>
-    </svg>
-  ),
-  LinkedIn: ({ size = 16 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <rect width="24" height="24" rx="5" fill="#0A66C2"/>
-      <path d="M7 9H9.5V17H7V9ZM8.25 8C7.56 8 7 7.44 7 6.75C7 6.06 7.56 5.5 8.25 5.5C8.94 5.5 9.5 6.06 9.5 6.75C9.5 7.44 8.94 8 8.25 8ZM17 17H14.5V13C14.5 12.17 13.83 11.5 13 11.5C12.17 11.5 11.5 12.17 11.5 13V17H9V9H11.5V10.1C12 9.4 12.9 9 13.9 9C15.6 9 17 10.4 17 12.1V17Z" fill="white"/>
-    </svg>
-  ),
-  Facebook: ({ size = 16 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <rect width="24" height="24" rx="5" fill="#1877F2"/>
-      <path d="M16 8H13.5C13.2 8 13 8.2 13 8.5V10.5H16L15.6 13H13V20H10.5V13H8.5V10.5H10.5V8.5C10.5 7 11.5 6 13 6H16V8Z" fill="white"/>
-    </svg>
-  ),
+  Instagram: ({ size = 16 }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none"><defs><linearGradient id="ig" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stopColor="#F58529"/><stop offset="50%" stopColor="#DD2A7B"/><stop offset="100%" stopColor="#515BD4"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5" fill="url(#ig)"/><circle cx="12" cy="12" r="4" stroke="white" strokeWidth="2" fill="none"/><circle cx="17.5" cy="6.5" r="1" fill="white"/></svg>),
+  TikTok: ({ size = 16 }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#010101"/><path d="M16.5 5C16.7 6.5 17.6 7.8 19 8.3V11C18 11 17 10.7 16.2 10.2V15C16.2 17.8 14 20 11.1 20C8.2 20 6 17.8 6 15C6 12.2 8.2 10 11.1 10C11.3 10 11.5 10 11.7 10.1V13.2C11.5 13.1 11.3 13.1 11.1 13.1C9.9 13.1 9 14 9 15.1C9 16.2 9.9 17.1 11.1 17.1C12.3 17.1 13.2 16.2 13.2 15.1V5H16.5Z" fill="white"/></svg>),
+  "X / Twitter": ({ size = 16 }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#000000"/><path d="M18 5L13.2 10.5L18.5 18H14.8L11.5 13.5L7.5 18H5L10.1 12.2L5 5H8.8L11.8 9.2L15.5 5H18ZM15 16.5L7.5 6.5H9L16.5 16.5H15Z" fill="white"/></svg>),
+  YouTube: ({ size = 16 }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#FF0000"/><path d="M20.5 8C20.3 7.2 19.6 6.6 18.8 6.4C17.3 6 12 6 12 6C12 6 6.7 6 5.2 6.4C4.4 6.6 3.7 7.2 3.5 8C3.2 9.4 3 12 3 12C3 12 3.2 14.6 3.5 16C3.7 16.8 4.4 17.4 5.2 17.6C6.7 18 12 18 12 18C12 18 17.3 18 18.8 17.6C19.6 17.4 20.3 16.8 20.5 16C20.8 14.6 21 12 21 12C21 12 20.8 9.4 20.5 8Z" fill="#FF0000"/><path d="M10 15L15.2 12L10 9V15Z" fill="white"/></svg>),
+  LinkedIn: ({ size = 16 }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#0A66C2"/><path d="M7 9H9.5V17H7V9ZM8.25 8C7.56 8 7 7.44 7 6.75C7 6.06 7.56 5.5 8.25 5.5C8.94 5.5 9.5 6.06 9.5 6.75C9.5 7.44 8.94 8 8.25 8ZM17 17H14.5V13C14.5 12.17 13.83 11.5 13 11.5C12.17 11.5 11.5 12.17 11.5 13V17H9V9H11.5V10.1C12 9.4 12.9 9 13.9 9C15.6 9 17 10.4 17 12.1V17Z" fill="white"/></svg>),
+  Facebook: ({ size = 16 }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#1877F2"/><path d="M16 8H13.5C13.2 8 13 8.2 13 8.5V10.5H16L15.6 13H13V20H10.5V13H8.5V10.5H10.5V8.5C10.5 7 11.5 6 13 6H16V8Z" fill="white"/></svg>),
 };
 
 function BrandLogo({ size = 36 }) {
-  const platforms = ["Instagram", "TikTok", "X / Twitter", "YouTube", "LinkedIn", "Facebook"];
+  const platforms = ["Instagram","TikTok","X / Twitter","YouTube","LinkedIn","Facebook"];
   return (
-    <div style={{ width: size, height: size, borderRadius: size * 0.28, display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gridTemplateRows: "1fr 1fr", gap: 1.5, overflow: "hidden", flexShrink: 0, background: C.side }}>
-      {platforms.map((p, i) => (
-        <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "center", background: C.sideHover }}>
-          {(() => { const Icon = PLATFORM_ICONS[p]; return <Icon size={size * 0.28} />; })()}
-        </div>
-      ))}
+    <div style={{width:size,height:size,borderRadius:size*0.28,display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gridTemplateRows:"1fr 1fr",gap:1.5,overflow:"hidden",flexShrink:0,background:C.side}}>
+      {platforms.map((p,i)=>(<div key={i} style={{display:"flex",alignItems:"center",justifyContent:"center",background:C.sideHover}}>{(()=>{const Icon=PLATFORM_ICONS[p];return <Icon size={size*0.28}/>;})()}</div>))}
     </div>
   );
 }
 
-const PLATFORMS = ["Instagram", "TikTok", "X / Twitter", "YouTube", "LinkedIn", "Facebook"];
+const PLATFORMS = ["Instagram","TikTok","X / Twitter","YouTube","LinkedIn","Facebook"];
+function nowTime(){return new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});}
+function Spinner({size=16,dark=false}){return(<span style={{width:size,height:size,borderRadius:"50%",border:`2px solid ${dark?C.border:"rgba(255,255,255,0.3)"}`,borderTopColor:dark?C.mint:"#fff",animation:"spin 0.7s linear infinite",display:"inline-block",flexShrink:0}}/>);}
 
-function nowTime() {
-  return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-}
+// ── Prediction Page ────────────────────────────────────────────────────────────
+function PredictionPage({ user, token, balance }) {
+  const [asset, setAsset]             = useState("BTC");
+  const [condition, setCondition]     = useState("risesBy");
+  const [condValue, setCondValue]     = useState("0.3");
+  const [outcome, setOutcome]         = useState("continuesRising");
+  const [timeframe, setTimeframe]     = useState("5min");
+  const [betAmount, setBetAmount]     = useState("1.00");
+  const [repeatCount, setRepeatCount] = useState(5);
+  const [maxLoss, setMaxLoss]         = useState(true);
+  const [autoReactivate, setAutoReactivate] = useState(false);
+  const [activating, setActivating]   = useState(false);
+  const [error, setError]             = useState("");
+  const [prices, setPrices]           = useState({ BTC:62798, ETH:1671.30, SOL:66.11 });
+  const [priceChanges, setPriceChanges] = useState({ BTC:0, ETH:0, SOL:0 });
+  const basePrices = { BTC:62798, ETH:1671.30, SOL:66.11 };
+  const [conditions, setConditions]       = useState([]);
+  const [conditionsTotal, setConditionsTotal] = useState(0);
+  const [conditionsPage, setConditionsPage]   = useState(1);
+  const [loadingMoreConds, setLoadingMoreConds] = useState(false);
+  const [history, setHistory]             = useState([]);
+  const [historyPage, setHistoryPage]     = useState(1);
+  const [historyTotal, setHistoryTotal]   = useState(0);
+  const [loadingMore, setLoadingMore]     = useState(false);
+  const [cancellingId, setCancellingId]   = useState(null);
+  const isMobile = window.innerWidth < 768;
 
-function Spinner({ size = 16, dark = false }) {
+  const OUTCOMES = {
+    drop: [
+      { key:"recovers",          name:"Recovers",           desc:"Bounces back up ≥0.08% — the dip was temporary" },
+      { key:"continuesDropping", name:"Continues dropping", desc:"Keeps falling ≥0.08% — bearish momentum continues" },
+      { key:"reversesHard",      name:"Reverses hard",      desc:"Snaps back hard ≥0.5% — strong relief rally" },
+      { key:"staysFlat",         name:"Stays flat",         desc:"Barely moves either way within ±0.1%" },
+    ],
+    rise: [
+      { key:"continuesRising",   name:"Continues rising",   desc:"Keeps climbing ≥0.08% — bullish momentum holds" },
+      { key:"reverses",          name:"Reverses",           desc:"Drops back down ≥0.08% — the rise was a fakeout" },
+      { key:"surgesToATH",       name:"Surges hard",        desc:"Explodes up ≥0.5% — strong breakout continuation" },
+      { key:"staysFlat",         name:"Stays flat",         desc:"Stalls and barely moves within ±0.1%" },
+    ],
+  };
+
+  const COND_LBL = { dropsBy:"drops by",risesBy:"rises by",dropsBelow:"drops below",risesAbove:"rises above" };
+  const OUT_LBL  = { recovers:"recovers",continuesDropping:"continues dropping",reversesHard:"reverses hard",continuesRising:"continues rising",reverses:"reverses",surgesToATH:"surges hard",staysFlat:"stays flat" };
+
+  const direction = (condition==="dropsBy"||condition==="dropsBelow") ? "drop" : "rise";
+  const outcomeOptions = OUTCOMES[direction];
+
+  useEffect(()=>{
+    const valid = OUTCOMES[direction].map(o=>o.key);
+    if(!valid.includes(outcome)) setOutcome(OUTCOMES[direction][0].key);
+  },[condition]);
+
+  // Try to get real prices from Binance (no API key needed), fall back to simulated ticks
+  useEffect(()=>{
+    async function loadPrices(){
+      try{
+        const [btc,eth,sol]=await Promise.all([
+          fetch("https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT"),
+          fetch("https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT"),
+          fetch("https://api.binance.com/api/v3/ticker/price?symbol=SOLUSDT"),
+        ]);
+        const [bd,ed,sd]=await Promise.all([btc.json(),eth.json(),sol.json()]);
+        if(bd.price){
+          const newPrices={BTC:parseFloat(bd.price),ETH:parseFloat(ed.price),SOL:parseFloat(sd.price)};
+          setPrices(newPrices);
+        }
+      }catch{
+        // fallback to simulation below
+      }
+    }
+    loadPrices();
+    const apiInterval=setInterval(loadPrices,10000);
+
+    // Simulate realistic price movement every 2s regardless of API
+    const tickInterval=setInterval(()=>{
+      setPrices(prev=>{
+        const next={...prev};
+        for(const a of ['BTC','ETH','SOL']){
+          next[a]=prev[a]*(1+(Math.random()-0.5)*0.0008);
+          if(Math.abs(next[a]-basePrices[a])/basePrices[a]>0.015){
+            next[a]=basePrices[a]*(1+(Math.random()-0.5)*0.003);
+          }
+        }
+        setPriceChanges({
+          BTC:((next.BTC-basePrices.BTC)/basePrices.BTC*100),
+          ETH:((next.ETH-basePrices.ETH)/basePrices.ETH*100),
+          SOL:((next.SOL-basePrices.SOL)/basePrices.SOL*100),
+        });
+        return next;
+      });
+    },2000);
+
+    return ()=>{ clearInterval(apiInterval); clearInterval(tickInterval); };
+  },[]);
+
+  async function loadData(){
+    try{
+      const h={Authorization:`Bearer ${token}`};
+      const [cRes,hRes]=await Promise.all([
+        fetch(`${API}/api/predictions/conditions?limit=5&page=1`,{headers:h}),
+        fetch(`${API}/api/predictions/history?limit=5&page=1`,{headers:h}),
+      ]);
+      const [cD,hD]=await Promise.all([cRes.json(),hRes.json()]);
+      if(cD.conditions){ setConditions(cD.conditions); setConditionsTotal(cD.total||0); setConditionsPage(1); }
+      if(hD.bets){ setHistory(hD.bets); setHistoryTotal(hD.total||0); setHistoryPage(1); }
+    }catch{}
+  }
+
+  async function loadMoreConditions(){
+    setLoadingMoreConds(true);
+    try{
+      const nextPage=conditionsPage+1;
+      const res=await fetch(`${API}/api/predictions/conditions?limit=5&page=${nextPage}`,{headers:{Authorization:`Bearer ${token}`}});
+      const data=await res.json();
+      if(data.conditions){ setConditions(prev=>[...prev,...data.conditions]); setConditionsPage(nextPage); }
+    }catch{}
+    setLoadingMoreConds(false);
+  }
+
+  async function loadMoreHistory(){
+    setLoadingMore(true);
+    try{
+      const nextPage=historyPage+1;
+      const res=await fetch(`${API}/api/predictions/history?limit=5&page=${nextPage}`,{headers:{Authorization:`Bearer ${token}`}});
+      const data=await res.json();
+      if(data.bets){ setHistory(prev=>[...prev,...data.bets]); setHistoryPage(nextPage); }
+    }catch{}
+    setLoadingMore(false);
+  }
+  useEffect(()=>{
+    loadData();
+    const iv = setInterval(loadData, 10000); // refresh every 10s
+    return ()=>clearInterval(iv);
+  },[]);
+
+  async function activateAgent(){
+    setError("");
+    const total=parseFloat(betAmount)*repeatCount;
+    if(balance<total){setError(`Need ${total.toFixed(2)} USDC (${repeatCount}× ${betAmount}), you have ${balance.toFixed(2)} USDC`);return;}
+    setActivating(true);
+    try{
+      const res=await fetch(`${API}/api/predictions/condition`,{method:"POST",headers:{"Content-Type":"application/json",Authorization:`Bearer ${token}`},body:JSON.stringify({asset,condition,conditionValue:parseFloat(condValue),outcome,timeframe,betAmount,repeatCount,maxLossProtection:maxLoss,autoReactivate})});
+      const data=await res.json();
+      if(!res.ok) throw new Error(data.error||"Failed to activate");
+      await loadData();
+    }catch(e){setError(e.message);}
+    setActivating(false);  }
+
+  async function cancelCondition(conditionId){
+    setCancellingId(conditionId);
+    try{
+      const res = await fetch(`${API}/api/predictions/condition/${conditionId}`,{method:"DELETE",headers:{Authorization:`Bearer ${token}`}});
+      if(res.ok){
+        // Only update this specific condition in local state — don't reload all
+        setConditions(prev => prev.map(c =>
+          c.conditionId === conditionId ? {...c, status:"cancelled"} : c
+        ));
+      } else {
+        const data = await res.json();
+        alert(data.error || "Failed to cancel condition");
+      }
+    }catch(e){
+      alert("Failed to cancel — please try again");
+    }
+    setCancellingId(null);
+  }
+
+  async function resumeCondition(conditionId){
+    try{
+      const res = await fetch(`${API}/api/predictions/condition/${conditionId}/resume`,{method:"POST",headers:{Authorization:`Bearer ${token}`}});
+      if(res.ok){
+        // Only update this specific condition in local state
+        setConditions(prev => prev.map(c =>
+          c.conditionId === conditionId ? {...c, status:"watching", consecutiveLosses:0} : c
+        ));
+      }
+    }catch(e){
+      console.error("Resume failed:", e.message);
+    }
+  }
+
+  const totalExposure=(parseFloat(betAmount)||0)*repeatCount;
+  const watchingCount=conditions.filter(c=>["watching","triggered"].includes(c.status)).length;
+  const atMaxConditions = watchingCount >= 3;
+  const dark={page:{flex:1,overflowY:"auto",padding:24,background:C.canvas},card:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:13,overflow:"hidden"},lbl:{fontSize:10,fontWeight:700,color:C.inkMuted,textTransform:"uppercase",letterSpacing:"0.06em",marginBottom:7,display:"block"}};
+
   return (
-    <span style={{ width: size, height: size, borderRadius: "50%", border: `2px solid ${dark ? C.border : "rgba(255,255,255,0.3)"}`, borderTopColor: dark ? C.mint : "#fff", animation: "spin 0.7s linear infinite", display: "inline-block", flexShrink: 0 }} />
+    <div style={dark.page}>
+      {/* Header */}
+      <div style={{background:C.surface,border:`1px solid ${C.border}`,borderTop:`3px solid ${C.mint}`,borderRadius:14,padding:"20px 24px",marginBottom:16,display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:14}}>
+        <div>
+          <h1 style={{fontSize:20,fontWeight:800,color:C.ink,marginBottom:5}}>Prediction Agent <span style={{fontSize:11,fontWeight:600,color:C.mintText,background:C.mintBg,padding:"3px 9px",borderRadius:20,marginLeft:7}}>BETA</span></h1>
+          <p style={{fontSize:12,color:C.inkMuted,maxWidth:420,lineHeight:1.6}}>Set your condition once. The agent monitors BTC, ETH and SOL 24/7 and bets autonomously — even while you sleep.</p>
+        </div>
+        <div style={{background:C.mintBg,border:"1px solid rgba(0,200,150,.3)",borderRadius:11,padding:"12px 18px",textAlign:"center",flexShrink:0}}>
+          <div style={{fontSize:22,fontWeight:800,color:C.mint}}>{balance.toFixed(2)}</div>
+          <div style={{fontSize:10,color:C.inkMuted,marginTop:2}}>USDC balance</div>
+        </div>
+      </div>
+
+      {/* Ticker */}
+      <div style={{display:"flex",gap:10,marginBottom:14,overflowX:"auto",paddingBottom:4}}>
+        {["BTC","ETH","SOL"].map(a=>{
+          const chg=priceChanges[a]||0;
+          const chgStr=(chg>=0?"+":"")+chg.toFixed(2)+"%";
+          return(
+          <div key={a} style={{background:C.surface,border:`1px solid ${C.border}`,borderRadius:9,padding:"9px 14px",flexShrink:0,minWidth:110}}>
+            <div style={{fontSize:10,color:C.inkMuted,marginBottom:3}}>{a}/USDC</div>
+            <div style={{fontSize:14,fontWeight:700,color:C.ink,fontFamily:"monospace"}}>${a==="SOL"?prices[a]?.toFixed(2):Math.round(prices[a])?.toLocaleString()}</div>
+            <div style={{fontSize:10,fontWeight:600,marginTop:2,color:chg>=0?C.green:C.red}}>{chg>=0?"▲":"▼"} {chgStr}</div>
+          </div>
+          );
+        })}
+        <div style={{background:C.mintBg,border:`1px solid ${C.mintBorder}`,borderRadius:9,padding:"9px 14px",flexShrink:0}}>
+          <div style={{fontSize:10,color:C.mintText,marginBottom:3}}>Agent status</div>
+          <div style={{fontSize:13,fontWeight:700,color:C.mintText}}>{watchingCount>0?"Monitoring":"Standby"}</div>
+          <div style={{fontSize:10,color:C.inkMuted,marginTop:2}}>{watchingCount}/3 slots used</div>
+        </div>
+      </div>
+
+      <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:14}}>
+        {/* Left — builder */}
+        <div style={dark.card}>
+          <div style={{padding:"14px 18px",borderBottom:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+            <div><div style={{fontSize:13,fontWeight:700,color:C.ink}}>Set Condition</div><div style={{fontSize:11,color:C.inkMuted,marginTop:2}}>Agent executes automatically when triggered</div></div>
+          </div>
+          <div style={{padding:18}}>
+
+            {/* Asset */}
+            <span style={dark.lbl}>Select asset</span>
+            <div style={{display:"flex",gap:7,marginBottom:14}}>
+              {["BTC","ETH","SOL"].map(a=>{
+                const chg=priceChanges[a]||0;
+                return(
+                <div key={a} onClick={()=>setAsset(a)} style={{flex:1,padding:"10px 6px",borderRadius:9,border:`1px solid ${asset===a?C.mint:C.border}`,background:asset===a?C.mintBg:C.surfaceAlt,cursor:"pointer",textAlign:"center"}}>
+                  <div style={{fontSize:12,fontWeight:700,color:asset===a?C.mintText:C.ink}}>{a}</div>
+                  <div style={{fontSize:10,color:C.inkMuted,fontFamily:"monospace",marginTop:2}}>${a==="SOL"?prices[a]?.toFixed(2):Math.round(prices[a])?.toLocaleString()}</div>
+                  <div style={{fontSize:9,fontWeight:600,marginTop:1,color:chg>=0?C.green:C.red}}>{chg>=0?"▲":""}{chg.toFixed(2)}%</div>
+                </div>
+                );
+              })}
+            </div>
+
+            {/* Timeframe */}
+            <span style={dark.lbl}>Timeframe</span>
+            <div style={{display:"flex",gap:7,marginBottom:18}}>
+              {["1min","3min","5min","15min"].map(tf=>(
+                <button key={tf} onClick={()=>setTimeframe(tf)} style={{padding:"7px 12px",borderRadius:7,border:`1px solid ${timeframe===tf?C.mint:C.border}`,background:timeframe===tf?C.mintBg:C.surfaceAlt,color:timeframe===tf?C.mintText:C.inkSub,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>{tf}</button>
+              ))}
+            </div>
+
+            {/* Condition */}
+            <span style={dark.lbl}>Trigger condition</span>
+            <div style={{display:"flex",gap:7,alignItems:"center",marginBottom:14,flexWrap:"wrap"}}>
+              <span style={{fontSize:12,color:C.inkSub}}>If {asset}</span>
+              <select value={condition} onChange={e=>setCondition(e.target.value)} style={{background:C.surfaceAlt,border:`1px solid ${C.border}`,borderRadius:7,padding:"8px 11px",color:C.ink,fontSize:12,fontFamily:"inherit",outline:"none"}}>
+                <option value="dropsBy">drops by</option>
+                <option value="risesBy">rises by</option>
+                <option value="dropsBelow">drops below</option>
+                <option value="risesAbove">rises above</option>
+              </select>
+              <input type="number" value={condValue} onChange={e=>setCondValue(e.target.value)} style={{background:C.surfaceAlt,border:`1px solid ${C.border}`,borderRadius:7,padding:"8px 11px",color:C.ink,fontSize:12,fontFamily:"inherit",outline:"none",width:65}} min="0.01" step="0.1"/>
+              <span style={{fontSize:12,color:C.inkSub}}>%</span>
+            </div>
+
+            {/* Outcomes — direction aware */}
+            <span style={dark.lbl}>Bet it will...</span>
+            <div style={{fontSize:11,background:C.mintBg,border:`1px solid ${C.mintBorder}`,borderRadius:8,padding:"8px 12px",marginBottom:12,color:C.mintText,lineHeight:1.6}}>
+              Trigger is a <strong>{direction==="drop"?"drop":"rise"}</strong> — pick what happens next
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:7,marginBottom:14}}>
+              {outcomeOptions.map(o=>(
+                <div key={o.key} onClick={()=>setOutcome(o.key)} style={{border:`1px solid ${outcome===o.key?C.mint:C.border}`,borderRadius:9,padding:"10px 12px",cursor:"pointer",background:outcome===o.key?C.mintBg:C.surfaceAlt,transition:"all .13s"}}>
+                  <div style={{fontSize:12,fontWeight:700,color:outcome===o.key?C.mintText:C.ink,marginBottom:3}}>{o.name}</div>
+                  <div style={{fontSize:10,color:C.inkMuted,lineHeight:1.4}}>{o.desc}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Summary line */}
+            <div style={{display:"flex",alignItems:"center",gap:9,background:C.mintBg,border:`1px solid ${C.mintBorder}`,borderRadius:8,padding:"9px 12px",marginBottom:18}}>
+              <span style={{fontSize:12,color:C.inkSub}}>If {asset} {COND_LBL[condition]} {condValue}% → bet it <strong style={{color:C.mintText}}>{OUT_LBL[outcome]||outcome}</strong> in {timeframe.replace("min"," min")}</span>
+            </div>
+
+            {/* Bet amount */}
+            <span style={dark.lbl}>Bet amount per execution</span>
+            <div style={{position:"relative",marginBottom:9}}>
+              <input type="number" value={betAmount} min="0.5" step="0.5" onChange={e=>setBetAmount(e.target.value)} style={{width:"100%",background:C.surfaceAlt,border:`1px solid ${C.border}`,borderRadius:7,padding:"9px 46px 9px 12px",color:C.ink,fontSize:13,fontWeight:600,fontFamily:"monospace",outline:"none"}}/>
+              <span style={{position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",fontSize:11,fontWeight:700,color:C.mint}}>USDC</span>
+            </div>
+            <div style={{display:"flex",gap:5,marginBottom:18}}>
+              {["0.50","1.00","2.00","5.00"].map(v=>(<button key={v} onClick={()=>setBetAmount(v)} style={{padding:"5px 10px",borderRadius:6,border:`1px solid ${betAmount===v?C.mint:C.border}`,background:betAmount===v?C.mintBg:C.surfaceAlt,color:betAmount===v?C.mintText:C.inkSub,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>{v}</button>))}
+            </div>
+
+            {/* Sequential counter */}
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10}}>
+              <div><div style={{fontSize:12,fontWeight:700}}>Sequential bets</div><div style={{fontSize:10,color:C.inkMuted,marginTop:2}}>How many times should agent repeat?</div></div>
+              <div style={{display:"flex",alignItems:"center",gap:8}}>
+                <button onClick={()=>setRepeatCount(n=>Math.max(1,n-1))} style={{width:26,height:26,borderRadius:6,border:`1px solid ${C.border}`,background:C.surfaceAlt,color:C.ink,fontSize:15,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"inherit"}}>−</button>
+                <span style={{fontSize:15,fontWeight:700,minWidth:22,textAlign:"center",fontFamily:"monospace"}}>{repeatCount}</span>
+                <button onClick={()=>setRepeatCount(n=>Math.min(10,n+1))} style={{width:26,height:26,borderRadius:6,border:`1px solid ${C.border}`,background:C.surfaceAlt,color:C.ink,fontSize:15,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"inherit"}}>+</button>
+              </div>
+            </div>
+
+            {/* Queue visual */}
+            <div style={{background:C.surfaceAlt,border:`1px solid ${C.border}`,borderRadius:9,padding:"12px 14px",marginBottom:10}}>
+              <span style={dark.lbl}>Bet queue</span>
+              <div style={{display:"flex",alignItems:"center",gap:3,flexWrap:"wrap"}}>
+                {Array.from({length:repeatCount},(_,i)=>(
+                  <span key={i} style={{display:"flex",alignItems:"center",gap:3}}>
+                    <div style={{width:28,height:28,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,background:i===0?C.mint:C.border,color:i===0?"#fff":C.inkMuted,border:`1px solid ${i===0?C.mint:C.border}`}}>{i+1}</div>
+                    {i<repeatCount-1&&<span style={{color:C.inkMuted,fontSize:11}}>→</span>}
+                  </span>
+                ))}
+              </div>
+              <div style={{fontSize:10,color:C.inkMuted,marginTop:7}}>Total exposure: <span style={{color:C.mint,fontWeight:700}}>{totalExposure.toFixed(2)} USDC</span></div>
+            </div>
+
+            {/* Max loss */}
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",background:"rgba(245,158,11,.1)",border:"1px solid rgba(245,158,11,.25)",borderRadius:9,padding:"11px 14px",marginBottom:10}}>
+              <div style={{display:"flex",alignItems:"center",gap:9}}>
+                <div><div style={{fontSize:12,fontWeight:700,color:"#F59E0B"}}>Max loss protection</div><div style={{fontSize:10,color:C.inkMuted,marginTop:1}}>Cooldown after 3 consecutive losses — resumes on next trigger</div></div>
+              </div>
+              <div onClick={()=>setMaxLoss(v=>!v)} style={{width:38,height:20,borderRadius:10,background:maxLoss?"#F59E0B":C.border,position:"relative",cursor:"pointer",flexShrink:0}}>
+                <div style={{width:16,height:16,borderRadius:"50%",background:"#fff",position:"absolute",top:2,left:maxLoss?20:2,transition:"left .2s"}}/>
+              </div>
+            </div>
+
+            {/* Auto-reactivate */}
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",background:C.mintBg,border:`1px solid ${C.mintBorder}`,borderRadius:9,padding:"11px 14px",marginBottom:18}}>
+              <div style={{display:"flex",alignItems:"center",gap:9}}>
+                <div><div style={{fontSize:12,fontWeight:700,color:C.mintText}}>Auto-reactivate</div><div style={{fontSize:10,color:C.inkMuted,marginTop:1}}>Restart automatically after all bets complete</div></div>
+              </div>
+              <div onClick={()=>setAutoReactivate(v=>!v)} style={{width:38,height:20,borderRadius:10,background:autoReactivate?C.mint:C.border,position:"relative",cursor:"pointer",flexShrink:0}}>
+                <div style={{width:16,height:16,borderRadius:"50%",background:"#fff",position:"absolute",top:2,left:autoReactivate?20:2,transition:"left .2s"}}/>
+              </div>
+            </div>
+
+            {error&&<div style={{background:"rgba(239,68,68,.1)",border:"1px solid rgba(239,68,68,.3)",borderRadius:7,padding:"9px 12px",fontSize:12,color:"#EF4444",marginBottom:12}}>⚠ {error}</div>}
+
+            <button onClick={activateAgent} disabled={activating||atMaxConditions||watchingCount>0} style={{width:"100%",padding:13,background:atMaxConditions||watchingCount>0?C.surfaceAlt:"linear-gradient(135deg,#00C896,#0EA5E9)",border:"none",borderRadius:9,fontSize:13,fontWeight:700,color:atMaxConditions||watchingCount>0?C.inkMuted:"#fff",cursor:activating||atMaxConditions||watchingCount>0?"not-allowed":"pointer",fontFamily:"inherit",opacity:activating?0.7:1,display:"flex",alignItems:"center",justifyContent:"center",gap:7}}>
+              {activating?"⏳ Activating...":watchingCount>0?"✓ Agent Activated":atMaxConditions?"⚠ Max 3 active conditions reached":`⚡ Activate Agent — ${repeatCount} sequential bet${repeatCount!==1?"s":""}`}
+            </button>
+          </div>
+        </div>
+
+        {/* Right — active + history */}
+        <div style={{display:"flex",flexDirection:"column",gap:14}}>
+          <div style={dark.card}>
+            <div style={{padding:"14px 18px",borderBottom:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+              <div><div style={{fontSize:13,fontWeight:700}}>Active conditions</div><div style={{fontSize:11,color:C.inkMuted,marginTop:2}}>Agent monitoring 24/7</div></div>
+              <div style={{display:"flex",alignItems:"center",gap:8}}>
+                {conditionsTotal>0&&<span style={{fontSize:11,color:C.inkMuted}}>{conditionsTotal} total</span>}
+                {watchingCount>0&&<span style={{fontSize:9,fontWeight:700,padding:"3px 7px",borderRadius:20,background:C.mintBg,color:C.mint}}>{watchingCount} running</span>}
+              </div>
+            </div>
+            {conditions.filter(c=>c.status!=="cancelled").length===0?(
+              <div style={{padding:"36px 20px",textAlign:"center",color:C.inkMuted}}>
+                <div style={{fontSize:32,marginBottom:10,opacity:.3}}>🎯</div>
+                <div style={{fontSize:13,fontWeight:600,marginBottom:5}}>No active conditions</div>
+                <div style={{fontSize:11,lineHeight:1.6}}>Set a condition and activate the agent.</div>
+              </div>
+            ):(
+              <>
+                {conditions.filter(c=>c.status!=="cancelled").map((c,i,arr)=>{
+                  const statusColor={watching:C.inkMuted,triggered:C.green,paused:"#F59E0B",completed:C.blue}[c.status]||C.inkMuted;
+                  const statusBg={watching:C.border,triggered:C.greenBg,paused:"rgba(245,158,11,.1)",completed:C.blueBg}[c.status]||C.border;
+                  const statusLabel={watching:"Watching",triggered:"● Live",paused:"⚠ Paused",completed:"Completed"}[c.status]||c.status;
+                  return(
+                    <div key={c.conditionId} style={{padding:"13px 18px",borderBottom:i<arr.filter(x=>x.status!=="cancelled").length-1?`1px solid ${C.border}`:"none",display:"flex",alignItems:"center",gap:10}}>
+                      <div style={{width:34,height:34,borderRadius:8,background:C.surfaceAlt,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:C.mint,flexShrink:0}}>{c.asset}</div>
+                      <div style={{flex:1}}>
+                        <div style={{fontSize:12,fontWeight:600,marginBottom:2}}>{c.asset} {COND_LBL[c.condition]} {c.conditionValue}% → {OUT_LBL[c.outcome]||c.outcome} · {c.timeframe}</div>
+                        <div style={{fontSize:10,color:C.inkMuted}}>Bet {c.betsPlaced}/{c.repeatCount} · {c.betAmount?.toFixed(2)} USDC each</div>
+                      </div>
+                      <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:4}}>
+                        {/* Top row — status + X cancel button */}
+                        <div style={{display:"flex",alignItems:"center",gap:5}}>
+                          {c.status==="paused"&&(
+                            <button
+                              onClick={()=>resumeCondition(c.conditionId)}
+                              style={{fontSize:9,fontWeight:700,padding:"3px 7px",borderRadius:20,background:"rgba(245,158,11,.1)",color:"#F59E0B",border:"none",cursor:"pointer",fontFamily:"inherit"}}
+                            >⚠ Resume</button>
+                          )}
+                          {c.status!=="paused"&&c.status!=="completed"&&(
+                            <span style={{fontSize:9,fontWeight:700,padding:"3px 7px",borderRadius:20,background:statusBg,color:statusColor,border:"none"}}>{statusLabel}</span>
+                          )}
+                          {c.status==="completed"&&(
+                            <span style={{fontSize:9,fontWeight:700,padding:"3px 7px",borderRadius:20,background:statusBg,color:statusColor,border:"none"}}>{statusLabel}</span>
+                          )}
+                          {c.status!=="completed"&&(
+                            <button
+                              onClick={()=>cancelCondition(c.conditionId)}
+                              disabled={cancellingId===c.conditionId}
+                              title="Cancel condition"
+                              style={{width:18,height:18,borderRadius:"50%",background:"rgba(239,68,68,.08)",border:"none",color:"#EF4444",cursor:cancellingId===c.conditionId?"not-allowed":"pointer",fontFamily:"inherit",fontSize:11,fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center",padding:0,flexShrink:0}}
+                            >{cancellingId===c.conditionId?"...":"×"}</button>
+                          )}
+                        </div>
+                        {/* Bottom — USDC amount */}
+                        <span style={{fontSize:12,fontWeight:700,color:C.mint,fontFamily:"monospace"}}>{c.betAmount?.toFixed(2)} USDC</span>
+                      </div>
+                    </div>
+                  );
+                })}
+                {conditions.filter(c=>c.status!=="cancelled").length < conditionsTotal&&(
+                  <div style={{padding:"10px 18px",textAlign:"center",borderTop:`1px solid ${C.border}`}}>
+                    <button onClick={loadMoreConditions} disabled={loadingMoreConds} style={{padding:"6px 18px",borderRadius:8,border:`1px solid ${C.border}`,background:C.surfaceAlt,color:C.inkSub,fontSize:12,fontWeight:600,cursor:loadingMoreConds?"not-allowed":"pointer",fontFamily:"inherit"}}>
+                      {loadingMoreConds?"Loading...":"Load more →"}
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+
+          <div style={dark.card}>
+            <div style={{padding:"14px 18px",borderBottom:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+              <div style={{fontSize:13,fontWeight:700}}>Recent settlements</div>
+              {historyTotal>0&&<div style={{fontSize:11,color:C.inkMuted}}>{historyTotal} total</div>}
+            </div>
+            {history.length===0?(
+              <div style={{padding:20,textAlign:"center",color:C.inkMuted,fontSize:11}}>No settled bets yet.</div>
+            ):(
+              <>
+                {history.map((bet,i,arr)=>(
+                  <div key={bet.betId||i} style={{display:"flex",alignItems:"center",gap:10,padding:"12px 18px",borderBottom:i<arr.length-1?`1px solid ${C.border}`:"none"}}>
+                    <div style={{width:34,height:34,borderRadius:8,background:bet.status==="won"?C.greenBg:"rgba(239,68,68,.1)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:bet.status==="won"?C.green:"#EF4444",flexShrink:0}}>{bet.asset}</div>
+                    <div style={{flex:1}}>
+                      <div style={{fontSize:12,fontWeight:600,marginBottom:2}}>{bet.asset} {COND_LBL[bet.condition]||bet.condition} → {OUT_LBL[bet.outcome]||bet.outcome}</div>
+                      <div style={{fontSize:10,color:C.inkMuted}}>Bet {bet.queueIndex}/{bet.queueTotal} · {bet.settledAt?new Date(bet.settledAt).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}):"-"}</div>
+                    </div>
+                    <div style={{textAlign:"right"}}>
+                      {/* Clickable amount → opens Arc explorer tx */}
+                      <div
+                        onClick={()=>bet.txHash&&window.open(`https://testnet.arcscan.app/tx/${bet.txHash}`,"_blank")}
+                        style={{fontSize:12,fontWeight:700,color:bet.status==="won"?C.green:"#EF4444",cursor:bet.txHash?"pointer":"default",textDecoration:bet.txHash?"underline":"none",textDecorationStyle:"dotted"}}
+                        title={bet.txHash?"View on Arc Explorer":undefined}
+                      >
+                        {bet.status==="won"?`+${bet.payout?.toFixed(2)}`:`−${bet.betAmount?.toFixed(2)}`} USDC
+                      </div>
+                      <div style={{fontSize:10,color:C.inkMuted}}>{bet.status==="won"?"Won ↗":"Lost ↗"}</div>
+                    </div>
+                  </div>
+                ))}
+                {history.length<historyTotal&&(
+                  <div style={{padding:"12px 18px",textAlign:"center",borderTop:`1px solid ${C.border}`}}>
+                    <button onClick={loadMoreHistory} disabled={loadingMore} style={{padding:"7px 20px",borderRadius:8,border:`1px solid ${C.border}`,background:C.surfaceAlt,color:C.inkSub,fontSize:12,fontWeight:600,cursor:loadingMore?"not-allowed":"pointer",fontFamily:"inherit"}}>
+                      {loadingMore?"Loading...":"Load more →"}
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -142,56 +534,32 @@ function LoginScreen({ onLogin }) {
 
   if (syncing) {
     return (
-      <div style={{ minHeight: "100vh", background: `linear-gradient(135deg, ${C.side} 0%, #0D1E3D 100%)`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16, fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+      <div style={{ minHeight:"100vh", background:`linear-gradient(135deg, ${C.side} 0%, #0D1E3D 100%)`, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:16, fontFamily:"'DM Sans', system-ui, sans-serif" }}>
         <BrandLogo size={56} />
-        <div style={{ color: "#fff", fontSize: 16, fontWeight: 600, marginTop: 8 }}>Setting up your wallet...</div>
-        <div style={{ color: C.sideSubtext, fontSize: 13 }}>Creating your Circle USDC wallet</div>
+        <div style={{ color:"#fff", fontSize:16, fontWeight:600, marginTop:8 }}>Setting up your wallet...</div>
+        <div style={{ color:C.sideSubtext, fontSize:13 }}>Creating your Circle USDC wallet</div>
         <Spinner size={24} />
       </div>
     );
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: `linear-gradient(135deg, ${C.side} 0%, #0D1E3D 100%)`, display: "flex", alignItems: "center", justifyContent: "center", padding: "2rem 1rem", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
-      <div style={{ width: "100%", maxWidth: 420, display: "flex", flexDirection: "column", alignItems: "center" }}>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "1.5rem", width: "100%", textAlign: "center" }}>
+    <div style={{ minHeight:"100vh", background:`linear-gradient(135deg, ${C.side} 0%, #0D1E3D 100%)`, display:"flex", alignItems:"center", justifyContent:"center", padding:"2rem 1rem", fontFamily:"'DM Sans', system-ui, sans-serif" }}>
+      <div style={{ width:"100%", maxWidth:420, display:"flex", flexDirection:"column", alignItems:"center" }}>
+        <div style={{ display:"flex", flexDirection:"column", alignItems:"center", marginBottom:"1.5rem", width:"100%", textAlign:"center" }}>
           <BrandLogo size={56} />
-          <div style={{ marginTop: 12 }}>
-            <div style={{ fontSize: 22, fontWeight: 800, color: "#FFFFFF", letterSpacing: "-0.5px" }}>SocialMint Agent</div>
-            <div style={{ fontSize: 12, color: C.sideSubtext, marginTop: 3 }}>AI-powered monetization intelligence</div>
+          <div style={{ marginTop:12 }}>
+            <div style={{ fontSize:22, fontWeight:800, color:"#FFFFFF", letterSpacing:"-0.5px" }}>SocialMint Agent</div>
+            <div style={{ fontSize:12, color:C.sideSubtext, marginTop:3 }}>AI-powered monetization intelligence</div>
           </div>
         </div>
-        {error && <div style={{ background: C.redBg, color: C.red, borderRadius: 8, padding: "8px 16px", fontSize: 13, marginBottom: 12, width: "100%" }}>⚠ {error}</div>}
-        <div style={{ width: "100%" }}>
-          <SignIn
-            routing="hash"
-            forceRedirectUrl={window.location.origin}
-            fallbackRedirectUrl={window.location.origin}
-            appearance={{
-              elements: {
-                rootBox: { width: "100%" },
-                card: { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "16px", backdropFilter: "blur(20px)", margin: "0", boxShadow: "none", width: "100%" },
-                headerTitle: { color: "#ffffff" },
-                headerSubtitle: { color: "rgba(255,255,255,0.5)" },
-                socialButtonsBlockButton: { background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", color: "#ffffff" },
-                socialButtonsBlockButtonText: { color: "#ffffff", fontWeight: 500 },
-                dividerLine: { background: "rgba(255,255,255,0.1)" },
-                dividerText: { color: "rgba(255,255,255,0.4)" },
-                formFieldLabel: { color: "#ffffff" },
-                formFieldInput: { background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", color: "#ffffff" },
-                formButtonPrimary: { background: `linear-gradient(135deg, ${C.mint}, #0EA5E9)`, border: "none" },
-                footer: { background: "rgba(0,0,0,0.25)", borderTop: "1px solid rgba(255,255,255,0.08)", borderRadius: "0 0 16px 16px" },
-                footerActionText: { color: "rgba(255,255,255,0.5)" },
-                footerActionLink: { color: C.mint },
-                identityPreviewText: { color: "#ffffff" },
-                identityPreviewEditButton: { color: C.mint },
-              },
-            }}
+        {error && <div style={{ background:C.redBg, color:C.red, borderRadius:8, padding:"8px 16px", fontSize:13, marginBottom:12, width:"100%" }}>⚠ {error}</div>}
+        <div style={{ width:"100%" }}>
+          <SignIn routing="hash" forceRedirectUrl={window.location.origin} fallbackRedirectUrl={window.location.origin}
+            appearance={{ elements: { rootBox:{width:"100%"}, card:{background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:"16px",backdropFilter:"blur(20px)",margin:"0",boxShadow:"none",width:"100%"}, headerTitle:{color:"#ffffff"}, headerSubtitle:{color:"rgba(255,255,255,0.5)"}, socialButtonsBlockButton:{background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.15)",color:"#ffffff"}, socialButtonsBlockButtonText:{color:"#ffffff",fontWeight:500}, dividerLine:{background:"rgba(255,255,255,0.1)"}, dividerText:{color:"rgba(255,255,255,0.4)"}, formFieldLabel:{color:"#ffffff"}, formFieldInput:{background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.15)",color:"#ffffff"}, formButtonPrimary:{background:`linear-gradient(135deg, ${C.mint}, #0EA5E9)`,border:"none"}, footer:{background:"rgba(0,0,0,0.25)",borderTop:"1px solid rgba(255,255,255,0.08)",borderRadius:"0 0 16px 16px"}, footerActionText:{color:"rgba(255,255,255,0.5)"}, footerActionLink:{color:C.mint}, identityPreviewText:{color:"#ffffff"}, identityPreviewEditButton:{color:C.mint} } }}
           />
         </div>
-        <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginTop: "1rem", textAlign: "center", lineHeight: 1.6 }}>
-          Powered by Circle Agent Stack · USDC on Arc
-        </div>
+        <div style={{ fontSize:11, color:"rgba(255,255,255,0.35)", marginTop:"1rem", textAlign:"center", lineHeight:1.6 }}>Powered by Circle Agent Stack · USDC on Arc</div>
       </div>
       <style>{`@keyframes spin{to{transform:rotate(360deg)}} .cl-formFieldInput::placeholder { color: rgba(255,255,255,0.35) !important; }`}</style>
     </div>
@@ -201,24 +569,24 @@ function LoginScreen({ onLogin }) {
 function NavItem({ icon, label, active, onClick, badge }) {
   const [hov, setHov] = useState(false);
   return (
-    <button onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "9px 12px", borderRadius: 8, border: "none", cursor: "pointer", fontFamily: "inherit", background: active ? "rgba(0,200,150,0.12)" : hov ? C.sideHover : "transparent", color: active ? C.mint : C.sideSubtext, fontSize: 13, fontWeight: active ? 600 : 400, transition: "all 0.12s", textAlign: "left", borderLeft: active ? `2px solid ${C.mint}` : "2px solid transparent" }}>
-      <span style={{ fontSize: 15, flexShrink: 0 }}>{icon}</span>
-      <span style={{ flex: 1 }}>{label}</span>
-      {badge && <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 7px", borderRadius: 20, background: C.mint, color: "#fff" }}>{badge}</span>}
+    <button onClick={onClick} onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)}
+      style={{ display:"flex", alignItems:"center", gap:10, width:"100%", padding:"9px 12px", borderRadius:8, border:"none", cursor:"pointer", fontFamily:"inherit", background:active?"rgba(0,200,150,0.12)":hov?C.sideHover:"transparent", color:active?C.mint:C.sideSubtext, fontSize:13, fontWeight:active?600:400, transition:"all 0.12s", textAlign:"left", borderLeft:active?`2px solid ${C.mint}`:"2px solid transparent" }}>
+      <span style={{ fontSize:15, flexShrink:0 }}>{icon}</span>
+      <span style={{ flex:1 }}>{label}</span>
+      {badge && <span style={{ fontSize:10, fontWeight:700, padding:"2px 7px", borderRadius:20, background:C.mint, color:"#fff" }}>{badge}</span>}
     </button>
   );
 }
 
 function MetricCard({ label, value, sub, icon, accent }) {
   return (
-    <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14, padding: "16px 18px", flex: 1, minWidth: 140, boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: C.inkMuted, textTransform: "uppercase", letterSpacing: "0.07em" }}>{label}</div>
-        <div style={{ width: 30, height: 30, borderRadius: 8, background: accent || C.surfaceAlt, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>{icon}</div>
+    <div style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:14, padding:"16px 18px", flex:1, minWidth:140, boxShadow:"0 1px 4px rgba(0,0,0,0.04)" }}>
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:10 }}>
+        <div style={{ fontSize:11, fontWeight:700, color:C.inkMuted, textTransform:"uppercase", letterSpacing:"0.07em" }}>{label}</div>
+        <div style={{ width:30, height:30, borderRadius:8, background:accent||C.surfaceAlt, display:"flex", alignItems:"center", justifyContent:"center", fontSize:14 }}>{icon}</div>
       </div>
-      <div style={{ fontSize: 22, fontWeight: 800, color: C.ink, marginBottom: 3, letterSpacing: "-0.5px" }}>{value}</div>
-      <div style={{ fontSize: 12, color: C.inkMuted }}>{sub}</div>
+      <div style={{ fontSize:22, fontWeight:800, color:C.ink, marginBottom:3, letterSpacing:"-0.5px" }}>{value}</div>
+      <div style={{ fontSize:12, color:C.inkMuted }}>{sub}</div>
     </div>
   );
 }
@@ -226,22 +594,22 @@ function MetricCard({ label, value, sub, icon, accent }) {
 function UserMenu({ user, onLogout }) {
   const [open, setOpen] = useState(false);
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position:"relative" }}>
       {open && (
-        <div style={{ position: "absolute", bottom: "100%", left: 0, right: 0, background: C.side, border: `1px solid ${C.sideBorder}`, borderRadius: 10, marginBottom: 4, overflow: "hidden", boxShadow: "0 -4px 20px rgba(0,0,0,0.3)" }}>
-          <div style={{ padding: "10px 14px", borderBottom: `1px solid ${C.sideBorder}` }}>
-            <div style={{ fontSize: 12, fontWeight: 600, color: C.sideText }}>{user.name}</div>
-            <div style={{ fontSize: 11, color: C.sideMuted, marginTop: 2 }}>{user.provider || "email"}</div>
+        <div style={{ position:"absolute", bottom:"100%", left:0, right:0, background:C.side, border:`1px solid ${C.sideBorder}`, borderRadius:10, marginBottom:4, overflow:"hidden", boxShadow:"0 -4px 20px rgba(0,0,0,0.3)" }}>
+          <div style={{ padding:"10px 14px", borderBottom:`1px solid ${C.sideBorder}` }}>
+            <div style={{ fontSize:12, fontWeight:600, color:C.sideText }}>{user.name}</div>
+            <div style={{ fontSize:11, color:C.sideMuted, marginTop:2 }}>{user.provider || "email"}</div>
           </div>
-          <button onClick={() => { setOpen(false); onLogout(); }} style={{ width: "100%", padding: "10px 14px", border: "none", background: "transparent", cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", gap: 8, color: C.red, fontSize: 13, fontWeight: 500, textAlign: "left" }}>
+          <button onClick={()=>{ setOpen(false); onLogout(); }} style={{ width:"100%", padding:"10px 14px", border:"none", background:"transparent", cursor:"pointer", fontFamily:"inherit", display:"flex", alignItems:"center", gap:8, color:C.red, fontSize:13, fontWeight:500, textAlign:"left" }}>
             <span>⎋</span> Sign out
           </button>
         </div>
       )}
-      <button onClick={() => setOpen(v => !v)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 8, padding: "7px 12px", borderRadius: 8, border: "none", background: open ? C.sideHover : "transparent", cursor: "pointer", fontFamily: "inherit", transition: "all 0.12s" }}>
-        <div style={{ width: 26, height: 26, borderRadius: "50%", background: `linear-gradient(135deg, ${C.mint}, #0EA5E9)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#fff", flexShrink: 0 }}>{user.name?.[0]?.toUpperCase() || "U"}</div>
-        <span style={{ flex: 1, textAlign: "left", color: C.sideSubtext, fontSize: 12, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.name}</span>
-        <span style={{ fontSize: 10, color: C.sideMuted }}>{open ? "▼" : "▲"}</span>
+      <button onClick={()=>setOpen(v=>!v)} style={{ width:"100%", display:"flex", alignItems:"center", gap:8, padding:"7px 12px", borderRadius:8, border:"none", background:open?C.sideHover:"transparent", cursor:"pointer", fontFamily:"inherit", transition:"all 0.12s" }}>
+        <div style={{ width:26, height:26, borderRadius:"50%", background:`linear-gradient(135deg, ${C.mint}, #0EA5E9)`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:11, fontWeight:700, color:"#fff", flexShrink:0 }}>{user.name?.[0]?.toUpperCase()||"U"}</div>
+        <span style={{ flex:1, textAlign:"left", color:C.sideSubtext, fontSize:12, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{user.name}</span>
+        <span style={{ fontSize:10, color:C.sideMuted }}>{open?"▼":"▲"}</span>
       </button>
     </div>
   );
@@ -269,28 +637,19 @@ function Dashboard({ user, onLogout }) {
   const FREE_LIMIT = 3;
 
   const token = () => localStorage.getItem("sm_token");
-
-  // ── Balance refresh — event driven, not polling ────────────────────────────
   const [refreshing, setRefreshing] = useState(false);
 
   async function fetchBalance(showSpinner = false) {
     if (showSpinner) setRefreshing(true);
     try {
-      const res = await fetch(`${API}/api/balance`, {
-        headers: { "Authorization": `Bearer ${token()}` },
-      });
+      const res = await fetch(`${API}/api/balance`, { headers: { "Authorization": `Bearer ${token()}` } });
       const data = await res.json();
-      if (typeof data.balance === "number" && data.balance > 0) {
-        setBalance(data.balance);
-      }
+      if (typeof data.balance === "number" && data.balance > 0) setBalance(data.balance);
     } catch {}
     if (showSpinner) setRefreshing(false);
   }
 
-  // Fetch once on mount to get accurate balance from Circle
   useEffect(() => { fetchBalance(false); }, []);
-
-  // Manual refresh button
   function refreshBalance() { fetchBalance(true); }
 
   useEffect(() => {
@@ -310,11 +669,7 @@ function Dashboard({ user, onLogout }) {
     fetchAnalyses();
   }, [txHistory]);
 
-  function copyAddress() {
-    navigator.clipboard.writeText(user.circleWalletAddress || "");
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }
+  function copyAddress() { navigator.clipboard.writeText(user.circleWalletAddress || ""); setCopied(true); setTimeout(() => setCopied(false), 2000); }
 
   const DEMO_PROMPTS = [
     { id:1, category:"🇳🇬 Nigeria & Africa", platform:"Instagram", goals:["products","content"], color:"#E91E8C", colorBg:"#FDE8F4", title:"Fitness page for Nigerian moms", icon:"💪", niche:"I run a fitness Instagram page for busy Nigerian moms aged 25–45. I post 15-minute home workout videos and healthy Nigerian meal prep tips. I have 8,000 followers and get great engagement on Reels. Based in Lagos." },
@@ -331,24 +686,22 @@ function Dashboard({ user, onLogout }) {
     { id:12, category:"🎨 Creators", platform:"LinkedIn", goals:["products","content"], color:"#0A66C2", colorBg:"#E8F3FB", title:"Tech career coach", icon:"💻", niche:"I help young Nigerians break into tech without a CS degree. I post career advice, roadmaps and success stories on LinkedIn. I have 8,500 followers and my audience is recent graduates and career switchers wanting to get into software or data." },
   ];
 
-  function toggleGoal(g) {
-    setGoals(prev => { const next = new Set(prev); if (next.has(g) && next.size === 1) return next; next.has(g) ? next.delete(g) : next.add(g); return next; });
-  }
+  function toggleGoal(g) { setGoals(prev => { const next = new Set(prev); if (next.has(g) && next.size === 1) return next; next.has(g) ? next.delete(g) : next.add(g); return next; }); }
 
   async function runAnalysis() {
     if (!niche.trim()) { setError("Describe your niche or audience first."); return; }
     if (balance < COST) { setError("Not enough USDC. Please top up your wallet."); return; }
     setError(""); setLoading(true); setResult(null);
     try {
-      const res  = await fetch(`${API}/api/analyze`, { method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token()}` }, body: JSON.stringify({ platform, niche, goals: Array.from(goals) }) });
+      const res  = await fetch(`${API}/api/analyze`, { method:"POST", headers:{ "Content-Type":"application/json", "Authorization":`Bearer ${token()}` }, body:JSON.stringify({ platform, niche, goals:Array.from(goals) }) });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Analysis failed");
       setBalance(b => parseFloat((b - COST).toFixed(2)));
       setTotalAnalyses(n => n + 1);
-      setTxHistory(h => [{ id: data.txId, label: platform + " analysis", time: nowTime(), amount: COST }, ...h]);
-      setResult({ ...data, goals: Array.from(goals) });
+      setTxHistory(h => [{ id:data.txId, label:platform+" analysis", time:nowTime(), amount:COST }, ...h]);
+      setResult({ ...data, goals:Array.from(goals) });
       setResultTab(Array.from(goals)[0]);
-      fetchBalance(false); // sync real balance from Circle after charge
+      fetchBalance(false);
     } catch (e) { setError(e.message); }
     setLoading(false);
   }
@@ -356,55 +709,41 @@ function Dashboard({ user, onLogout }) {
   const canAnalyze = !loading && niche.trim() && balance >= COST;
 
   const sidebar = (
-    <div style={{ width: 220, flexShrink: 0, background: C.side, display: "flex", flexDirection: "column", height: "100vh", position: isMobile ? "fixed" : "sticky", top: 0, left: 0, zIndex: 50, transform: isMobile && !mobileNav ? "translateX(-100%)" : "translateX(0)", transition: "transform 0.25s ease", borderRight: `1px solid ${C.sideBorder}` }}>
-      <div style={{ padding: "18px 16px 16px", borderBottom: `1px solid ${C.sideBorder}` }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+    <div style={{ width:220, flexShrink:0, background:C.side, display:"flex", flexDirection:"column", height:"100vh", position:isMobile?"fixed":"sticky", top:0, left:0, zIndex:50, transform:isMobile&&!mobileNav?"translateX(-100%)":"translateX(0)", transition:"transform 0.25s ease", borderRight:`1px solid ${C.sideBorder}` }}>
+      <div style={{ padding:"18px 16px 16px", borderBottom:`1px solid ${C.sideBorder}` }}>
+        <div style={{ display:"flex", alignItems:"center", gap:10 }}>
           <BrandLogo size={38} />
           <div>
-            <div style={{ fontSize: 14, fontWeight: 800, color: C.sideText, letterSpacing: "-0.3px" }}>SocialMint</div>
-            <div style={{ fontSize: 10, color: C.sideMuted, marginTop: 1 }}>AI monetization intelligence</div>
+            <div style={{ fontSize:14, fontWeight:800, color:C.sideText, letterSpacing:"-0.3px" }}>SocialMint</div>
+            <div style={{ fontSize:10, color:C.sideMuted, marginTop:1 }}>AI monetization intelligence</div>
           </div>
         </div>
       </div>
-      <div style={{ flex: 1, padding: "12px 8px", overflowY: "auto" }}>
-        <div style={{ fontSize: 10, fontWeight: 700, color: C.sideMuted, padding: "4px 12px 8px", textTransform: "uppercase", letterSpacing: "0.08em" }}>Workspace</div>
-        <NavItem icon="⊞" label="Dashboard"   active={page==="dashboard"} onClick={() => { setPage("dashboard"); setMobileNav(false); }} />
-        <NavItem icon="✦" label="New Analysis" active={page==="analyze"}   onClick={() => { setPage("analyze");   setMobileNav(false); }} badge="0.50 USDC" />
-        <NavItem icon="◈" label="Prompts"      active={page==="prompts"}   onClick={() => { setPage("prompts");   setMobileNav(false); }} badge="Free" />
-        <NavItem icon="⏱" label="History"      active={page==="history"}   onClick={() => { setPage("history");   setMobileNav(false); }} />
-        <NavItem icon="◎" label="Wallet"        active={page==="wallet"}    onClick={() => { setPage("wallet");    setMobileNav(false); }} />
-        <div style={{ height: 1, background: C.sideBorder, margin: "10px 4px" }} />
-
-        {/* Coming Soon */}
-        <div style={{ fontSize: 10, fontWeight: 700, color: C.sideMuted, padding: "4px 12px 8px", textTransform: "uppercase", letterSpacing: "0.08em" }}>Coming Soon</div>
-        {[
-          { icon: "📈", label: "Agent Trade" },
-          { icon: "🎯", label: "Prediction Agent" },
-        ].map(item => (
-          <div key={item.label} style={{
-            display: "flex", alignItems: "center", gap: 10,
-            padding: "9px 12px", borderRadius: 8, opacity: 0.5,
-            cursor: "not-allowed",
-          }}>
-            <span style={{ fontSize: 15, flexShrink: 0 }}>{item.icon}</span>
-            <span style={{ flex: 1, fontSize: 13, color: C.sideSubtext }}>{item.label}</span>
-            <span style={{
-              fontSize: 9, fontWeight: 700, padding: "2px 7px", borderRadius: 20,
-              background: C.sideBorder, color: C.sideMuted, letterSpacing: "0.05em",
-            }}>SOON</span>
-          </div>
-        ))}
-
-        <div style={{ height: 1, background: C.sideBorder, margin: "10px 4px" }} />
-        <NavItem icon="⚙" label="Settings"     active={page==="settings"}  onClick={() => { setPage("settings");  setMobileNav(false); }} />
+      <div style={{ flex:1, padding:"12px 8px", overflowY:"auto" }}>
+        <div style={{ fontSize:10, fontWeight:700, color:C.sideMuted, padding:"4px 12px 8px", textTransform:"uppercase", letterSpacing:"0.08em" }}>Workspace</div>
+        <NavItem icon="⊞" label="Dashboard"        active={page==="dashboard"}  onClick={()=>{ setPage("dashboard");  setMobileNav(false); }} />
+        <NavItem icon="✦" label="New Analysis"      active={page==="analyze"}    onClick={()=>{ setPage("analyze");    setMobileNav(false); }} badge="0.50 USDC" />
+        <NavItem icon="◈" label="Prompts"           active={page==="prompts"}    onClick={()=>{ setPage("prompts");    setMobileNav(false); }} badge="Free" />
+        <NavItem icon="⏱" label="History"           active={page==="history"}    onClick={()=>{ setPage("history");    setMobileNav(false); }} />
+        <NavItem icon="◎" label="Wallet"            active={page==="wallet"}     onClick={()=>{ setPage("wallet");     setMobileNav(false); }} />
+        <div style={{ height:1, background:C.sideBorder, margin:"10px 4px" }} />
+        <NavItem icon="" label="Prediction Agent" active={page==="prediction"} onClick={()=>{ setPage("prediction"); setMobileNav(false); }} badge="BETA" />
+        <div style={{ height:1, background:C.sideBorder, margin:"10px 4px" }} />
+        <div style={{ fontSize:10, fontWeight:700, color:C.sideMuted, padding:"4px 12px 8px", textTransform:"uppercase", letterSpacing:"0.08em" }}>Coming Soon</div>
+        <div style={{ display:"flex", alignItems:"center", gap:10, padding:"9px 12px", borderRadius:8, opacity:0.5, cursor:"not-allowed" }}>
+          <span style={{ flex:1, fontSize:13, color:C.sideSubtext }}>Agent Trade</span>
+          <span style={{ fontSize:9, fontWeight:700, padding:"2px 7px", borderRadius:20, background:C.sideBorder, color:C.sideMuted }}>SOON</span>
+        </div>
+        <div style={{ height:1, background:C.sideBorder, margin:"10px 4px" }} />
+        <NavItem icon="⚙" label="Settings"          active={page==="settings"}   onClick={()=>{ setPage("settings");   setMobileNav(false); }} />
       </div>
-      <div style={{ padding: "10px 8px", borderTop: `1px solid ${C.sideBorder}`, position: "relative" }}>
-        <div style={{ background: "rgba(0,200,150,0.08)", border: `1px solid ${C.mintBorder}`, borderRadius: 10, padding: "9px 12px", marginBottom: 8 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2 }}>
-            <div style={{ width: 7, height: 7, borderRadius: "50%", background: C.mint }} />
-            <span style={{ fontSize: 11, fontWeight: 600, color: C.mint }}>Arc Testnet</span>
+      <div style={{ padding:"10px 8px", borderTop:`1px solid ${C.sideBorder}`, position:"relative" }}>
+        <div style={{ background:"rgba(0,200,150,0.08)", border:`1px solid ${C.mintBorder}`, borderRadius:10, padding:"9px 12px", marginBottom:8 }}>
+          <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:2 }}>
+            <div style={{ width:7, height:7, borderRadius:"50%", background:C.mint }} />
+            <span style={{ fontSize:11, fontWeight:600, color:C.mint }}>Arc Testnet</span>
           </div>
-          <div style={{ fontSize: 10, color: C.sideMuted }}>Circle Agent Stack live</div>
+          <div style={{ fontSize:10, color:C.sideMuted }}>Circle Agent Stack live</div>
         </div>
         <UserMenu user={user} onLogout={onLogout} />
       </div>
@@ -412,58 +751,40 @@ function Dashboard({ user, onLogout }) {
   );
 
   const topbar = (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "13px 24px", background: C.surface, borderBottom: `1px solid ${C.border}`, flexShrink: 0 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        {isMobile && <button onClick={() => setMobileNav(v => !v)} style={{ width: 34, height: 34, borderRadius: 8, border: `1px solid ${C.border}`, background: "transparent", cursor: "pointer", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center" }}>☰</button>}
-        <div style={{ fontSize: 15, fontWeight: 700, color: C.ink }}>
-          {page === "analyze" ? "New Analysis" : page === "dashboard" ? "Dashboard" : page === "prompts" ? "Demo Prompts" : page === "history" ? "History" : page === "wallet" ? "Wallet" : "Settings"}
+    <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"13px 24px", background:C.surface, borderBottom:`1px solid ${C.border}`, flexShrink:0 }}>
+      <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+        {isMobile && <button onClick={()=>setMobileNav(v=>!v)} style={{ width:34, height:34, borderRadius:8, border:`1px solid ${C.border}`, background:"transparent", cursor:"pointer", fontSize:16, display:"flex", alignItems:"center", justifyContent:"center" }}>☰</button>}
+        <div style={{ fontSize:15, fontWeight:700, color:C.ink }}>
+          {page==="analyze"?"New Analysis":page==="dashboard"?"Dashboard":page==="prompts"?"Demo Prompts":page==="history"?"History":page==="wallet"?"Wallet":page==="prediction"?"Prediction Agent":"Settings"}
         </div>
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 7, background: C.surfaceAlt, borderRadius: 20, padding: "6px 12px", border: `1px solid ${C.border}` }}>
-        <div style={{ width: 7, height: 7, borderRadius: "50%", background: C.mint }} />
-        <span style={{ fontSize: 12, fontFamily: "monospace", color: C.inkSub }}>
-          {user.circleWalletAddress ? user.circleWalletAddress.slice(0, 6) + "..." + user.circleWalletAddress.slice(-4) : "0x1234...5678"}
-        </span>
+      <div style={{ display:"flex", alignItems:"center", gap:7, background:C.surfaceAlt, borderRadius:20, padding:"6px 12px", border:`1px solid ${C.border}` }}>
+        <div style={{ width:7, height:7, borderRadius:"50%", background:C.mint }} />
+        <span style={{ fontSize:12, fontFamily:"monospace", color:C.inkSub }}>{user.circleWalletAddress ? user.circleWalletAddress.slice(0,6)+"..."+user.circleWalletAddress.slice(-4) : "0x1234...5678"}</span>
       </div>
     </div>
   );
 
+  // ── Dashboard, Analyze, Prompts, History, Wallet pages (unchanged from original) ──
   const dashboardPage = (
-    <div style={{ padding: 24, overflowY: "auto", flex: 1 }}>
-      <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 24 }}>
-        <MetricCard label="USDC Balance"   value={`${balance.toFixed(2)}`}                    sub="Available to spend"    icon="◎" accent={C.mintBg} />
-        <MetricCard label="Analyses Run"   value={totalAnalyses}                               sub="All time"              icon="✦" accent={C.greenBg} />
-        <MetricCard label="Total Spent"    value={`${(totalAnalyses * 0.50).toFixed(2)} USDC`} sub="Charged via Circle"    icon="⚡" accent={C.blueBg} />
-        <MetricCard label="Cost Per Call"  value="0.50 USDC"                                   sub="Fixed, always"         icon="↗" accent={C.purpleBg} />
+    <div style={{ padding:24, overflowY:"auto", flex:1 }}>
+      <div style={{ display:"flex", gap:12, flexWrap:"wrap", marginBottom:24 }}>
+        <MetricCard label="USDC Balance"  value={`${balance.toFixed(2)}`}                    sub="Available to spend"  icon="◎" accent={C.mintBg} />
+        <MetricCard label="Analyses Run"  value={totalAnalyses}                               sub="All time"            icon="✦" accent={C.greenBg} />
+        <MetricCard label="Total Spent"   value={`${(totalAnalyses*0.50).toFixed(2)} USDC`}  sub="Charged via Circle"  icon="⚡" accent={C.blueBg} />
+        <MetricCard label="Cost Per Call" value="0.50 USDC"                                   sub="Fixed, always"       icon="↗" accent={C.purpleBg} />
       </div>
-      <div style={{ background: C.surface, borderRadius: 14, border: `1px solid ${C.border}`, overflow: "hidden" }}>
-        <div style={{ padding: "16px 20px", borderBottom: `1px solid ${C.border}`, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: C.ink }}>Recent analyses</div>
-            <div style={{ fontSize: 12, color: C.inkMuted, marginTop: 2 }}>Circle USDC ledger · Arc Testnet</div>
-          </div>
-          <button onClick={() => setPage("analyze")} style={{ padding: "8px 16px", background: C.mint, color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>+ New Analysis</button>
+      <div style={{ background:C.surface, borderRadius:14, border:`1px solid ${C.border}`, overflow:"hidden" }}>
+        <div style={{ padding:"16px 20px", borderBottom:`1px solid ${C.border}`, display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+          <div><div style={{ fontSize:15, fontWeight:700, color:C.ink }}>Recent analyses</div><div style={{ fontSize:12, color:C.inkMuted, marginTop:2 }}>Circle USDC ledger · Arc Testnet</div></div>
+          <button onClick={()=>setPage("analyze")} style={{ padding:"8px 16px", background:C.mint, color:"#fff", border:"none", borderRadius:8, fontSize:13, fontWeight:600, cursor:"pointer", fontFamily:"inherit" }}>+ New Analysis</button>
         </div>
-        {txHistory.length === 0 ? (
-          <div style={{ padding: "48px 24px", textAlign: "center", color: C.inkMuted, fontSize: 14 }}>No analyses yet.<br /><span style={{ fontSize: 12 }}>Run your first analysis to start the ledger.</span></div>
-        ) : (
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-            <thead><tr style={{ background: C.surfaceAlt }}>
-              {["Analysis", "Platform", "Amount", "Status", "Time"].map(h => (
-                <th key={h} style={{ padding: "10px 18px", textAlign: "left", fontSize: 11, fontWeight: 700, color: C.inkMuted, letterSpacing: "0.06em", textTransform: "uppercase" }}>{h}</th>
-              ))}
-            </tr></thead>
-            <tbody>
-              {txHistory.map((tx, i) => (
-                <tr key={i} style={{ borderTop: `1px solid ${C.border}` }}>
-                  <td style={{ padding: "12px 18px", color: C.ink, fontWeight: 500 }}>⚡ {tx.label}</td>
-                  <td style={{ padding: "12px 18px", color: C.inkSub }}>{tx.label.split(" ")[0]}</td>
-                  <td style={{ padding: "12px 18px", color: C.ink, fontWeight: 600 }}>−{tx.amount.toFixed(2)} USDC</td>
-                  <td style={{ padding: "12px 18px" }}><span style={{ fontSize: 11, fontWeight: 600, padding: "3px 9px", borderRadius: 20, background: C.greenBg, color: C.greenText }}>Confirmed</span></td>
-                  <td style={{ padding: "12px 18px", color: C.inkMuted, fontFamily: "monospace", fontSize: 12 }}>{tx.time}</td>
-                </tr>
-              ))}
-            </tbody>
+        {txHistory.length===0?(
+          <div style={{ padding:"48px 24px", textAlign:"center", color:C.inkMuted, fontSize:14 }}>No analyses yet.<br/><span style={{ fontSize:12 }}>Run your first analysis to start the ledger.</span></div>
+        ):(
+          <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
+            <thead><tr style={{ background:C.surfaceAlt }}>{["Analysis","Platform","Amount","Status","Time"].map(h=>(<th key={h} style={{ padding:"10px 18px", textAlign:"left", fontSize:11, fontWeight:700, color:C.inkMuted, letterSpacing:"0.06em", textTransform:"uppercase" }}>{h}</th>))}</tr></thead>
+            <tbody>{txHistory.map((tx,i)=>(<tr key={i} style={{ borderTop:`1px solid ${C.border}` }}><td style={{ padding:"12px 18px", color:C.ink, fontWeight:500 }}>⚡ {tx.label}</td><td style={{ padding:"12px 18px", color:C.inkSub }}>{tx.label.split(" ")[0]}</td><td style={{ padding:"12px 18px", color:C.ink, fontWeight:600 }}>−{tx.amount.toFixed(2)} USDC</td><td style={{ padding:"12px 18px" }}><span style={{ fontSize:11, fontWeight:600, padding:"3px 9px", borderRadius:20, background:C.greenBg, color:C.greenText }}>Confirmed</span></td><td style={{ padding:"12px 18px", color:C.inkMuted, fontFamily:"monospace", fontSize:12 }}>{tx.time}</td></tr>))}</tbody>
           </table>
         )}
       </div>
@@ -471,117 +792,49 @@ function Dashboard({ user, onLogout }) {
   );
 
   const analyzePage = (
-    <div style={{ display: "flex", flex: 1, minHeight: 0, flexDirection: isMobile ? "column" : "row" }}>
-      <div style={{ width: isMobile ? "100%" : 340, flexShrink: 0, borderRight: isMobile ? "none" : `1px solid ${C.border}`, borderBottom: isMobile ? `1px solid ${C.border}` : "none", padding: "20px 20px", overflowY: "auto", background: C.surface }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: C.inkMuted, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 18 }}>Configure analysis</div>
-        <div style={{ marginBottom: 20 }}>
-          <label style={{ fontSize: 12, fontWeight: 600, color: C.inkSub, display: "block", marginBottom: 10 }}>Platform</label>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
-            {PLATFORMS.map(p => {
-              const active = platform === p;
-              return (
-                <button key={p} onClick={() => setPlatform(p)} style={{ padding: "6px 11px", borderRadius: 8, fontSize: 12, fontFamily: "inherit", border: active ? `1.5px solid ${C.mint}` : `1px solid ${C.border}`, background: active ? C.mintBg : C.surfaceAlt, color: active ? C.mintText : C.inkSub, fontWeight: active ? 600 : 400, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, transition: "all 0.12s" }}>
-                  {(() => { const Icon = PLATFORM_ICONS[p]; return <Icon size={13} />; })()}{p}
-                </button>
-              );
-            })}
+    <div style={{ display:"flex", flex:1, minHeight:0, flexDirection:isMobile?"column":"row" }}>
+      <div style={{ width:isMobile?"100%":340, flexShrink:0, borderRight:isMobile?"none":`1px solid ${C.border}`, borderBottom:isMobile?`1px solid ${C.border}`:"none", padding:"20px 20px", overflowY:"auto", background:C.surface }}>
+        <div style={{ fontSize:11, fontWeight:700, color:C.inkMuted, textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:18 }}>Configure analysis</div>
+        <div style={{ marginBottom:20 }}>
+          <label style={{ fontSize:12, fontWeight:600, color:C.inkSub, display:"block", marginBottom:10 }}>Platform</label>
+          <div style={{ display:"flex", flexWrap:"wrap", gap:7 }}>
+            {PLATFORMS.map(p=>{ const active=platform===p; return (<button key={p} onClick={()=>setPlatform(p)} style={{ padding:"6px 11px", borderRadius:8, fontSize:12, fontFamily:"inherit", border:active?`1.5px solid ${C.mint}`:`1px solid ${C.border}`, background:active?C.mintBg:C.surfaceAlt, color:active?C.mintText:C.inkSub, fontWeight:active?600:400, cursor:"pointer", display:"flex", alignItems:"center", gap:6, transition:"all 0.12s" }}>{(()=>{const Icon=PLATFORM_ICONS[p];return <Icon size={13}/>;})()}{p}</button>); })}
           </div>
         </div>
-        <div style={{ marginBottom: 20 }}>
-          <label style={{ fontSize: 12, fontWeight: 600, color: C.inkSub, display: "block", marginBottom: 8 }}>Your niche / audience / handle</label>
-          <textarea value={niche} onChange={e => setNiche(e.target.value)} placeholder="e.g. I run a fitness page for busy moms in Nigeria, 25–45 year olds. 8k followers, strong Reels engagement, workout tips and meal prep content..." style={{ width: "100%", minHeight: 110, padding: "10px 12px", border: `1px solid ${C.border}`, borderRadius: 10, fontSize: 13, lineHeight: 1.65, fontFamily: "inherit", resize: "vertical", color: C.ink, background: C.surfaceAlt, outline: "none" }} />
+        <div style={{ marginBottom:20 }}>
+          <label style={{ fontSize:12, fontWeight:600, color:C.inkSub, display:"block", marginBottom:8 }}>Your niche / audience / handle</label>
+          <textarea value={niche} onChange={e=>setNiche(e.target.value)} placeholder="e.g. I run a fitness page for busy moms in Nigeria, 25–45 year olds..." style={{ width:"100%", minHeight:110, padding:"10px 12px", border:`1px solid ${C.border}`, borderRadius:10, fontSize:13, lineHeight:1.65, fontFamily:"inherit", resize:"vertical", color:C.ink, background:C.surfaceAlt, outline:"none" }}/>
         </div>
-        <div style={{ marginBottom: 20 }}>
-          <label style={{ fontSize: 12, fontWeight: 600, color: C.inkSub, display: "block", marginBottom: 10 }}>Discover (pick multiple)</label>
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {[{ id: "products", label: "📦 Products to sell", desc: "Physical, digital, or services" }, { id: "content", label: "🎬 Content ideas", desc: "Videos, posts, hooks that earn" }, { id: "marketing", label: "📣 Marketing channels", desc: "Where to push harder" }].map(g => {
-              const active = goals.has(g.id);
-              return (
-                <button key={g.id} onClick={() => toggleGoal(g.id)} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 10, fontFamily: "inherit", border: active ? `1.5px solid ${C.mint}` : `1px solid ${C.border}`, background: active ? C.mintBg : C.surfaceAlt, cursor: "pointer", textAlign: "left", transition: "all 0.12s" }}>
-                  <div style={{ width: 18, height: 18, borderRadius: 5, flexShrink: 0, border: active ? `2px solid ${C.mint}` : `2px solid ${C.borderStrong}`, background: active ? C.mint : "transparent", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    {active && <span style={{ color: "#fff", fontSize: 11, fontWeight: 700 }}>✓</span>}
-                  </div>
-                  <div>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: active ? C.mintText : C.ink }}>{g.label}</div>
-                    <div style={{ fontSize: 11, color: C.inkMuted }}>{g.desc}</div>
-                  </div>
-                </button>
-              );
-            })}
+        <div style={{ marginBottom:20 }}>
+          <label style={{ fontSize:12, fontWeight:600, color:C.inkSub, display:"block", marginBottom:10 }}>Discover (pick multiple)</label>
+          <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+            {[{id:"products",label:"📦 Products to sell",desc:"Physical, digital, or services"},{id:"content",label:"🎬 Content ideas",desc:"Videos, posts, hooks that earn"},{id:"marketing",label:"📣 Marketing channels",desc:"Where to push harder"}].map(g=>{ const active=goals.has(g.id); return (<button key={g.id} onClick={()=>toggleGoal(g.id)} style={{ display:"flex", alignItems:"center", gap:10, padding:"10px 12px", borderRadius:10, fontFamily:"inherit", border:active?`1.5px solid ${C.mint}`:`1px solid ${C.border}`, background:active?C.mintBg:C.surfaceAlt, cursor:"pointer", textAlign:"left", transition:"all 0.12s" }}><div style={{ width:18, height:18, borderRadius:5, flexShrink:0, border:active?`2px solid ${C.mint}`:`2px solid ${C.borderStrong}`, background:active?C.mint:"transparent", display:"flex", alignItems:"center", justifyContent:"center" }}>{active&&<span style={{ color:"#fff", fontSize:11, fontWeight:700 }}>✓</span>}</div><div><div style={{ fontSize:13, fontWeight:600, color:active?C.mintText:C.ink }}>{g.label}</div><div style={{ fontSize:11, color:C.inkMuted }}>{g.desc}</div></div></button>); })}
           </div>
         </div>
-        {error && <div style={{ background: C.redBg, color: C.red, borderRadius: 8, padding: "9px 12px", fontSize: 13, marginBottom: 12 }}>⚠ {error}</div>}
-        <div style={{ background: C.surfaceAlt, borderRadius: 10, padding: "10px 14px", marginBottom: 14, display: "flex", justifyContent: "space-between", alignItems: "center", border: `1px solid ${C.border}` }}>
-          <div style={{ fontSize: 12, color: C.inkSub }}>Wallet balance</div>
-          <div style={{ fontSize: 14, fontWeight: 700, color: balance >= COST ? C.mint : C.red }}>{balance.toFixed(2)} USDC</div>
+        {error && <div style={{ background:C.redBg, color:C.red, borderRadius:8, padding:"9px 12px", fontSize:13, marginBottom:12 }}>⚠ {error}</div>}
+        <div style={{ background:C.surfaceAlt, borderRadius:10, padding:"10px 14px", marginBottom:14, display:"flex", justifyContent:"space-between", alignItems:"center", border:`1px solid ${C.border}` }}>
+          <div style={{ fontSize:12, color:C.inkSub }}>Wallet balance</div>
+          <div style={{ fontSize:14, fontWeight:700, color:balance>=COST?C.mint:C.red }}>{balance.toFixed(2)} USDC</div>
         </div>
-        <button onClick={runAnalysis} disabled={!canAnalyze} style={{ width: "100%", padding: "13px", background: canAnalyze ? `linear-gradient(135deg, ${C.mint}, #0EA5E9)` : C.surfaceAlt, color: canAnalyze ? "#fff" : C.inkMuted, border: "none", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: canAnalyze ? "pointer" : "not-allowed", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: canAnalyze ? "0 4px 20px rgba(0,200,150,0.3)" : "none", transition: "all 0.15s" }}>
-          {loading ? <><Spinner />&nbsp;Analyzing...</> : `⚡ Pay 0.50 USDC & Analyze`}
+        <button onClick={runAnalysis} disabled={!canAnalyze} style={{ width:"100%", padding:"13px", background:canAnalyze?`linear-gradient(135deg, ${C.mint}, #0EA5E9)`:C.surfaceAlt, color:canAnalyze?"#fff":C.inkMuted, border:"none", borderRadius:10, fontSize:14, fontWeight:700, cursor:canAnalyze?"pointer":"not-allowed", fontFamily:"inherit", display:"flex", alignItems:"center", justifyContent:"center", gap:8, boxShadow:canAnalyze?"0 4px 20px rgba(0,200,150,0.3)":"none", transition:"all 0.15s" }}>
+          {loading?<><Spinner/>&nbsp;Analyzing...</>:`⚡ Pay 0.50 USDC & Analyze`}
         </button>
       </div>
-      <div style={{ flex: 1, overflowY: "auto", padding: 24, background: C.canvas }}>
-        {!result && !loading && (
-          <div style={{ height: "100%", minHeight: 300, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", border: `2px dashed ${C.border}`, borderRadius: 16, padding: 32, color: C.inkMuted, textAlign: "center" }}>
-            <div style={{ fontSize: 40, marginBottom: 14, opacity: 0.4 }}>✦</div>
-            <div style={{ fontSize: 16, fontWeight: 700, color: C.inkSub, marginBottom: 8 }}>Your analysis will appear here</div>
-            <div style={{ fontSize: 13, maxWidth: 300, lineHeight: 1.7, color: C.inkMuted }}>Fill in the form, choose what you want to discover, and click Analyze. Results include specific product ideas, content hooks, and marketing strategies.</div>
-          </div>
-        )}
-        {loading && (
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 300, gap: 16 }}>
-            <Spinner size={32} dark />
-            <div style={{ fontSize: 14, fontWeight: 600, color: C.inkSub }}>Analyzing your social presence...</div>
-            <div style={{ fontSize: 12, color: C.inkMuted }}>0.50 USDC charged · Claude is thinking</div>
-          </div>
-        )}
-        {result && (
-          <div style={{ maxWidth: 700, animation: "fadeIn 0.3s ease" }}>
-            <div style={{ background: C.surface, borderRadius: 14, padding: "20px 24px", marginBottom: 20, border: `1px solid ${C.border}`, borderTop: `3px solid ${C.mint}`, boxShadow: "0 2px 12px rgba(0,200,150,0.08)" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                <div style={{ width: 8, height: 8, borderRadius: "50%", background: C.mint }} />
-                <div style={{ fontSize: 11, fontWeight: 700, color: C.mint, textTransform: "uppercase", letterSpacing: "0.08em" }}>{result.platform} · Opportunity Snapshot</div>
-              </div>
-              <div style={{ fontSize: 16, color: C.ink, lineHeight: 1.8, fontWeight: 400 }}>{result.summary}</div>
+      <div style={{ flex:1, overflowY:"auto", padding:24, background:C.canvas }}>
+        {!result&&!loading&&(<div style={{ height:"100%", minHeight:300, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", border:`2px dashed ${C.border}`, borderRadius:16, padding:32, color:C.inkMuted, textAlign:"center" }}><div style={{ fontSize:40, marginBottom:14, opacity:0.4 }}>✦</div><div style={{ fontSize:16, fontWeight:700, color:C.inkSub, marginBottom:8 }}>Your analysis will appear here</div><div style={{ fontSize:13, maxWidth:300, lineHeight:1.7, color:C.inkMuted }}>Fill in the form, choose what you want to discover, and click Analyze.</div></div>)}
+        {loading&&(<div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", minHeight:300, gap:16 }}><Spinner size={32} dark/><div style={{ fontSize:14, fontWeight:600, color:C.inkSub }}>Analyzing your social presence...</div><div style={{ fontSize:12, color:C.inkMuted }}>0.50 USDC charged · Claude is thinking</div></div>)}
+        {result&&(
+          <div style={{ maxWidth:700 }}>
+            <div style={{ background:C.surface, borderRadius:14, padding:"20px 24px", marginBottom:20, border:`1px solid ${C.border}`, borderTop:`3px solid ${C.mint}` }}>
+              <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:10 }}><div style={{ width:8, height:8, borderRadius:"50%", background:C.mint }}/><div style={{ fontSize:11, fontWeight:700, color:C.mint, textTransform:"uppercase", letterSpacing:"0.08em" }}>{result.platform} · Opportunity Snapshot</div></div>
+              <div style={{ fontSize:16, color:C.ink, lineHeight:1.8 }}>{result.summary}</div>
             </div>
-            <div style={{ display: "flex", gap: 6, marginBottom: 16, flexWrap: "wrap" }}>
-              {result.goals.map(g => {
-                const labels = { products: "📦 Products", content: "🎬 Content", marketing: "📣 Marketing" };
-                const active = resultTab === g;
-                return <button key={g} onClick={() => setResultTab(g)} style={{ padding: "8px 18px", borderRadius: 20, fontSize: 13, fontFamily: "inherit", border: active ? `1.5px solid ${C.mint}` : `1px solid ${C.border}`, background: active ? C.mint : C.surface, color: active ? "#fff" : C.inkSub, fontWeight: active ? 600 : 400, cursor: "pointer", transition: "all 0.12s" }}>{labels[g]}</button>;
-              })}
+            <div style={{ display:"flex", gap:6, marginBottom:16, flexWrap:"wrap" }}>
+              {result.goals.map(g=>{ const labels={products:"📦 Products",content:"🎬 Content",marketing:"📣 Marketing"}; const active=resultTab===g; return <button key={g} onClick={()=>setResultTab(g)} style={{ padding:"8px 18px", borderRadius:20, fontSize:13, fontFamily:"inherit", border:active?`1.5px solid ${C.mint}`:`1px solid ${C.border}`, background:active?C.mint:C.surface, color:active?"#fff":C.inkSub, fontWeight:active?600:400, cursor:"pointer" }}>{labels[g]}</button>; })}
             </div>
-            {resultTab === "products" && result.products?.map((p, i) => (
-              <div key={i} style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, padding: "18px 20px", marginBottom: 10, display: "flex", gap: 16, alignItems: "flex-start", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
-                <div style={{ width: 34, height: 34, borderRadius: 10, background: C.mintBg, color: C.mintText, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 800, flexShrink: 0 }}>{i + 1}</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 6 }}>
-                    <span style={{ fontSize: 15, fontWeight: 700, color: C.ink }}>{p.title}</span>
-                    <span style={{ fontSize: 12, fontWeight: 600, padding: "3px 10px", borderRadius: 20, background: C.greenBg, color: C.greenText }}>{p.price_range}</span>
-                  </div>
-                  <div style={{ fontSize: 14, color: C.inkSub, lineHeight: 1.75 }}>{p.why}</div>
-                </div>
-              </div>
-            ))}
-            {resultTab === "content" && result.content?.map((c, i) => (
-              <div key={i} style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, padding: "18px 20px", marginBottom: 10, boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10, flexWrap: "wrap" }}>
-                  <div style={{ width: 30, height: 30, borderRadius: 8, background: C.purpleBg, color: C.purpleText, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, flexShrink: 0 }}>{i + 1}</div>
-                  <span style={{ fontSize: 15, fontWeight: 700, color: C.ink }}>{c.idea}</span>
-                  <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 20, background: C.purpleBg, color: C.purpleText }}>{c.format}</span>
-                </div>
-                <div style={{ background: C.surfaceAlt, borderRadius: 8, padding: "12px 16px", borderLeft: `3px solid ${C.purple}`, fontSize: 14, color: C.inkSub, lineHeight: 1.75, fontStyle: "italic" }}>"{c.hook}"</div>
-              </div>
-            ))}
-            {resultTab === "marketing" && result.marketing?.map((m, i) => (
-              <div key={i} style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, padding: "18px 20px", marginBottom: 10, display: "flex", gap: 16, boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
-                <div style={{ width: 34, height: 34, borderRadius: 10, background: C.blueBg, color: C.blueText, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 800, flexShrink: 0 }}>{i + 1}</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 15, fontWeight: 700, color: C.ink, marginBottom: 5 }}>{m.channel}</div>
-                  <div style={{ fontSize: 14, color: C.inkSub, lineHeight: 1.75, marginBottom: 8 }}>{m.tactic}</div>
-                  <div style={{ fontSize: 12, color: C.inkMuted, padding: "4px 12px", background: C.surfaceAlt, borderRadius: 20, display: "inline-block" }}>📊 {m.expected_reach}</div>
-                </div>
-              </div>
-            ))}
+            {resultTab==="products"&&result.products?.map((p,i)=>(<div key={i} style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:12, padding:"18px 20px", marginBottom:10, display:"flex", gap:16, alignItems:"flex-start" }}><div style={{ width:34, height:34, borderRadius:10, background:C.mintBg, color:C.mintText, display:"flex", alignItems:"center", justifyContent:"center", fontSize:14, fontWeight:800, flexShrink:0 }}>{i+1}</div><div style={{ flex:1 }}><div style={{ display:"flex", alignItems:"center", gap:10, flexWrap:"wrap", marginBottom:6 }}><span style={{ fontSize:15, fontWeight:700, color:C.ink }}>{p.title}</span><span style={{ fontSize:12, fontWeight:600, padding:"3px 10px", borderRadius:20, background:C.greenBg, color:C.greenText }}>{p.price_range}</span></div><div style={{ fontSize:14, color:C.inkSub, lineHeight:1.75 }}>{p.why}</div></div></div>))}
+            {resultTab==="content"&&result.content?.map((c,i)=>(<div key={i} style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:12, padding:"18px 20px", marginBottom:10 }}><div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:10, flexWrap:"wrap" }}><div style={{ width:30, height:30, borderRadius:8, background:C.purpleBg, color:C.purpleText, display:"flex", alignItems:"center", justifyContent:"center", fontSize:13, fontWeight:700, flexShrink:0 }}>{i+1}</div><span style={{ fontSize:15, fontWeight:700, color:C.ink }}>{c.idea}</span><span style={{ fontSize:11, fontWeight:600, padding:"3px 10px", borderRadius:20, background:C.purpleBg, color:C.purpleText }}>{c.format}</span></div><div style={{ background:C.surfaceAlt, borderRadius:8, padding:"12px 16px", borderLeft:`3px solid ${C.purple}`, fontSize:14, color:C.inkSub, lineHeight:1.75, fontStyle:"italic" }}>"{c.hook}"</div></div>))}
+            {resultTab==="marketing"&&result.marketing?.map((m,i)=>(<div key={i} style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:12, padding:"18px 20px", marginBottom:10, display:"flex", gap:16 }}><div style={{ width:34, height:34, borderRadius:10, background:C.blueBg, color:C.blueText, display:"flex", alignItems:"center", justifyContent:"center", fontSize:14, fontWeight:800, flexShrink:0 }}>{i+1}</div><div style={{ flex:1 }}><div style={{ fontSize:15, fontWeight:700, color:C.ink, marginBottom:5 }}>{m.channel}</div><div style={{ fontSize:14, color:C.inkSub, lineHeight:1.75, marginBottom:8 }}>{m.tactic}</div><div style={{ fontSize:12, color:C.inkMuted, padding:"4px 12px", background:C.surfaceAlt, borderRadius:20, display:"inline-block" }}>📊 {m.expected_reach}</div></div></div>))}
           </div>
         )}
       </div>
@@ -589,222 +842,110 @@ function Dashboard({ user, onLogout }) {
   );
 
   async function runPromptAnalysis(prompt) {
-    const isFree = freeRunsUsed < FREE_LIMIT;
-    if (!isFree && balance < COST) { setPage("analyze"); setPlatform(prompt.platform); setGoals(new Set(prompt.goals)); setNiche(prompt.niche); setError("Not enough USDC. Please top up your wallet to run this analysis."); return; }
-    setPage("analyze"); setPlatform(prompt.platform); setGoals(new Set(prompt.goals)); setNiche(prompt.niche);
-    setError(""); setLoading(true); setResult(null);
-    if (isFree) { setFreeRunsUsed(n => n + 1); } else { setBalance(b => parseFloat((b - COST).toFixed(2))); }
-    try {
-      const res = await fetch(`${API}/api/analyze`, { method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token()}` }, body: JSON.stringify({ platform: prompt.platform, niche: prompt.niche, goals: prompt.goals, isFreeDemo: isFree }) });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Analysis failed");
-      if (!isFree) { setTotalAnalyses(n => n + 1); setTxHistory(h => [{ id: data.txId, label: prompt.platform + " analysis", time: nowTime(), amount: COST }, ...h]); fetchBalance(false); }
-      setResult({ ...data, goals: prompt.goals }); setResultTab(prompt.goals[0]);
-    } catch (e) { setError(e.message || "Analysis failed — please try again."); if (!isFree) setBalance(b => parseFloat((b + COST).toFixed(2))); }
+    const isFree=freeRunsUsed<FREE_LIMIT;
+    if(!isFree&&balance<COST){setPage("analyze");setPlatform(prompt.platform);setGoals(new Set(prompt.goals));setNiche(prompt.niche);setError("Not enough USDC. Please top up your wallet.");return;}
+    setPage("analyze");setPlatform(prompt.platform);setGoals(new Set(prompt.goals));setNiche(prompt.niche);
+    setError("");setLoading(true);setResult(null);
+    if(isFree){setFreeRunsUsed(n=>n+1);}else{setBalance(b=>parseFloat((b-COST).toFixed(2)));}
+    try{
+      const res=await fetch(`${API}/api/analyze`,{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${token()}`},body:JSON.stringify({platform:prompt.platform,niche:prompt.niche,goals:prompt.goals,isFreeDemo:isFree})});
+      const data=await res.json();
+      if(!res.ok) throw new Error(data.error||"Analysis failed");
+      if(!isFree){setTotalAnalyses(n=>n+1);setTxHistory(h=>[{id:data.txId,label:prompt.platform+" analysis",time:nowTime(),amount:COST},...h]);fetchBalance(false);}
+      setResult({...data,goals:prompt.goals});setResultTab(prompt.goals[0]);
+    }catch(e){setError(e.message||"Analysis failed — please try again.");if(!isFree)setBalance(b=>parseFloat((b+COST).toFixed(2)));}
     setLoading(false);
   }
 
-  const runsLeft = FREE_LIMIT - freeRunsUsed;
-  const categories = [...new Set(DEMO_PROMPTS.map(p => p.category))];
+  const runsLeft=FREE_LIMIT-freeRunsUsed;
+  const categories=[...new Set(DEMO_PROMPTS.map(p=>p.category))];
 
-  const promptsPage = (
-    <div style={{ padding: 24, flex: 1, overflowY: "auto" }}>
-      <div style={{ background: `linear-gradient(135deg, ${C.side} 0%, #0D2040 100%)`, borderRadius: 16, padding: "24px 28px", marginBottom: 20, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
-        <div>
-          <div style={{ fontSize: 20, fontWeight: 800, color: "#fff", marginBottom: 6, letterSpacing: "-0.5px" }}>Ready-made prompts ✦</div>
-          <div style={{ fontSize: 14, color: C.sideSubtext, lineHeight: 1.65, maxWidth: 480 }}>Too lazy to type? Just click any prompt — we auto-fill everything and run the analysis instantly. First 3 are free, after that 0.50 USDC each.</div>
-        </div>
-        <div style={{ background: runsLeft > 0 ? "rgba(0,200,150,0.15)" : "rgba(59,130,246,0.15)", border: `1px solid ${runsLeft > 0 ? C.mintBorder : "#3B82F640"}`, borderRadius: 12, padding: "14px 20px", textAlign: "center", flexShrink: 0 }}>
-          {runsLeft > 0 ? (<><div style={{ fontSize: 32, fontWeight: 800, color: C.mint }}>{runsLeft}</div><div style={{ fontSize: 12, color: C.sideSubtext, fontWeight: 500 }}>free {runsLeft === 1 ? "run" : "runs"} left</div></>) : (<><div style={{ fontSize: 32, fontWeight: 800, color: C.blue }}>∞</div><div style={{ fontSize: 12, color: C.sideSubtext, fontWeight: 500 }}>0.50 USDC / run</div></>)}
+  const promptsPage=(
+    <div style={{padding:24,flex:1,overflowY:"auto"}}>
+      <div style={{background:`linear-gradient(135deg,${C.side} 0%,#0D2040 100%)`,borderRadius:16,padding:"24px 28px",marginBottom:20,display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:16}}>
+        <div><div style={{fontSize:20,fontWeight:800,color:"#fff",marginBottom:6}}>Ready-made prompts ✦</div><div style={{fontSize:14,color:C.sideSubtext,lineHeight:1.65,maxWidth:480}}>Too lazy to type? Just click any prompt — we auto-fill everything and run the analysis instantly. First 3 are free, after that 0.50 USDC each.</div></div>
+        <div style={{background:runsLeft>0?"rgba(0,200,150,0.15)":"rgba(59,130,246,0.15)",border:`1px solid ${runsLeft>0?C.mintBorder:"#3B82F640"}`,borderRadius:12,padding:"14px 20px",textAlign:"center",flexShrink:0}}>
+          {runsLeft>0?(<><div style={{fontSize:32,fontWeight:800,color:C.mint}}>{runsLeft}</div><div style={{fontSize:12,color:C.sideSubtext,fontWeight:500}}>free {runsLeft===1?"run":"runs"} left</div></>):(<><div style={{fontSize:32,fontWeight:800,color:C.blue}}>∞</div><div style={{fontSize:12,color:C.sideSubtext,fontWeight:500}}>0.50 USDC / run</div></>)}
         </div>
       </div>
-      {runsLeft > 0 ? (
-        <div style={{ background: C.mintBg, border: `1px solid ${C.mintBorder}`, borderRadius: 10, padding: "11px 16px", marginBottom: 20, display: "flex", alignItems: "center", gap: 10, fontSize: 13, color: C.mintText }}>
-          <span>✦</span><span>You have <strong>{runsLeft} free {runsLeft === 1 ? "run" : "runs"}</strong> left — click any card to see a real AI analysis. No USDC needed.</span>
-        </div>
-      ) : (
-        <div style={{ background: C.blueBg, border: `1px solid ${C.blue}30`, borderRadius: 10, padding: "11px 16px", marginBottom: 20, display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{ fontSize: 18 }}>💡</span>
-          <div style={{ fontSize: 13, color: C.inkSub }}><strong style={{ color: C.blueText }}>Prompts still work</strong> — each now costs 0.50 USDC from your wallet.{balance < COST && <> Low balance — <button onClick={() => setPage("wallet")} style={{ fontSize: 13, fontWeight: 600, color: C.mint, background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", textDecoration: "underline" }}>top up →</button></>}</div>
-        </div>
-      )}
-      {categories.map(cat => (
-        <div key={cat} style={{ marginBottom: 28 }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: C.inkSub, marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>{cat}<div style={{ flex: 1, height: 1, background: C.border }} /></div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(270px, 1fr))", gap: 12 }}>
-            {DEMO_PROMPTS.filter(p => p.category === cat).map(prompt => {
-              const isFree = freeRunsUsed < FREE_LIMIT;
-              const cantAfford = !isFree && balance < COST;
-              return (
-                <div key={prompt.id} onClick={() => !cantAfford && runPromptAnalysis(prompt)}
-                  onMouseEnter={e => { if (!cantAfford) { e.currentTarget.style.borderColor = isFree ? C.mint : C.blue; e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = `0 6px 20px ${isFree ? "rgba(0,200,150,0.15)" : "rgba(59,130,246,0.15)"}`; } }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "0 1px 4px rgba(0,0,0,0.04)"; }}
-                  style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14, padding: "16px 18px", cursor: cantAfford ? "not-allowed" : "pointer", opacity: cantAfford ? 0.5 : 1, transition: "all 0.18s ease", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
-                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 10 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <div style={{ width: 40, height: 40, borderRadius: 10, background: prompt.colorBg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>{prompt.icon}</div>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 700, color: C.ink, lineHeight: 1.3 }}>{prompt.title}</div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 3 }}>{(() => { const Icon = PLATFORM_ICONS[prompt.platform]; return <Icon size={11} />; })()}<span style={{ fontSize: 11, color: C.inkMuted }}>{prompt.platform}</span></div>
-                      </div>
-                    </div>
-                    <span style={{ fontSize: 10, fontWeight: 700, padding: "3px 8px", borderRadius: 20, flexShrink: 0, background: isFree ? C.mintBg : C.blueBg, color: isFree ? C.mintText : C.blueText }}>{isFree ? "FREE" : "0.50 USDC"}</span>
-                  </div>
-                  <div style={{ fontSize: 12, color: C.inkMuted, lineHeight: 1.6, marginBottom: 12, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{prompt.niche}</div>
-                  <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 13 }}>
-                    {prompt.goals.map(g => <span key={g} style={{ fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 20, background: C.surfaceAlt, color: C.inkSub, border: `1px solid ${C.border}` }}>{{ products: "📦 Products", content: "🎬 Content", marketing: "📣 Marketing" }[g]}</span>)}
-                  </div>
-                  <button style={{ width: "100%", padding: "9px", border: "none", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: cantAfford ? "not-allowed" : "pointer", fontFamily: "inherit", transition: "opacity 0.15s", background: cantAfford ? C.surfaceAlt : isFree ? `linear-gradient(135deg, ${C.mint}, #0EA5E9)` : `linear-gradient(135deg, ${C.blue}, #6366F1)`, color: cantAfford ? C.inkMuted : "#fff", boxShadow: cantAfford ? "none" : isFree ? "0 2px 10px rgba(0,200,150,0.25)" : "0 2px 10px rgba(59,130,246,0.25)" }}>
-                    {cantAfford ? "⚠ Insufficient balance" : isFree ? "▶ Run free" : "⚡ Run — 0.50 USDC"}
-                  </button>
+      {categories.map(cat=>(
+        <div key={cat} style={{marginBottom:28}}>
+          <div style={{fontSize:13,fontWeight:700,color:C.inkSub,marginBottom:12,display:"flex",alignItems:"center",gap:8}}>{cat}<div style={{flex:1,height:1,background:C.border}}/></div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(270px,1fr))",gap:12}}>
+            {DEMO_PROMPTS.filter(p=>p.category===cat).map(prompt=>{
+              const isFree=freeRunsUsed<FREE_LIMIT;const cantAfford=!isFree&&balance<COST;
+              return(<div key={prompt.id} onClick={()=>!cantAfford&&runPromptAnalysis(prompt)} style={{background:C.surface,border:`1px solid ${C.border}`,borderRadius:14,padding:"16px 18px",cursor:cantAfford?"not-allowed":"pointer",opacity:cantAfford?0.5:1,transition:"all 0.18s ease"}}>
+                <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:10}}>
+                  <div style={{display:"flex",alignItems:"center",gap:8}}><div style={{width:40,height:40,borderRadius:10,background:prompt.colorBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0}}>{prompt.icon}</div><div><div style={{fontSize:13,fontWeight:700,color:C.ink,lineHeight:1.3}}>{prompt.title}</div><div style={{display:"flex",alignItems:"center",gap:4,marginTop:3}}>{(()=>{const Icon=PLATFORM_ICONS[prompt.platform];return <Icon size={11}/>;})()}<span style={{fontSize:11,color:C.inkMuted}}>{prompt.platform}</span></div></div></div>
+                  <span style={{fontSize:10,fontWeight:700,padding:"3px 8px",borderRadius:20,flexShrink:0,background:isFree?C.mintBg:C.blueBg,color:isFree?C.mintText:C.blueText}}>{isFree?"FREE":"0.50 USDC"}</span>
                 </div>
-              );
+                <div style={{fontSize:12,color:C.inkMuted,lineHeight:1.6,marginBottom:12,display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical",overflow:"hidden"}}>{prompt.niche}</div>
+                <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:13}}>{prompt.goals.map(g=><span key={g} style={{fontSize:10,fontWeight:600,padding:"2px 8px",borderRadius:20,background:C.surfaceAlt,color:C.inkSub,border:`1px solid ${C.border}`}}>{{products:"📦 Products",content:"🎬 Content",marketing:"📣 Marketing"}[g]}</span>)}</div>
+                <button style={{width:"100%",padding:"9px",border:"none",borderRadius:8,fontSize:12,fontWeight:700,cursor:cantAfford?"not-allowed":"pointer",fontFamily:"inherit",background:cantAfford?C.surfaceAlt:isFree?`linear-gradient(135deg,${C.mint},#0EA5E9)`:`linear-gradient(135deg,${C.blue},#6366F1)`,color:cantAfford?C.inkMuted:"#fff"}}>
+                  {cantAfford?"⚠ Insufficient balance":isFree?"▶ Run free":"⚡ Run — 0.50 USDC"}
+                </button>
+              </div>);
             })}
           </div>
         </div>
       ))}
-      <div style={{ textAlign: "center", padding: "16px 0 8px", fontSize: 12, color: C.inkMuted }}>First 3 free · Then 0.50 USDC each · Powered by Circle Agent Stack</div>
     </div>
   );
 
-  const historyPage = (
-    <div style={{ padding: 24, flex: 1, overflowY: "auto", position: "relative" }}>
-      {viewingAnalysis && (
-        <div style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }} onClick={() => setViewingAnalysis(null)}>
-          <div onClick={e => e.stopPropagation()} style={{ background: C.surface, borderRadius: 18, width: "100%", maxWidth: 680, maxHeight: "85vh", overflowY: "auto", boxShadow: "0 20px 60px rgba(0,0,0,0.3)", animation: "fadeIn 0.2s ease" }}>
-            <div style={{ padding: "20px 24px", borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, background: C.surface, zIndex: 1, borderRadius: "18px 18px 0 0" }}>
-              <div>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-                  {(() => { const Icon = PLATFORM_ICONS[viewingAnalysis.platform]; return <Icon size={16} />; })()}
-                  <span style={{ fontSize: 15, fontWeight: 700, color: C.ink }}>{viewingAnalysis.platform} Analysis</span>
-                  <span style={{ fontSize: 11, fontWeight: 600, padding: "2px 8px", borderRadius: 20, background: viewingAnalysis.isFreeDemo ? C.mintBg : C.blueBg, color: viewingAnalysis.isFreeDemo ? C.mintText : C.blueText }}>{viewingAnalysis.isFreeDemo ? "Free demo" : "0.50 USDC"}</span>
-                </div>
-                <div style={{ fontSize: 12, color: C.inkMuted }}>{new Date(viewingAnalysis.createdAt).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}</div>
-              </div>
-              <div style={{ display: "flex", gap: 8 }}>
-                <button onClick={() => { setPlatform(viewingAnalysis.platform); setGoals(new Set(viewingAnalysis.goals)); setNiche(viewingAnalysis.niche); setViewingAnalysis(null); setPage("analyze"); }} style={{ padding: "7px 14px", borderRadius: 8, fontSize: 12, fontWeight: 600, background: C.mint, color: "#fff", border: "none", cursor: "pointer", fontFamily: "inherit" }}>↗ Run again</button>
-                <button onClick={() => setViewingAnalysis(null)} style={{ width: 34, height: 34, borderRadius: 8, border: `1px solid ${C.border}`, background: C.surfaceAlt, cursor: "pointer", fontSize: 18, color: C.inkSub, display: "flex", alignItems: "center", justifyContent: "center" }}>×</button>
-              </div>
+  const historyPage=(
+    <div style={{padding:24,flex:1,overflowY:"auto",position:"relative"}}>
+      {viewingAnalysis&&(
+        <div style={{position:"fixed",inset:0,zIndex:100,background:"rgba(0,0,0,0.5)",backdropFilter:"blur(4px)",display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}} onClick={()=>setViewingAnalysis(null)}>
+          <div onClick={e=>e.stopPropagation()} style={{background:C.surface,borderRadius:18,width:"100%",maxWidth:680,maxHeight:"85vh",overflowY:"auto",boxShadow:"0 20px 60px rgba(0,0,0,0.3)"}}>
+            <div style={{padding:"20px 24px",borderBottom:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:0,background:C.surface,zIndex:1,borderRadius:"18px 18px 0 0"}}>
+              <div><div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>{(()=>{const Icon=PLATFORM_ICONS[viewingAnalysis.platform];return <Icon size={16}/>;})()}<span style={{fontSize:15,fontWeight:700,color:C.ink}}>{viewingAnalysis.platform} Analysis</span><span style={{fontSize:11,fontWeight:600,padding:"2px 8px",borderRadius:20,background:viewingAnalysis.isFreeDemo?C.mintBg:C.blueBg,color:viewingAnalysis.isFreeDemo?C.mintText:C.blueText}}>{viewingAnalysis.isFreeDemo?"Free demo":"0.50 USDC"}</span></div><div style={{fontSize:12,color:C.inkMuted}}>{new Date(viewingAnalysis.createdAt).toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"})}</div></div>
+              <div style={{display:"flex",gap:8}}><button onClick={()=>{setPlatform(viewingAnalysis.platform);setGoals(new Set(viewingAnalysis.goals));setNiche(viewingAnalysis.niche);setViewingAnalysis(null);setPage("analyze");}} style={{padding:"7px 14px",borderRadius:8,fontSize:12,fontWeight:600,background:C.mint,color:"#fff",border:"none",cursor:"pointer",fontFamily:"inherit"}}>↗ Run again</button><button onClick={()=>setViewingAnalysis(null)} style={{width:34,height:34,borderRadius:8,border:`1px solid ${C.border}`,background:C.surfaceAlt,cursor:"pointer",fontSize:18,color:C.inkSub,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button></div>
             </div>
-            <div style={{ padding: "20px 24px" }}>
-              <div style={{ background: C.surfaceAlt, borderRadius: 10, padding: "12px 16px", marginBottom: 16, fontSize: 13, color: C.inkSub, lineHeight: 1.65, borderLeft: `3px solid ${C.mint}` }}>
-                <div style={{ fontSize: 11, fontWeight: 700, color: C.mint, marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.06em" }}>Your niche</div>
-                {viewingAnalysis.niche}
-              </div>
-              <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderTop: `3px solid ${C.mint}`, borderRadius: 12, padding: "16px 20px", marginBottom: 16 }}>
-                <div style={{ fontSize: 11, fontWeight: 700, color: C.mint, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.07em" }}>✦ Opportunity Snapshot</div>
-                <div style={{ fontSize: 15, color: C.ink, lineHeight: 1.75 }}>{viewingAnalysis.summary}</div>
-              </div>
-              <div style={{ display: "flex", gap: 6, marginBottom: 14, flexWrap: "wrap" }}>
-                {viewingAnalysis.goals.map(g => { const labels = { products: "📦 Products", content: "🎬 Content", marketing: "📣 Marketing" }; const active = viewTab === g; return <button key={g} onClick={() => setViewTab(g)} style={{ padding: "7px 16px", borderRadius: 20, fontSize: 13, fontFamily: "inherit", border: active ? `1.5px solid ${C.mint}` : `1px solid ${C.border}`, background: active ? C.mint : C.surface, color: active ? "#fff" : C.inkSub, fontWeight: active ? 600 : 400, cursor: "pointer" }}>{labels[g]}</button>; })}
-              </div>
-              {viewTab === "products" && viewingAnalysis.products?.map((p, i) => (
-                <div key={i} style={{ display: "flex", gap: 12, padding: "14px 16px", background: C.surfaceAlt, borderRadius: 12, marginBottom: 8 }}>
-                  <div style={{ width: 30, height: 30, borderRadius: 8, background: C.mintBg, color: C.mintText, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, flexShrink: 0 }}>{i + 1}</div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 4 }}><span style={{ fontSize: 14, fontWeight: 700, color: C.ink }}>{p.title}</span><span style={{ fontSize: 11, fontWeight: 600, padding: "2px 8px", borderRadius: 20, background: C.greenBg, color: C.greenText }}>{p.price_range}</span></div>
-                    <div style={{ fontSize: 13, color: C.inkSub, lineHeight: 1.65 }}>{p.why}</div>
-                  </div>
-                </div>
-              ))}
-              {viewTab === "content" && viewingAnalysis.content?.map((c, i) => (
-                <div key={i} style={{ padding: "14px 16px", background: C.surfaceAlt, borderRadius: 12, marginBottom: 8 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8, flexWrap: "wrap" }}>
-                    <div style={{ width: 28, height: 28, borderRadius: 7, background: C.purpleBg, color: C.purpleText, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>{i + 1}</div>
-                    <span style={{ fontSize: 14, fontWeight: 700, color: C.ink }}>{c.idea}</span>
-                    <span style={{ fontSize: 11, fontWeight: 600, padding: "2px 8px", borderRadius: 20, background: C.purpleBg, color: C.purpleText }}>{c.format}</span>
-                  </div>
-                  <div style={{ background: C.surface, borderLeft: `3px solid ${C.purple}`, padding: "8px 12px", borderRadius: "0 8px 8px 0", fontSize: 13, color: C.inkSub, fontStyle: "italic", lineHeight: 1.65 }}>"{c.hook}"</div>
-                </div>
-              ))}
-              {viewTab === "marketing" && viewingAnalysis.marketing?.map((m, i) => (
-                <div key={i} style={{ display: "flex", gap: 12, padding: "14px 16px", background: C.surfaceAlt, borderRadius: 12, marginBottom: 8 }}>
-                  <div style={{ width: 30, height: 30, borderRadius: 8, background: C.blueBg, color: C.blueText, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, flexShrink: 0 }}>{i + 1}</div>
-                  <div><div style={{ fontSize: 14, fontWeight: 700, color: C.ink, marginBottom: 4 }}>{m.channel}</div><div style={{ fontSize: 13, color: C.inkSub, lineHeight: 1.65, marginBottom: 6 }}>{m.tactic}</div><div style={{ fontSize: 12, color: C.inkMuted, padding: "3px 10px", background: C.surface, borderRadius: 20, display: "inline-block" }}>📊 {m.expected_reach}</div></div>
-                </div>
-              ))}
+            <div style={{padding:"20px 24px"}}>
+              <div style={{background:C.surfaceAlt,borderRadius:10,padding:"12px 16px",marginBottom:16,fontSize:13,color:C.inkSub,lineHeight:1.65,borderLeft:`3px solid ${C.mint}`}}><div style={{fontSize:11,fontWeight:700,color:C.mint,marginBottom:4,textTransform:"uppercase",letterSpacing:"0.06em"}}>Your niche</div>{viewingAnalysis.niche}</div>
+              <div style={{background:C.surface,border:`1px solid ${C.border}`,borderTop:`3px solid ${C.mint}`,borderRadius:12,padding:"16px 20px",marginBottom:16}}><div style={{fontSize:11,fontWeight:700,color:C.mint,marginBottom:6,textTransform:"uppercase",letterSpacing:"0.07em"}}>✦ Opportunity Snapshot</div><div style={{fontSize:15,color:C.ink,lineHeight:1.75}}>{viewingAnalysis.summary}</div></div>
+              <div style={{display:"flex",gap:6,marginBottom:14,flexWrap:"wrap"}}>{viewingAnalysis.goals.map(g=>{const labels={products:"📦 Products",content:"🎬 Content",marketing:"📣 Marketing"};const active=viewTab===g;return <button key={g} onClick={()=>setViewTab(g)} style={{padding:"7px 16px",borderRadius:20,fontSize:13,fontFamily:"inherit",border:active?`1.5px solid ${C.mint}`:`1px solid ${C.border}`,background:active?C.mint:C.surface,color:active?"#fff":C.inkSub,fontWeight:active?600:400,cursor:"pointer"}}>{labels[g]}</button>;})}</div>
+              {viewTab==="products"&&viewingAnalysis.products?.map((p,i)=>(<div key={i} style={{display:"flex",gap:12,padding:"14px 16px",background:C.surfaceAlt,borderRadius:12,marginBottom:8}}><div style={{width:30,height:30,borderRadius:8,background:C.mintBg,color:C.mintText,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:700,flexShrink:0}}>{i+1}</div><div style={{flex:1}}><div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:4}}><span style={{fontSize:14,fontWeight:700,color:C.ink}}>{p.title}</span><span style={{fontSize:11,fontWeight:600,padding:"2px 8px",borderRadius:20,background:C.greenBg,color:C.greenText}}>{p.price_range}</span></div><div style={{fontSize:13,color:C.inkSub,lineHeight:1.65}}>{p.why}</div></div></div>))}
+              {viewTab==="content"&&viewingAnalysis.content?.map((c,i)=>(<div key={i} style={{padding:"14px 16px",background:C.surfaceAlt,borderRadius:12,marginBottom:8}}><div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8,flexWrap:"wrap"}}><div style={{width:28,height:28,borderRadius:7,background:C.purpleBg,color:C.purpleText,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:700,flexShrink:0}}>{i+1}</div><span style={{fontSize:14,fontWeight:700,color:C.ink}}>{c.idea}</span><span style={{fontSize:11,fontWeight:600,padding:"2px 8px",borderRadius:20,background:C.purpleBg,color:C.purpleText}}>{c.format}</span></div><div style={{background:C.surface,borderLeft:`3px solid ${C.purple}`,padding:"8px 12px",borderRadius:"0 8px 8px 0",fontSize:13,color:C.inkSub,fontStyle:"italic",lineHeight:1.65}}>"{c.hook}"</div></div>))}
+              {viewTab==="marketing"&&viewingAnalysis.marketing?.map((m,i)=>(<div key={i} style={{display:"flex",gap:12,padding:"14px 16px",background:C.surfaceAlt,borderRadius:12,marginBottom:8}}><div style={{width:30,height:30,borderRadius:8,background:C.blueBg,color:C.blueText,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:700,flexShrink:0}}>{i+1}</div><div><div style={{fontSize:14,fontWeight:700,color:C.ink,marginBottom:4}}>{m.channel}</div><div style={{fontSize:13,color:C.inkSub,lineHeight:1.65,marginBottom:6}}>{m.tactic}</div><div style={{fontSize:12,color:C.inkMuted,padding:"3px 10px",background:C.surface,borderRadius:20,display:"inline-block"}}>📊 {m.expected_reach}</div></div></div>))}
             </div>
           </div>
         </div>
       )}
-      <div style={{ background: C.surface, borderRadius: 14, border: `1px solid ${C.border}`, overflow: "hidden" }}>
-        <div style={{ padding: "16px 20px", borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: C.ink }}>Analysis history</div>
-            <div style={{ fontSize: 12, color: C.inkMuted, marginTop: 2 }}>All analyses · click View to read again · Run again to reuse</div>
-          </div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: C.inkMuted }}>{savedAnalyses.length} total</div>
-        </div>
-        {savedAnalyses.length === 0 ? (
-          <div style={{ padding: "48px 24px", textAlign: "center", color: C.inkMuted, fontSize: 14 }}>No analyses yet.<br /><span style={{ fontSize: 12 }}>Run your first analysis and it will appear here.</span></div>
-        ) : (
-          <div>
-            {savedAnalyses.map((a, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: 16, padding: "14px 20px", borderBottom: i < savedAnalyses.length - 1 ? `1px solid ${C.border}` : "none", flexWrap: "wrap" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, flex: 1, minWidth: 200 }}>
-                  <div style={{ width: 36, height: 36, borderRadius: 9, background: C.surfaceAlt, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{(() => { const Icon = PLATFORM_ICONS[a.platform]; return <Icon size={18} />; })()}</div>
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: C.ink }}>{a.platform} analysis</div>
-                    <div style={{ fontSize: 12, color: C.inkMuted, marginTop: 2, maxWidth: 300, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.niche?.slice(0, 60)}...</div>
-                  </div>
-                </div>
-                <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
-                  {a.goals?.map(g => <span key={g} style={{ fontSize: 10, fontWeight: 600, padding: "2px 7px", borderRadius: 20, background: C.surfaceAlt, color: C.inkSub, border: `1px solid ${C.border}` }}>{{ products: "📦", content: "🎬", marketing: "📣" }[g]}</span>)}
-                </div>
-                <div style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, padding: "3px 9px", borderRadius: 20, background: a.isFreeDemo ? C.mintBg : C.blueBg, color: a.isFreeDemo ? C.mintText : C.blueText }}>{a.isFreeDemo ? "Free" : "−0.50 USDC"}</div>
-                </div>
-                <div style={{ fontSize: 11, color: C.inkMuted, fontFamily: "monospace", textAlign: "right", minWidth: 80 }}>{new Date(a.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</div>
-                <div style={{ display: "flex", gap: 6 }}>
-                  <button onClick={() => { setViewingAnalysis(a); setViewTab(a.goals?.[0] || "products"); }} style={{ padding: "6px 14px", borderRadius: 8, fontSize: 12, fontWeight: 600, border: `1px solid ${C.mint}`, background: C.mintBg, color: C.mintText, cursor: "pointer", fontFamily: "inherit" }}>View →</button>
-                  <button onClick={() => { setPlatform(a.platform); setGoals(new Set(a.goals)); setNiche(a.niche); setPage("analyze"); }} style={{ padding: "6px 14px", borderRadius: 8, fontSize: 12, fontWeight: 600, border: `1px solid ${C.border}`, background: C.surfaceAlt, color: C.inkSub, cursor: "pointer", fontFamily: "inherit" }}>↗ Run again</button>
-                </div>
-              </div>
-            ))}
-          </div>
+      <div style={{background:C.surface,borderRadius:14,border:`1px solid ${C.border}`,overflow:"hidden"}}>
+        <div style={{padding:"16px 20px",borderBottom:`1px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}><div><div style={{fontSize:15,fontWeight:700,color:C.ink}}>Analysis history</div><div style={{fontSize:12,color:C.inkMuted,marginTop:2}}>All analyses · click View to read again</div></div><div style={{fontSize:13,fontWeight:600,color:C.inkMuted}}>{savedAnalyses.length} total</div></div>
+        {savedAnalyses.length===0?(<div style={{padding:"48px 24px",textAlign:"center",color:C.inkMuted,fontSize:14}}>No analyses yet.</div>):(
+          <div>{savedAnalyses.map((a,i)=>(<div key={i} style={{display:"flex",alignItems:"center",gap:16,padding:"14px 20px",borderBottom:i<savedAnalyses.length-1?`1px solid ${C.border}`:"none",flexWrap:"wrap"}}>
+            <div style={{display:"flex",alignItems:"center",gap:10,flex:1,minWidth:200}}><div style={{width:36,height:36,borderRadius:9,background:C.surfaceAlt,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{(()=>{const Icon=PLATFORM_ICONS[a.platform];return <Icon size={18}/>;})()}</div><div><div style={{fontSize:14,fontWeight:600,color:C.ink}}>{a.platform} analysis</div><div style={{fontSize:12,color:C.inkMuted,marginTop:2,maxWidth:300,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{a.niche?.slice(0,60)}...</div></div></div>
+            <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>{a.goals?.map(g=><span key={g} style={{fontSize:10,fontWeight:600,padding:"2px 7px",borderRadius:20,background:C.surfaceAlt,color:C.inkSub,border:`1px solid ${C.border}`}}>{{products:"📦",content:"🎬",marketing:"📣"}[g]}</span>)}</div>
+            <div style={{textAlign:"center"}}><div style={{fontSize:11,fontWeight:700,padding:"3px 9px",borderRadius:20,background:a.isFreeDemo?C.mintBg:C.blueBg,color:a.isFreeDemo?C.mintText:C.blueText}}>{a.isFreeDemo?"Free":"−0.50 USDC"}</div></div>
+            <div style={{fontSize:11,color:C.inkMuted,fontFamily:"monospace",textAlign:"right",minWidth:80}}>{new Date(a.createdAt).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})}</div>
+            <div style={{display:"flex",gap:6}}><button onClick={()=>{setViewingAnalysis(a);setViewTab(a.goals?.[0]||"products");}} style={{padding:"6px 14px",borderRadius:8,fontSize:12,fontWeight:600,border:`1px solid ${C.mint}`,background:C.mintBg,color:C.mintText,cursor:"pointer",fontFamily:"inherit"}}>View →</button><button onClick={()=>{setPlatform(a.platform);setGoals(new Set(a.goals));setNiche(a.niche);setPage("analyze");}} style={{padding:"6px 14px",borderRadius:8,fontSize:12,fontWeight:600,border:`1px solid ${C.border}`,background:C.surfaceAlt,color:C.inkSub,cursor:"pointer",fontFamily:"inherit"}}>↗ Run again</button></div>
+          </div>))}</div>
         )}
       </div>
     </div>
   );
 
-  // ── Wallet page ───────────────────────────────────────────────────────────────
-  const walletPage = (
-    <div style={{ padding: 24, flex: 1, overflowY: "auto" }}>
-      <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 20 }}>
-        <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14, padding: "16px 18px", flex: 1, minWidth: 140, boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: C.inkMuted, textTransform: "uppercase", letterSpacing: "0.07em" }}>USDC Balance</div>
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <button onClick={refreshBalance} disabled={refreshing} style={{ padding: "3px 10px", borderRadius: 6, border: `1px solid ${C.border}`, background: C.surfaceAlt, color: C.inkMuted, cursor: refreshing ? "not-allowed" : "pointer", fontSize: 11, fontWeight: 600, fontFamily: "inherit" }}>
-                {refreshing ? "..." : "↻ Refresh"}
-              </button>
-              <div style={{ width: 30, height: 30, borderRadius: 8, background: C.mintBg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>◎</div>
-            </div>
+  const walletPage=(
+    <div style={{padding:24,flex:1,overflowY:"auto"}}>
+      <div style={{display:"flex",gap:12,flexWrap:"wrap",marginBottom:20}}>
+        <div style={{background:C.surface,border:`1px solid ${C.border}`,borderRadius:14,padding:"16px 18px",flex:1,minWidth:140}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
+            <div style={{fontSize:11,fontWeight:700,color:C.inkMuted,textTransform:"uppercase",letterSpacing:"0.07em"}}>USDC Balance</div>
+            <div style={{display:"flex",alignItems:"center",gap:6}}><button onClick={refreshBalance} disabled={refreshing} style={{padding:"3px 10px",borderRadius:6,border:`1px solid ${C.border}`,background:C.surfaceAlt,color:C.inkMuted,cursor:refreshing?"not-allowed":"pointer",fontSize:11,fontWeight:600,fontFamily:"inherit"}}>{refreshing?"...":"↻ Refresh"}</button><div style={{width:30,height:30,borderRadius:8,background:C.mintBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14}}>◎</div></div>
           </div>
-          <div style={{ fontSize: 22, fontWeight: 800, color: C.ink, marginBottom: 3, letterSpacing: "-0.5px" }}>{balance.toFixed(2)} USDC</div>
-          <div style={{ fontSize: 12, color: C.inkMuted }}>Available to spend</div>
+          <div style={{fontSize:22,fontWeight:800,color:C.ink,marginBottom:3}}>{balance.toFixed(2)} USDC</div>
+          <div style={{fontSize:12,color:C.inkMuted}}>Available to spend</div>
         </div>
-        <MetricCard label="Total Charged" value={`${(totalAnalyses * 0.50).toFixed(2)} USDC`} sub="Lifetime total" icon="⚡" accent={C.blueBg} />
+        <MetricCard label="Total Charged" value={`${(totalAnalyses*0.50).toFixed(2)} USDC`} sub="Lifetime total" icon="⚡" accent={C.blueBg}/>
       </div>
-      <div style={{ background: C.surface, borderRadius: 14, border: `1px solid ${C.border}`, padding: "20px 24px" }}>
-        <div style={{ fontSize: 14, fontWeight: 700, color: C.ink, marginBottom: 16 }}>Wallet details</div>
-        {[
-          ["Wallet ID",   user.circleWalletId || "—",      false],
-          ["Address",     user.circleWalletAddress || "—", true],
-          ["Network",     user.network || "Arc Testnet",   false],
-          ["Type",        "Circle Programmable Wallet",    false],
-          ["Cost / call", "0.50 USDC",                    false],
-        ].map(([k, v, copyable]) => (
-          <div key={k} style={{ display: "flex", justifyContent: "space-between", padding: "11px 0", borderBottom: `1px solid ${C.border}`, flexWrap: "wrap", gap: 8, alignItems: "center" }}>
-            <span style={{ fontSize: 13, color: C.inkMuted }}>{k}</span>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ fontSize: 13, color: C.ink, fontFamily: "monospace", wordBreak: "break-all" }}>{v}</span>
-              {copyable && v !== "—" && (
-                <button onClick={copyAddress} style={{ padding: "4px 10px", borderRadius: 6, border: `1px solid ${copied ? C.mint : C.border}`, background: copied ? C.mintBg : C.surfaceAlt, color: copied ? C.mintText : C.inkMuted, cursor: "pointer", fontSize: 11, fontWeight: 600, fontFamily: "inherit", transition: "all 0.2s", flexShrink: 0, whiteSpace: "nowrap" }}>
-                  {copied ? "✓ Copied!" : "Copy"}
-                </button>
-              )}
-            </div>
+      <div style={{background:C.surface,borderRadius:14,border:`1px solid ${C.border}`,padding:"20px 24px"}}>
+        <div style={{fontSize:14,fontWeight:700,color:C.ink,marginBottom:16}}>Wallet details</div>
+        {[["Wallet ID",user.circleWalletId||"—",false],["Address",user.circleWalletAddress||"—",true],["Network",user.network||"Arc Testnet",false],["Type","Circle Programmable Wallet",false],["Cost / call","0.50 USDC",false]].map(([k,v,copyable])=>(
+          <div key={k} style={{display:"flex",justifyContent:"space-between",padding:"11px 0",borderBottom:`1px solid ${C.border}`,flexWrap:"wrap",gap:8,alignItems:"center"}}>
+            <span style={{fontSize:13,color:C.inkMuted}}>{k}</span>
+            <div style={{display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:13,color:C.ink,fontFamily:"monospace",wordBreak:"break-all"}}>{v}</span>{copyable&&v!=="—"&&(<button onClick={copyAddress} style={{padding:"4px 10px",borderRadius:6,border:`1px solid ${copied?C.mint:C.border}`,background:copied?C.mintBg:C.surfaceAlt,color:copied?C.mintText:C.inkMuted,cursor:"pointer",fontSize:11,fontWeight:600,fontFamily:"inherit",flexShrink:0}}>{copied?"✓ Copied!":"Copy"}</button>)}</div>
           </div>
         ))}
       </div>
@@ -812,18 +953,19 @@ function Dashboard({ user, onLogout }) {
   );
 
   return (
-    <div style={{ display: "flex", height: "100vh", overflow: "hidden", fontFamily: "'DM Sans', system-ui, sans-serif", background: C.canvas }}>
-      {isMobile && mobileNav && <div onClick={() => setMobileNav(false)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 40 }} />}
+    <div style={{ display:"flex", height:"100vh", overflow:"hidden", fontFamily:"'DM Sans', system-ui, sans-serif", background:C.canvas }}>
+      {isMobile && mobileNav && <div onClick={()=>setMobileNav(false)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.6)", zIndex:40 }}/>}
       {sidebar}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", minWidth: 0 }}>
+      <div style={{ flex:1, display:"flex", flexDirection:"column", overflow:"hidden", minWidth:0 }}>
         {topbar}
-        <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column" }}>
-          {page === "dashboard" && <div style={{ flex: 1, overflowY: "auto" }}>{dashboardPage}</div>}
-          {page === "analyze"   && analyzePage}
-          {page === "prompts"   && promptsPage}
-          {page === "history"   && historyPage}
-          {page === "wallet"    && walletPage}
-          {page === "settings"  && <div style={{ padding: 24, color: C.inkMuted, fontSize: 14 }}>Settings coming soon.</div>}
+        <div style={{ flex:1, overflow:"hidden", display:"flex", flexDirection:"column" }}>
+          {page==="dashboard"  && <div style={{flex:1,overflowY:"auto"}}>{dashboardPage}</div>}
+          {page==="analyze"    && analyzePage}
+          {page==="prompts"    && promptsPage}
+          {page==="history"    && historyPage}
+          {page==="wallet"     && walletPage}
+          {page==="prediction" && <PredictionPage user={user} token={token()} balance={balance} />}
+          {page==="settings"   && <div style={{padding:24,color:C.inkMuted,fontSize:14}}>Settings coming soon.</div>}
         </div>
       </div>
       <style>{`
@@ -847,10 +989,10 @@ export default function App() {
 
   if (!isLoaded) {
     return (
-      <div style={{ minHeight: "100vh", background: `linear-gradient(135deg, #0B1121 0%, #0D1E3D 100%)`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16, fontFamily: "'DM Sans', system-ui, sans-serif" }}>
-        <BrandLogo size={56} />
-        <div style={{ color: "#fff", fontSize: 15, fontWeight: 600, marginTop: 8 }}>SocialMint Agent</div>
-        <Spinner size={24} />
+      <div style={{ minHeight:"100vh", background:`linear-gradient(135deg, #0B1121 0%, #0D1E3D 100%)`, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:16, fontFamily:"'DM Sans', system-ui, sans-serif" }}>
+        <BrandLogo size={56}/>
+        <div style={{ color:"#fff", fontSize:15, fontWeight:600, marginTop:8 }}>SocialMint Agent</div>
+        <Spinner size={24}/>
         <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
       </div>
     );
@@ -858,10 +1000,10 @@ export default function App() {
 
   if (transitioning) {
     return (
-      <div style={{ minHeight: "100vh", background: `linear-gradient(135deg, #0B1121 0%, #0D1E3D 100%)`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16, fontFamily: "'DM Sans', system-ui, sans-serif" }}>
-        <BrandLogo size={56} />
-        <Spinner size={24} />
-        <div style={{ color: "#8BA3C4", fontSize: 13 }}>Please wait...</div>
+      <div style={{ minHeight:"100vh", background:`linear-gradient(135deg, #0B1121 0%, #0D1E3D 100%)`, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:16, fontFamily:"'DM Sans', system-ui, sans-serif" }}>
+        <BrandLogo size={56}/>
+        <Spinner size={24}/>
+        <div style={{ color:"#8BA3C4", fontSize:13 }}>Please wait...</div>
         <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
       </div>
     );
@@ -878,5 +1020,5 @@ export default function App() {
     setTransitioning(false);
   }
 
-  return user ? <Dashboard user={user} onLogout={handleLogout} /> : <LoginScreen onLogin={handleLogin} />;
+  return user ? <Dashboard user={user} onLogout={handleLogout}/> : <LoginScreen onLogin={handleLogin}/>;
 }

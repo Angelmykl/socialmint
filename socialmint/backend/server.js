@@ -1,12 +1,6 @@
 /**
  * server.js — SocialMint Backend
- *
- * Smart storage: uses MongoDB when MONGODB_URI is set (production/Railway)
- * Falls back to local db.json when no MongoDB (local development)
- *
- * This means:
- *   - Railway (live) → MongoDB → wallets/data saved forever
- *   - Your laptop    → db.json → works without internet/DNS issues
+ * Complete file — replace your existing server.js with this one
  */
 
 require("dotenv").config();
@@ -17,19 +11,22 @@ const axios    = require("axios");
 const fs       = require("fs");
 const path     = require("path");
 
-const { loginLimiter, analysisLimiter, generalLimiter } = require("./middleware/rateLimiter");
+const { loginLimiter, analysisLimiter, generalLimiter, predictionLimiter } = require("./middleware/rateLimiter");
 const requireAuth = require("./middleware/auth");
 const {
   createUserWallet, getWalletBalance,
   chargeUser, fundTestWallet,
 } = require("./circle");
 
+// ── Prediction Agent ──────────────────────────────────────────────────────────
+const predictionRoutes = require("./predictions");
+const agentMonitor     = require("./agentMonitor");
+const { initPredictionDB, loadConditionsFromFile } = require("./predictions");
+
 const app = express();
 app.set("trust proxy", 1);
 
 // ── Smart Database Layer ──────────────────────────────────────────────────────
-// Automatically picks MongoDB or local file depending on environment
-
 let useMongoose = false;
 let UserModel   = null;
 
@@ -57,6 +54,8 @@ async function initDB() {
       UserModel   = mongoose.models.User || mongoose.model("User", UserSchema);
       useMongoose = true;
       console.log("✅ MongoDB connected — using cloud database");
+      // Initialize prediction agent DB models
+      await initPredictionDB(mongoose);
     } catch (err) {
       console.log("⚠️  MongoDB failed, falling back to local db.json:", err.message);
     }
@@ -153,7 +152,6 @@ app.post("/api/auth/login", loginLimiter, async (req, res) => {
     let user = await getUser(userId);
 
     if (user) {
-      // Returning user — update last login, return existing wallet
       await updateUserField(userId, { lastLoginAt: new Date() });
       let balance = 0;
       try { balance = await getWalletBalance(user.circleWalletId); } catch {}
@@ -171,7 +169,6 @@ app.post("/api/auth/login", loginLimiter, async (req, res) => {
       });
     }
 
-    // New user — create Circle wallet
     console.log(`🆕 New user: ${name} (${provider})`);
     let wallet;
     try {
@@ -192,13 +189,12 @@ app.post("/api/auth/login", loginLimiter, async (req, res) => {
     };
     await saveUser(userId, newUser);
 
-    // Auto-fund on testnet (Base Sepolia or Arc Testnet) but not mainnet
     if (process.env.USE_MAINNET !== "true") {
       try {
         await fundTestWallet(wallet.address);
-        console.log("💧 Auto-funded new wallet with testnet USDC:", wallet.address);
+        console.log("💧 Auto-funded new wallet:", wallet.address);
       } catch (e) {
-        console.log("⚠️ Auto-fund failed (user can manually use faucet):", e.message);
+        console.log("⚠️ Auto-fund failed:", e.message);
       }
     }
 
@@ -278,7 +274,6 @@ app.post("/api/analyze", requireAuth, analysisLimiter, async (req, res) => {
       console.log(`💳 Charged 0.50 USDC — TX: ${circleTransfer.id}`);
     } catch (paymentErr) {
       console.error("❌ Payment error:", paymentErr.message);
-      console.error("❌ Circle response:", JSON.stringify(paymentErr.response?.data, null, 2));
       return res.status(402).json({
         error: paymentErr.message.includes("Insufficient")
           ? "Not enough USDC in your wallet. Please top up and try again."
@@ -286,14 +281,12 @@ app.post("/api/analyze", requireAuth, analysisLimiter, async (req, res) => {
       });
     }
 
-    // Save pending transaction
     await pushToUserArray(userId, "transactions", {
       txId: circleTransfer.id, amount: 0.50,
       platform, status: "pending",
       createdAt: new Date().toISOString(),
     });
   } else {
-    // ── Enforce free run limit server-side ──────────────────────────────────
     const user = await getUser(userId);
     const freeRunsUsed = user.freeRunsUsed || 0;
     const FREE_LIMIT = 3;
@@ -306,12 +299,10 @@ app.post("/api/analyze", requireAuth, analysisLimiter, async (req, res) => {
       });
     }
 
-    // Increment free runs counter in MongoDB
     await updateUserField(userId, { freeRunsUsed: freeRunsUsed + 1 });
     console.log(`🎁 Free demo ${freeRunsUsed + 1}/${FREE_LIMIT}: ${platform} — ${userId}`);
   }
 
-  // Call Anthropic
   const goalLabels = {
     products: "products or services to sell",
     content:  "content ideas for making money",
@@ -343,7 +334,6 @@ Include only sections for: ${goalText}. Each array = exactly 4 items. Be specifi
     const text     = aiRes.data.content.map(c => c.text || "").join("");
     const analysis = JSON.parse(text.replace(/```json|```/g, "").trim());
 
-    // Save analysis to history
     const analysisRecord = {
       id: circleTransfer?.id || "demo-" + Date.now(),
       platform, niche, goals,
@@ -358,12 +348,10 @@ Include only sections for: ${goalText}. Each array = exactly 4 items. Be specifi
 
     await pushToUserArray(userId, "analyses", analysisRecord);
 
-    // Update stats
     const user = await getUser(userId);
     const updates = { totalAnalyses: (user.totalAnalyses || 0) + 1 };
     if (!isFreeDemo) {
       updates.totalSpentUsdc = parseFloat(((user.totalSpentUsdc || 0) + 0.50).toFixed(2));
-      // Update transaction status
       const txList = (user.transactions || []).map(t =>
         t.txId === circleTransfer?.id ? { ...t, status: "confirmed" } : t
       );
@@ -380,7 +368,6 @@ Include only sections for: ${goalText}. Each array = exactly 4 items. Be specifi
 
   } catch (aiErr) {
     console.error("❌ AI failed:", aiErr.message);
-    if (aiErr.response) console.error("   Data:", JSON.stringify(aiErr.response.data, null, 2));
     if (circleTransfer) {
       const user = await getUser(userId);
       const txList = (user.transactions || []).map(t =>
@@ -433,6 +420,24 @@ app.get("/api/analyses", requireAuth, async (req, res) => {
   res.json({ analyses: (user.analyses || []).slice(0, 50) });
 });
 
+// ─────────────────────────────────────────────────────────────────────────────
+// ROUTE 7: Prediction Agent
+// ─────────────────────────────────────────────────────────────────────────────
+app.use("/api/predictions", predictionLimiter, requireAuth, predictionRoutes);
+
+// Live prices for the prediction UI ticker (no auth needed)
+app.get("/api/prices", (req, res) => res.json(agentMonitor.getCurrentPrices()));
+
+// Manual house sweep — trigger anytime to push earnings to treasury
+app.post("/api/admin/sweep", requireAuth, async (req, res) => {
+  try {
+    await agentMonitor.triggerSweep();
+    res.json({ success: true, message: "House sweep triggered — check server logs for result" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ── Health Check ──────────────────────────────────────────────────────────────
 app.get("/api/health", (req, res) => {
   res.json({
@@ -445,15 +450,25 @@ app.get("/api/health", (req, res) => {
       jwt: !!process.env.JWT_SECRET,
       treasury: !!process.env.CIRCLE_TREASURY_ADDRESS,
       mongodb: useMongoose,
+      predictionContract: !!process.env.PREDICTION_CONTRACT_ADDRESS,
     },
   });
 });
 
 // ── Start ─────────────────────────────────────────────────────────────────────
 initDB().then(() => {
+  // Make getUser available to prediction routes
+  app.locals.getUser = getUser;
+
+  // Load prediction conditions from file on startup (works without MongoDB)
+  loadConditionsFromFile();
+
   const PORT = process.env.PORT || 4000;
   app.listen(PORT, () => {
     console.log(`\n🚀 SocialMint backend running on port ${PORT}`);
     console.log(`   Health: http://localhost:${PORT}/api/health\n`);
+
+    // Start prediction agent background monitor
+    agentMonitor.start();
   });
 });

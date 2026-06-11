@@ -10,8 +10,6 @@ const USDC_TOKEN_BASE_MAINNET = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
 const USDC_TOKEN_ARC_TESTNET  = "0x3600000000000000000000000000000000000000";
 
 // Network selector
-// Set USE_ARC=true in Railway to use Arc Testnet
-// Set USE_MAINNET=true in Railway to use Base Mainnet
 function getNetwork() {
   if (process.env.USE_MAINNET === "true") {
     return { blockchain: "BASE-MAINNET", tokenAddress: USDC_TOKEN_BASE_MAINNET };
@@ -99,7 +97,6 @@ async function getWalletBalance(walletId) {
   const data = res.data.data;
   const balances = data.tokenBalances || [];
 
-  // Works for both Arc native USDC (isNative: true) and Base ERC-20 USDC
   let usdc = balances.find(b => b.token?.symbol === "USDC");
 
   if (!usdc) {
@@ -117,6 +114,7 @@ async function getWalletBalance(walletId) {
   return usdc ? parseFloat(usdc.amount) : 0.0;
 }
 
+// ── Charge user 0.50 USDC → treasury (for AI analysis) ───────────────────────
 async function chargeUser(userWalletId) {
   const balance = await getWalletBalance(userWalletId);
   if (balance < 0.50) {
@@ -148,6 +146,54 @@ async function chargeUser(userWalletId) {
   return res.data.data;
 }
 
+// ── Charge user any amount → agent wallet (for prediction bets) ───────────────
+// Different from chargeUser — this sends to the AGENT wallet not treasury
+// The agent wallet then funds the on-chain bet contract transaction
+async function chargeUserForBet(userWalletId, amount) {
+  const balance = await getWalletBalance(userWalletId);
+  if (balance < amount) {
+    throw new Error(`Insufficient balance. Has ${balance.toFixed(2)} USDC, needs ${amount.toFixed(2)} USDC.`);
+  }
+
+  // Get the agent wallet's on-chain address to receive the funds
+  const agentAddress = process.env.AGENT_WALLET_ADDRESS;
+  if (!agentAddress) {
+    // Fallback: derive from private key
+    const { ethers } = require("ethers");
+    const wallet = new ethers.Wallet(process.env.AGENT_PRIVATE_KEY);
+    console.log(`[Circle] Charging ${amount} USDC from user wallet → agent ${wallet.address}`);
+  }
+
+  const destinationAddress = agentAddress ||
+    (() => {
+      const { ethers } = require("ethers");
+      return new ethers.Wallet(process.env.AGENT_PRIVATE_KEY).address;
+    })();
+
+  const entitySecretCiphertext = await getEntitySecretCiphertext();
+  const { blockchain, tokenAddress } = getNetwork();
+
+  console.log(`[Circle] Charging ${amount} USDC from user ${userWalletId} → agent ${destinationAddress}`);
+
+  const res = await axios.post(
+    `${BASE_URL}/developer/transactions/transfer`,
+    {
+      idempotencyKey: uuidv4(),
+      entitySecretCiphertext,
+      walletId:            userWalletId,
+      destinationAddress,
+      amounts:             [amount.toFixed(6)],
+      tokenAddress,
+      blockchain,
+      feeLevel: "MEDIUM",
+    },
+    { headers: headers() }
+  );
+
+  console.log(`[Circle] ✅ Bet charge complete — TX: ${res.data.data?.id}`);
+  return res.data.data;
+}
+
 async function getTransactionStatus(transactionId) {
   const res = await axios.get(
     `${BASE_URL}/transactions/${transactionId}`,
@@ -172,6 +218,7 @@ module.exports = {
   createUserWallet,
   getWalletBalance,
   chargeUser,
+  chargeUserForBet,
   getTransactionStatus,
   fundTestWallet,
 };

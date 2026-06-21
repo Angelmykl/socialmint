@@ -23,6 +23,9 @@ const predictionRoutes = require("./predictions");
 const agentMonitor     = require("./agentMonitor");
 const { initPredictionDB, loadConditionsFromFile } = require("./predictions");
 
+// ── Influence Escrow ──────────────────────────────────────────────────────────
+const influenceRoutes = require("./influence");
+
 const app = express();
 app.set("trust proxy", 1);
 
@@ -325,14 +328,35 @@ Respond ONLY in valid JSON (no markdown, no backticks, no preamble):
 Include only sections for: ${goalText}. Each array = exactly 4 items. Be specific and concrete.`;
 
   try {
-    const aiRes = await axios.post(
-      "https://api.anthropic.com/v1/messages",
-      { model: "claude-sonnet-4-20250514", max_tokens: 1000, messages: [{ role: "user", content: prompt }] },
-      { headers: { "Content-Type": "application/json", "x-api-key": process.env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" } }
-    );
+  // Retry up to 3 times on network errors
+  let aiRes, lastErr;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      aiRes = await axios.post(
+        "https://api.anthropic.com/v1/messages",
+        { model: "claude-sonnet-4-6", max_tokens: 4000, messages: [{ role: "user", content: prompt }] },
+        { headers: { "Content-Type": "application/json", "x-api-key": process.env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" }, timeout: 30000 }
+      );
+      lastErr = null;
+      break;
+    } catch (e) {
+      lastErr = e;
+      console.warn(`[Analyze] Attempt ${attempt} failed: ${e.message}`);
+      if (attempt < 3) await new Promise(r => setTimeout(r, 2000 * attempt));
+    }
+  }
+  if (lastErr) throw lastErr;
 
-    const text     = aiRes.data.content.map(c => c.text || "").join("");
-    const analysis = JSON.parse(text.replace(/```json|```/g, "").trim());
+    const text = aiRes.data.content.map(c => c.text || "").join("");
+
+    // Robust JSON extraction — find the first { and last } to handle any wrapping
+    let cleanText = text.replace(/```json|```/g, "").trim();
+    const firstBrace = cleanText.indexOf("{");
+    const lastBrace  = cleanText.lastIndexOf("}");
+    if (firstBrace !== -1 && lastBrace !== -1) {
+      cleanText = cleanText.slice(firstBrace, lastBrace + 1);
+    }
+    const analysis = JSON.parse(cleanText);
 
     const analysisRecord = {
       id: circleTransfer?.id || "demo-" + Date.now(),
@@ -424,6 +448,7 @@ app.get("/api/analyses", requireAuth, async (req, res) => {
 // ROUTE 7: Prediction Agent
 // ─────────────────────────────────────────────────────────────────────────────
 app.use("/api/predictions", predictionLimiter, requireAuth, predictionRoutes);
+app.use("/api/influence",  generalLimiter,   requireAuth, influenceRoutes);
 
 // Live prices for the prediction UI ticker (no auth needed)
 app.get("/api/prices", (req, res) => res.json(agentMonitor.getCurrentPrices()));

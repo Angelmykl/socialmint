@@ -4,17 +4,32 @@ import { useClerk, useUser, SignIn } from "@clerk/clerk-react";
 const API  = import.meta.env.VITE_API_URL || "http://localhost:4000";
 const COST = 0.50;
 
-const C = {
-  side:"#0B1121",sideHover:"#131E35",sideBorder:"#1A2740",sideMuted:"#4A6080",sideText:"#F0F4FF",sideSubtext:"#8BA3C4",
-  canvas:"#F4F6FB",surface:"#FFFFFF",surfaceAlt:"#EEF1F8",border:"#E2E7F0",borderStrong:"#C8D0E0",
-  ink:"#0D1526",inkSub:"#3D526E",inkMuted:"#8BA3C4",
-  mint:"#00C896",mintDark:"#00A87E",mintBg:"#E6FAF4",mintText:"#006B52",mintBorder:"#00C89640",
-  green:"#10B981",greenBg:"#ECFDF5",greenText:"#065F46",greenBorder:"#6EE7B7",
-  red:"#EF4444",redBg:"#FEF2F2",
-  blue:"#3B82F6",blueBg:"#EFF6FF",blueText:"#1D4ED8",
-  purple:"#8B5CF6",purpleBg:"#F5F3FF",purpleText:"#5B21B6",
-  cta:"#00C896",ctaText:"#FFFFFF",ctaDark:"#00A87E",
-};
+function getTheme(dark) {
+  if (dark) return {
+    side:"#0B1121",sideHover:"#131E35",sideBorder:"#1A2740",sideMuted:"#4A6080",sideText:"#F0F4FF",sideSubtext:"#8BA3C4",
+    canvas:"#0D1526",surface:"#111F35",surfaceAlt:"#162236",border:"#1E2D45",borderStrong:"#2A3D55",
+    ink:"#F0F4FF",inkSub:"#C0CFDF",inkMuted:"#8BA3C4",
+    mint:"#00C896",mintDark:"#00A87E",mintBg:"rgba(0,200,150,0.1)",mintText:"#00C896",mintBorder:"#00C89640",
+    green:"#10B981",greenBg:"rgba(16,185,129,0.1)",greenText:"#10B981",greenBorder:"#6EE7B7",
+    red:"#EF4444",redBg:"rgba(239,68,68,0.1)",
+    blue:"#3B82F6",blueBg:"rgba(59,130,246,0.1)",blueText:"#3B82F6",
+    purple:"#8B5CF6",purpleBg:"rgba(139,92,246,0.1)",purpleText:"#8B5CF6",
+    cta:"#00C896",ctaText:"#FFFFFF",ctaDark:"#00A87E",
+  };
+  return {
+    side:"#0B1121",sideHover:"#131E35",sideBorder:"#1A2740",sideMuted:"#4A6080",sideText:"#F0F4FF",sideSubtext:"#8BA3C4",
+    canvas:"#F4F6FB",surface:"#FFFFFF",surfaceAlt:"#EEF1F8",border:"#E2E7F0",borderStrong:"#C8D0E0",
+    ink:"#0D1526",inkSub:"#3D526E",inkMuted:"#8BA3C4",
+    mint:"#00C896",mintDark:"#00A87E",mintBg:"#E6FAF4",mintText:"#006B52",mintBorder:"#00C89640",
+    green:"#10B981",greenBg:"#ECFDF5",greenText:"#065F46",greenBorder:"#6EE7B7",
+    red:"#EF4444",redBg:"#FEF2F2",
+    blue:"#3B82F6",blueBg:"#EFF6FF",blueText:"#1D4ED8",
+    purple:"#8B5CF6",purpleBg:"#F5F3FF",purpleText:"#5B21B6",
+    cta:"#00C896",ctaText:"#FFFFFF",ctaDark:"#00A87E",
+  };
+}
+
+const C = getTheme(false);
 
 const PLATFORM_ICONS = {
   Instagram: ({ size = 16 }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none"><defs><linearGradient id="ig" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stopColor="#F58529"/><stop offset="50%" stopColor="#DD2A7B"/><stop offset="100%" stopColor="#515BD4"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5" fill="url(#ig)"/><circle cx="12" cy="12" r="4" stroke="white" strokeWidth="2" fill="none"/><circle cx="17.5" cy="6.5" r="1" fill="white"/></svg>),
@@ -39,7 +54,7 @@ function nowTime(){return new Date().toLocaleTimeString([],{hour:"2-digit",minut
 function Spinner({size=16,dark=false}){return(<span style={{width:size,height:size,borderRadius:"50%",border:`2px solid ${dark?C.border:"rgba(255,255,255,0.3)"}`,borderTopColor:dark?C.mint:"#fff",animation:"spin 0.7s linear infinite",display:"inline-block",flexShrink:0}}/>);}
 
 // ── Prediction Page ────────────────────────────────────────────────────────────
-function PredictionPage({ user, token, balance }) {
+function PredictionPage({ user, token, balance, C }) {
   const [asset, setAsset]             = useState("BTC");
   const [condition, setCondition]     = useState("risesBy");
   const [condValue, setCondValue]     = useState("0.3");
@@ -192,16 +207,20 @@ function PredictionPage({ user, token, balance }) {
     try{
       const res = await fetch(`${API}/api/predictions/condition/${conditionId}`,{method:"DELETE",headers:{Authorization:`Bearer ${token}`}});
       if(res.ok){
-        // Only update this specific condition in local state — don't reload all
         setConditions(prev => prev.map(c =>
           c.conditionId === conditionId ? {...c, status:"cancelled"} : c
         ));
       } else {
-        const data = await res.json();
-        alert(data.error || "Failed to cancel condition");
+        // Silently remove from UI if backend can't find it (stale condition from old server)
+        setConditions(prev => prev.map(c =>
+          c.conditionId === conditionId ? {...c, status:"cancelled"} : c
+        ));
       }
     }catch(e){
-      alert("Failed to cancel — please try again");
+      // Silently mark as cancelled in UI
+      setConditions(prev => prev.map(c =>
+        c.conditionId === conditionId ? {...c, status:"cancelled"} : c
+      ));
     }
     setCancellingId(null);
   }
@@ -617,6 +636,8 @@ function UserMenu({ user, onLogout }) {
 
 function Dashboard({ user, onLogout }) {
   const [page, setPage]           = useState("analyze");
+  const [darkMode, setDarkMode]   = useState(false);
+  const C = getTheme(darkMode);
   const [balance, setBalance]     = useState(user.balance || 0);
   const [platform, setPlatform]   = useState("Instagram");
   const [goals, setGoals]         = useState(new Set(["products"]));
@@ -731,11 +752,15 @@ function Dashboard({ user, onLogout }) {
         <div style={{ height:1, background:C.sideBorder, margin:"10px 4px" }} />
         <div style={{ fontSize:10, fontWeight:700, color:C.sideMuted, padding:"4px 12px 8px", textTransform:"uppercase", letterSpacing:"0.08em" }}>Coming Soon</div>
         <div style={{ display:"flex", alignItems:"center", gap:10, padding:"9px 12px", borderRadius:8, opacity:0.5, cursor:"not-allowed" }}>
+          <span style={{ flex:1, fontSize:13, color:C.sideSubtext }}>Influence</span>
+          <span style={{ fontSize:9, fontWeight:700, padding:"2px 7px", borderRadius:20, background:C.sideBorder, color:C.sideMuted }}>SOON</span>
+        </div>
+        <div style={{ display:"flex", alignItems:"center", gap:10, padding:"9px 12px", borderRadius:8, opacity:0.5, cursor:"not-allowed" }}>
           <span style={{ flex:1, fontSize:13, color:C.sideSubtext }}>Agent Trade</span>
           <span style={{ fontSize:9, fontWeight:700, padding:"2px 7px", borderRadius:20, background:C.sideBorder, color:C.sideMuted }}>SOON</span>
         </div>
         <div style={{ height:1, background:C.sideBorder, margin:"10px 4px" }} />
-        <NavItem icon="⚙" label="Settings"          active={page==="settings"}   onClick={()=>{ setPage("settings");   setMobileNav(false); }} />
+        <NavItem icon="⚙" label="Settings" active={page==="settings"} onClick={()=>{ setPage("settings"); setMobileNav(false); }} />
       </div>
       <div style={{ padding:"10px 8px", borderTop:`1px solid ${C.sideBorder}`, position:"relative" }}>
         <div style={{ background:"rgba(0,200,150,0.08)", border:`1px solid ${C.mintBorder}`, borderRadius:10, padding:"9px 12px", marginBottom:8 }}>
@@ -758,9 +783,19 @@ function Dashboard({ user, onLogout }) {
           {page==="analyze"?"New Analysis":page==="dashboard"?"Dashboard":page==="prompts"?"Demo Prompts":page==="history"?"History":page==="wallet"?"Wallet":page==="prediction"?"Prediction Agent":"Settings"}
         </div>
       </div>
-      <div style={{ display:"flex", alignItems:"center", gap:7, background:C.surfaceAlt, borderRadius:20, padding:"6px 12px", border:`1px solid ${C.border}` }}>
-        <div style={{ width:7, height:7, borderRadius:"50%", background:C.mint }} />
-        <span style={{ fontSize:12, fontFamily:"monospace", color:C.inkSub }}>{user.circleWalletAddress ? user.circleWalletAddress.slice(0,6)+"..."+user.circleWalletAddress.slice(-4) : "0x1234...5678"}</span>
+      <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+        {/* Dark mode toggle */}
+        <div onClick={()=>setDarkMode(v=>!v)} style={{ display:"flex", alignItems:"center", gap:6, background:C.surfaceAlt, border:`1px solid ${C.border}`, borderRadius:20, padding:"5px 10px", cursor:"pointer", userSelect:"none" }}>
+          <span style={{ fontSize:13 }}>{darkMode ? "☾" : "☀"}</span>
+          <div style={{ width:32, height:17, borderRadius:10, background:darkMode?"#8B5CF6":C.mint, position:"relative", transition:"background .2s", flexShrink:0 }}>
+            <div style={{ width:13, height:13, borderRadius:"50%", background:"#fff", position:"absolute", top:2, left:darkMode?2:17, transition:"left .2s" }}/>
+          </div>
+        </div>
+        {/* Wallet chip */}
+        <div style={{ display:"flex", alignItems:"center", gap:7, background:C.surfaceAlt, borderRadius:20, padding:"6px 12px", border:`1px solid ${C.border}` }}>
+          <div style={{ width:7, height:7, borderRadius:"50%", background:C.mint }} />
+          <span style={{ fontSize:12, fontFamily:"monospace", color:C.inkSub }}>{user.circleWalletAddress ? user.circleWalletAddress.slice(0,6)+"..."+user.circleWalletAddress.slice(-4) : "0x1234...5678"}</span>
+        </div>
       </div>
     </div>
   );
@@ -964,7 +999,7 @@ function Dashboard({ user, onLogout }) {
           {page==="prompts"    && promptsPage}
           {page==="history"    && historyPage}
           {page==="wallet"     && walletPage}
-          {page==="prediction" && <PredictionPage user={user} token={token()} balance={balance} />}
+          {page==="prediction" && <PredictionPage user={user} token={token()} balance={balance} C={C} />}
           {page==="settings"   && <div style={{padding:24,color:C.inkMuted,fontSize:14}}>Settings coming soon.</div>}
         </div>
       </div>

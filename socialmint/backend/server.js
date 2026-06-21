@@ -23,8 +23,7 @@ const predictionRoutes = require("./predictions");
 const agentMonitor     = require("./agentMonitor");
 const { initPredictionDB, loadConditionsFromFile } = require("./predictions");
 
-// ── Influence Escrow ──────────────────────────────────────────────────────────
-const influenceRoutes = require("./influence");
+// ── Influence Escrow ── (coming soon)
 
 const app = express();
 app.set("trust proxy", 1);
@@ -126,7 +125,13 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: true,
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
 }));
 app.use(express.json());
@@ -442,7 +447,6 @@ app.get("/api/analyses", requireAuth, async (req, res) => {
 // ROUTE 7: Prediction Agent
 // ─────────────────────────────────────────────────────────────────────────────
 app.use("/api/predictions", predictionLimiter, requireAuth, predictionRoutes);
-app.use("/api/influence",  generalLimiter,   requireAuth, influenceRoutes);
 
 // Live prices for the prediction UI ticker (no auth needed)
 app.get("/api/prices", (req, res) => res.json(agentMonitor.getCurrentPrices()));

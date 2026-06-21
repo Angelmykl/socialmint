@@ -126,9 +126,7 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: function(origin, callback) {
-    callback(null, true);
-  },
+  origin: true,
   credentials: true,
 }));
 app.use(express.json());

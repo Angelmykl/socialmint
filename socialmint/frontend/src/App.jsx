@@ -857,7 +857,7 @@ function Dashboard({ user, onLogout }) {
       </div>
       <div style={{ flex:1, overflowY:"auto", padding:24, background:C.canvas }}>
         {!result&&!loading&&(<div style={{ height:"100%", minHeight:300, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", border:`2px dashed ${C.border}`, borderRadius:16, padding:32, color:C.inkMuted, textAlign:"center" }}><div style={{ fontSize:40, marginBottom:14, opacity:0.4 }}>✦</div><div style={{ fontSize:16, fontWeight:700, color:C.inkSub, marginBottom:8 }}>Your analysis will appear here</div><div style={{ fontSize:13, maxWidth:300, lineHeight:1.7, color:C.inkMuted }}>Fill in the form, choose what you want to discover, and click Analyze.</div></div>)}
-        {loading&&(<div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", minHeight:300, gap:16 }}><Spinner size={32} dark/><div style={{ fontSize:14, fontWeight:600, color:C.inkSub }}>Analyzing your social presence...</div><div style={{ fontSize:12, color:C.inkMuted }}>0.50 USDC charged · Claude is thinking</div></div>)}
+        {loading&&(<div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", minHeight:300, gap:16 }}><Spinner size={32} dark/><div style={{ fontSize:14, fontWeight:600, color:C.inkSub }}>Analyzing your social presence...</div><div style={{ fontSize:12, color:C.inkMuted }}>0.50 USDC charged · Agent is thinking</div></div>)}
         {result&&(
           <div style={{ maxWidth:700 }}>
             <div style={{ background:C.surface, borderRadius:14, padding:"20px 24px", marginBottom:20, border:`1px solid ${C.border}`, borderTop:`3px solid ${C.mint}` }}>

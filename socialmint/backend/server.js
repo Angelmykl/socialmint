@@ -321,24 +321,11 @@ Respond ONLY in valid JSON (no markdown, no backticks, no preamble):
 Include only sections for: ${goalText}. Each array = exactly 4 items. Be specific and concrete.`;
 
   try {
-  // Retry up to 3 times on network errors
-  let aiRes, lastErr;
-  for (let attempt = 1; attempt <= 3; attempt++) {
-    try {
-      aiRes = await axios.post(
-        "https://api.anthropic.com/v1/messages",
-        { model: "claude-sonnet-4-6", max_tokens: 4000, messages: [{ role: "user", content: prompt }] },
-        { headers: { "Content-Type": "application/json", "x-api-key": process.env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" }, timeout: 30000 }
-      );
-      lastErr = null;
-      break;
-    } catch (e) {
-      lastErr = e;
-      console.warn(`[Analyze] Attempt ${attempt} failed: ${e.message}`);
-      if (attempt < 3) await new Promise(r => setTimeout(r, 2000 * attempt));
-    }
-  }
-  if (lastErr) throw lastErr;
+    const aiRes = await axios.post(
+      "https://api.anthropic.com/v1/messages",
+      { model: "claude-sonnet-4-6", max_tokens: 1000, messages: [{ role: "user", content: prompt }] },
+      { headers: { "Content-Type": "application/json", "x-api-key": process.env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" }, timeout: 55000 }
+    );
 
     const text = aiRes.data.content.map(c => c.text || "").join("");
 

@@ -15,7 +15,7 @@ const { loginLimiter, analysisLimiter, generalLimiter, predictionLimiter } = req
 const requireAuth = require("./middleware/auth");
 const {
   createUserWallet, getWalletBalance,
-  chargeUser, fundTestWallet,
+  chargeUser, fundTestWallet, refundUserUSDC,
 } = require("./circle");
 
 // ── Prediction Agent ──────────────────────────────────────────────────────────
@@ -372,15 +372,27 @@ Include only sections for: ${goalText}. Each array = exactly 3 items. Be specifi
 
   } catch (aiErr) {
     console.error("❌ AI failed:", aiErr.message);
-    if (circleTransfer) {
-      const user = await getUser(userId);
-      const txList = (user.transactions || []).map(t =>
-        t.txId === circleTransfer.id ? { ...t, status: "failed" } : t
-      );
-      await updateUserField(userId, { transactions: txList });
+
+    // Auto-refund the 0.50 USDC back to user's wallet
+    if (circleTransfer && !isFreeDemo) {
+      try {
+        console.log(`[Refund] Returning 0.50 USDC to user ${userId}`);
+        const user = await getUser(userId);
+        const refundRes = await refundUserUSDC(user.circleWalletId, 0.50);
+        console.log(`[Refund] ✅ Refund sent — TX: ${refundRes?.id}`);
+
+        // Mark original tx as refunded
+        const txList = (user.transactions || []).map(t =>
+          t.txId === circleTransfer.id ? { ...t, status: "refunded" } : t
+        );
+        await updateUserField(userId, { transactions: txList });
+      } catch (refundErr) {
+        console.error("[Refund] ❌ Refund failed:", refundErr.message);
+      }
     }
+
     res.status(500).json({
-      error: isFreeDemo ? "Demo failed. Please try again." : "Analysis failed after payment. Contact support.",
+      error: isFreeDemo ? "Demo failed. Please try again." : "Analysis failed — your 0.50 USDC has been refunded to your wallet.",
       txId: circleTransfer?.id,
     });
   }

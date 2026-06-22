@@ -212,6 +212,37 @@ async function fundTestWallet(walletAddress) {
   return res.data;
 }
 
+async function refundUserUSDC(userWalletId, amount) {
+  // Transfer from treasury back to user wallet
+  const entitySecretCiphertext = await getEntitySecretCiphertext();
+  const { blockchain, tokenAddress } = getNetwork();
+
+  // Get user wallet address
+  const walletRes = await axios.get(
+    `${BASE_URL}/wallets/${userWalletId}`,
+    { headers: headers() }
+  );
+  const userAddress = walletRes.data.data.wallet.address;
+
+  const res = await axios.post(
+    `${BASE_URL}/developer/transactions/transfer`,
+    {
+      idempotencyKey: uuidv4(),
+      entitySecretCiphertext,
+      walletId: process.env.CIRCLE_TREASURY_WALLET_ID,
+      destinationAddress: userAddress,
+      amounts: [amount.toFixed(6)],
+      tokenAddress,
+      blockchain,
+      feeLevel: "MEDIUM",
+    },
+    { headers: headers() }
+  );
+
+  console.log(`[Circle] ✅ Refund sent — ${amount} USDC → ${userAddress} — TX: ${res.data.data?.id}`);
+  return res.data.data;
+}
+
 module.exports = {
   createWalletSet,
   createTreasuryWallet,
@@ -219,6 +250,7 @@ module.exports = {
   getWalletBalance,
   chargeUser,
   chargeUserForBet,
+  refundUserUSDC,
   getTransactionStatus,
   fundTestWallet,
 };

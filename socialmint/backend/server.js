@@ -318,12 +318,12 @@ Respond ONLY in valid JSON (no markdown, no backticks, no preamble):
   "content": [{"idea": "title", "format": "Reel/Thread/Short/etc", "hook": "opening hook line"}],
   "marketing": [{"channel": "name", "tactic": "specific tactic", "expected_reach": "description"}]
 }
-Include only sections for: ${goalText}. Each array = exactly 4 items. Be specific and concrete.`;
+Include only sections for: ${goalText}. Each array = exactly 3 items. Be specific and concrete. Keep each field under 20 words.`;
 
   try {
     const aiRes = await axios.post(
       "https://api.anthropic.com/v1/messages",
-      { model: "claude-sonnet-4-6", max_tokens: 1000, messages: [{ role: "user", content: prompt }] },
+      { model: "claude-sonnet-4-6", max_tokens: 2000, messages: [{ role: "user", content: prompt }] },
       { headers: { "Content-Type": "application/json", "x-api-key": process.env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" }, timeout: 55000 }
     );
 
